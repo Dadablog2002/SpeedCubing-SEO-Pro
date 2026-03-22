@@ -1,0 +1,2269 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SpeedCubing SEO Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red: #e63950; --red-dim: rgba(230,57,80,0.12); --red-border: rgba(230,57,80,0.3);
+  --violet: #7c5cfc; --violet-dim: rgba(124,92,252,0.12); --violet-border: rgba(124,92,252,0.3);
+  --cyan: #0ea5e9; --cyan-dim: rgba(14,165,233,0.1); --cyan-border: rgba(14,165,233,0.3);
+  --green: #10b981; --green-dim: rgba(16,185,129,0.1); --green-border: rgba(16,185,129,0.3);
+  --amber: #f59e0b; --amber-dim: rgba(245,158,11,0.1); --amber-border: rgba(245,158,11,0.28);
+  --mono: 'JetBrains Mono', monospace; --sans: 'Outfit', sans-serif;
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 20px;
+}
+[data-theme="dark"], :root {
+  --bg:#0b0c12; --card:#13141d; --card2:#1a1b27; --card3:#202131;
+  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.13);
+  --tx:#f0f0f8; --tx2:#9090b0; --tx3:#505068;
+  --topbar-bg:rgba(11,12,18,0.92); --shadow:0 2px 8px rgba(0,0,0,0.35);
+}
+[data-theme="light"] {
+  --bg:#f1f2f8; --card:#ffffff; --card2:#f6f7fc; --card3:#eef0f7;
+  --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.15);
+  --tx:#111827; --tx2:#4b5563; --tx3:#9ca3af;
+  --topbar-bg:rgba(255,255,255,0.97); --shadow:0 2px 8px rgba(0,0,0,0.08);
+  --red-dim:rgba(230,57,80,0.07); --violet-dim:rgba(124,92,252,0.07);
+  --cyan-dim:rgba(14,165,233,0.07); --green-dim:rgba(16,185,129,0.07);
+  --amber-dim:rgba(245,158,11,0.07);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--tx);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── NOISE TEXTURE OVERLAY ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: .4; mix-blend-mode: overlay;
+}
+
+/* ── AMBIENT GLOW ── */
+.glow-bg {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+}
+.glow-bg::before {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  top: -200px; left: -100px;
+  background: radial-gradient(circle, rgba(124,92,252,0.06) 0%, transparent 70%);
+  animation: drift 12s ease-in-out infinite alternate;
+}
+.glow-bg::after {
+  content: '';
+  position: absolute;
+  width: 500px; height: 500px;
+  bottom: -100px; right: -100px;
+  background: radial-gradient(circle, rgba(230,57,80,0.05) 0%, transparent 70%);
+  animation: drift 15s ease-in-out infinite alternate-reverse;
+}
+[data-theme='light'] .glow-bg { display: none; }
+@keyframes drift {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(40px, 30px) scale(1.1); }
+}
+
+/* ── LAYOUT ── */
+.app {
+  position: relative; z-index: 1;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  grid-template-rows: auto 1fr;
+  min-height: 100vh;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 24px;
+  height: 60px;
+  border-bottom: 1px solid var(--border);
+  background: var(--topbar-bg);
+  backdrop-filter: blur(12px);
+  position: sticky; top: 0; z-index: 100;
+}
+
+.logo-mark {
+  width: 34px; height: 34px;
+  border-radius: var(--r-sm);
+  background: var(--red);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.logo-mark svg { width: 18px; height: 18px; fill: white; }
+
+.topbar-title {
+  font-size: .95rem;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  color: var(--tx);
+}
+
+.topbar-sub {
+  font-size: .7rem;
+  color: var(--tx3);
+  font-family: var(--mono);
+  display: none;
+}
+@media(min-width: 600px) { .topbar-sub { display: block; } }
+
+.theme-toggle {
+  width: 34px; height: 34px;
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-sm);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background .2s, border-color .2s;
+  flex-shrink: 0;
+}
+.theme-toggle:hover { background: var(--card3); border-color: var(--violet-border); }
+.theme-toggle svg { width: 16px; height: 16px; stroke: var(--tx2); }
+.topbar-badge {
+  margin-left: auto;
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--violet);
+  background: var(--violet-dim);
+  border: 1px solid var(--violet-border);
+  padding: 3px 10px;
+  border-radius: 100px;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  grid-column: 1;
+  grid-row: 2;
+  padding: 20px 16px;
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  height: calc(100vh - 60px);
+  position: sticky; top: 60px;
+}
+
+/* ── MAIN ── */
+.main {
+  grid-column: 2;
+  grid-row: 2;
+  padding: 24px;
+  overflow-y: auto;
+  min-height: calc(100vh - 60px);
+}
+
+/* ── MOBILE LAYOUT ── */
+@media(max-width: 768px) {
+  .app {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+  }
+  .topbar { padding: 0 16px; height: 54px; }
+  .sidebar {
+    grid-column: 1; grid-row: 2;
+    height: auto;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 16px;
+  }
+  .main {
+    grid-column: 1; grid-row: 3;
+    padding: 16px;
+  }
+}
+
+/* ── SECTION LABEL ── */
+.section-label {
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--tx3);
+  margin-bottom: 10px;
+  padding-left: 2px;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  transition: border-color .2s;
+}
+.card:focus-within { border-color: var(--violet-border); }
+.card + .card { margin-top: 10px; }
+
+.card-inner { padding: 14px 16px; }
+
+/* ── PLATFORM TABS ── */
+.platform-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.ptab {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 10px 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: all .2s;
+  user-select: none;
+}
+.ptab:hover { border-color: var(--border2); }
+.ptab-name {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--tx2);
+  display: block;
+  margin-bottom: 2px;
+}
+.ptab-desc { font-size: .6rem; color: var(--tx3); }
+
+.ptab.active-yt  { background: rgba(230,57,80,.08); border-color: var(--red-border); }
+.ptab.active-yt .ptab-name  { color: var(--red); }
+.ptab.active-yts { background: rgba(230,57,80,.05); border-color: rgba(255,100,130,.4); }
+.ptab.active-yts .ptab-name { color: #ff7090; }
+.ptab.active-tkt { background: var(--cyan-dim); border-color: var(--cyan-border); }
+.ptab.active-tkt .ptab-name { color: var(--cyan); }
+
+/* ── PLATFORM PILL ── */
+.plat-pill {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--r-sm);
+  font-size: .72rem; font-weight: 600;
+  margin-bottom: 10px;
+}
+.plat-pill.yt  { background: rgba(230,57,80,.07); border: 1px solid rgba(230,57,80,.2); color: #ff8899; }
+.plat-pill.yts { background: rgba(255,100,130,.06); border: 1px solid rgba(255,100,130,.2); color: #ffaabb; }
+.plat-pill.tkt { background: var(--cyan-dim); border: 1px solid var(--cyan-border); color: var(--cyan); }
+.plat-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.plat-dot.yt  { background: var(--red); box-shadow: 0 0 6px var(--red); }
+.plat-dot.yts { background: #ff7090; box-shadow: 0 0 6px #ff7090; }
+.plat-dot.tkt { background: var(--cyan); box-shadow: 0 0 6px var(--cyan); }
+
+/* ── FORM ELEMENTS ── */
+.field { margin-bottom: 10px; }
+.field:last-child { margin-bottom: 0; }
+.field-label {
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--tx3);
+  display: block;
+  margin-bottom: 6px;
+}
+
+input[type=text],
+input[type=password],
+select,
+textarea {
+  width: 100%;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  color: var(--tx);
+  font-family: var(--sans);
+  font-size: .82rem;
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color .2s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+input[type=password] { font-family: var(--mono); font-size: .78rem; letter-spacing: .05em; }
+input:focus, select:focus, textarea:focus { border-color: var(--violet-border); }
+input::placeholder, textarea::placeholder { color: var(--tx3); }
+select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23505068' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; }
+select option { background: #13141d; }
+textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
+
+.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.field-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+@media(max-width: 480px) {
+  .field-grid, .field-grid-3 { grid-template-columns: 1fr; }
+}
+
+/* ── API BOX ── */
+.api-box {
+  background: var(--amber-dim);
+  border: 1px solid var(--amber-border);
+  border-radius: var(--r-lg);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.api-box-label {
+  font-size: .62rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.api-key-icon {
+  width: 14px; height: 14px;
+  display: inline-block;
+}
+.api-hint {
+  font-size: .64rem; color: var(--tx3);
+  margin-top: 6px; font-family: var(--mono);
+}
+.api-hint a { color: var(--amber); text-decoration: none; }
+.api-hint a:hover { text-decoration: underline; }
+
+/* ── TAGS INPUT ── */
+.tags-wrap {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  min-height: 42px;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 7px 10px;
+  cursor: text; align-items: center;
+  transition: border-color .2s;
+}
+.tags-wrap:focus-within { border-color: var(--violet-border); }
+.chip {
+  display: flex; align-items: center; gap: 4px;
+  background: var(--violet-dim);
+  border: 1px solid var(--violet-border);
+  color: #b4a0ff;
+  font-size: .7rem; padding: 3px 8px;
+  border-radius: 6px;
+  font-family: var(--mono);
+  animation: chipIn .15s ease;
+}
+@keyframes chipIn { from { opacity:0; transform:scale(.8); } to { opacity:1; transform:scale(1); } }
+.chip-del {
+  background: none; border: none;
+  color: rgba(180,160,255,.4);
+  cursor: pointer; font-size: 14px;
+  line-height: 1; padding: 0;
+  transition: color .15s;
+  display: flex;
+}
+.chip-del:hover { color: var(--red); }
+#tagInput {
+  background: none; border: none; outline: none;
+  color: var(--tx); font-family: var(--sans);
+  font-size: .8rem; min-width: 90px; flex: 1;
+  padding: 0;
+}
+#tagInput::placeholder { color: var(--tx3); }
+
+.hint-text {
+  font-size: .62rem; color: var(--tx3);
+  margin-top: 5px; font-family: var(--mono);
+}
+
+/* ── QUICK TAG PILLS ── */
+.qtag-row {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  margin-top: 8px;
+}
+.qtag-lbl {
+  font-size: .58rem; color: var(--tx3);
+  font-family: var(--mono);
+  width: 100%; margin-bottom: 2px;
+}
+.qtag {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  color: var(--tx3);
+  font-size: .64rem; padding: 3px 8px;
+  border-radius: 5px; cursor: pointer;
+  transition: all .18s;
+  font-family: var(--mono);
+}
+.qtag:hover { border-color: var(--violet-border); color: #b4a0ff; background: var(--violet-dim); }
+
+/* ── TOGGLE SWITCH ── */
+.toggle-row {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.toggle-row:last-child { border-bottom: none; }
+.toggle-label { font-size: .78rem; color: var(--tx2); font-weight: 500; }
+.toggle-sub { font-size: .62rem; color: var(--tx3); margin-top: 1px; }
+.toggle-sw {
+  width: 36px; height: 20px;
+  background: var(--card3);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  position: relative; cursor: pointer;
+  transition: background .25s, border-color .25s;
+  flex-shrink: 0;
+}
+.toggle-sw.on { background: var(--violet); border-color: var(--violet); }
+.toggle-sw::after {
+  content: '';
+  position: absolute;
+  width: 14px; height: 14px;
+  background: white; border-radius: 50%;
+  top: 2px; left: 2px;
+  transition: transform .25s;
+  box-shadow: 0 1px 3px rgba(0,0,0,.3);
+}
+.toggle-sw.on::after { transform: translateX(16px); }
+
+/* ── SERIES BLOCK ── */
+.series-block {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.series-header {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 13px 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: background .15s;
+}
+.series-header:hover { background: rgba(255,255,255,.02); }
+.series-header-left {
+  display: flex; align-items: center; gap: 10px;
+}
+.series-icon {
+  width: 28px; height: 28px;
+  border-radius: 7px;
+  background: var(--violet-dim);
+  border: 1px solid var(--violet-border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.series-icon svg { width: 14px; height: 14px; stroke: var(--violet); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.series-head-title { font-size: .82rem; font-weight: 600; color: var(--tx); }
+.series-head-sub { font-size: .62rem; color: var(--tx3); margin-top: 1px; }
+.series-chevron {
+  color: var(--tx3); transition: transform .25s; width: 16px; height: 16px;
+}
+.series-chevron.open { transform: rotate(180deg); }
+
+.series-body {
+  padding: 0 16px 16px;
+  display: none;
+  border-top: 1px solid var(--border);
+  animation: fadeSlide .25s ease;
+}
+.series-body.open { display: block; }
+@keyframes fadeSlide { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
+
+.ep-counter-wrap { display: flex; align-items: center; gap: 0; }
+.ep-btn {
+  width: 34px; height: 34px;
+  background: var(--card2); border: 1px solid var(--border);
+  color: var(--tx2);
+  cursor: pointer; font-size: 1.1rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.ep-btn:first-child { border-radius: var(--r-sm) 0 0 var(--r-sm); }
+.ep-btn:last-child  { border-radius: 0 var(--r-sm) var(--r-sm) 0; }
+.ep-btn:hover { background: var(--violet-dim); border-color: var(--violet-border); color: var(--violet); }
+.ep-num {
+  min-width: 44px; height: 34px;
+  background: var(--card2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; font-weight: 700;
+  color: var(--violet);
+  font-family: var(--mono);
+}
+
+.series-preview {
+  margin-top: 12px;
+  background: var(--violet-dim);
+  border: 1px solid var(--violet-border);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  display: none;
+}
+.series-preview-label {
+  font-size: .6rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--violet); margin-bottom: 6px;
+}
+.series-preview-text {
+  font-size: .75rem; color: var(--tx);
+  font-family: var(--mono); line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* ── ANALYZE BUTTON ── */
+.analyze-btn {
+  width: 100%; height: 48px;
+  border: none; border-radius: var(--r-md);
+  color: white; font-family: var(--sans);
+  font-size: .88rem; font-weight: 700;
+  letter-spacing: .02em;
+  cursor: pointer; position: relative; overflow: hidden;
+  transition: opacity .2s, transform .15s;
+  margin-top: 4px;
+}
+.analyze-btn.yt  { background: linear-gradient(135deg, #e63950 0%, #c0293e 50%, #ff5066 100%); }
+.analyze-btn.yts { background: linear-gradient(135deg, #ff3b5c 0%, #e02040 50%, #ff7090 100%); }
+.analyze-btn.tkt { background: linear-gradient(135deg, #22d3ee 0%, #0e9ab0 50%, #ee1d52 100%); }
+.analyze-btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.12) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform .5s;
+}
+.analyze-btn:hover::before { transform: translateX(100%); }
+.analyze-btn:hover { opacity: .92; transform: translateY(-1px); }
+.analyze-btn:active { transform: scale(.98); }
+.analyze-btn:disabled { opacity: .35; cursor: not-allowed; transform: none; }
+.btn-inner { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-icon { width: 18px; height: 18px; flex-shrink: 0; }
+
+/* ── COLLAPSIBLE ADVANCED ── */
+.adv-toggle {
+  display: flex; align-items: center; gap: 8px;
+  cursor: pointer; font-size: .74rem;
+  color: var(--tx3); padding: 8px 0;
+  user-select: none; transition: color .2s;
+  border-top: 1px solid var(--border);
+  margin-top: 6px;
+}
+.adv-toggle:hover { color: var(--tx2); }
+.adv-arrow { width: 14px; height: 14px; transition: transform .25s; }
+.adv-toggle.open .adv-arrow { transform: rotate(90deg); }
+.adv-panel { display: none; padding-top: 10px; animation: fadeSlide .25s ease; }
+.adv-panel.open { display: block; }
+
+/* ── LOADING ── */
+.loading {
+  display: none;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 24px 20px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.loading.show { display: block; }
+.spinner {
+  width: 36px; height: 36px;
+  border: 2.5px solid var(--card3);
+  border-top-color: var(--violet);
+  border-radius: 50%;
+  animation: spin .75s linear infinite;
+  margin: 0 auto 14px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: .78rem; color: var(--tx2); margin-bottom: 16px; }
+.steps { display: flex; flex-direction: column; gap: 6px; text-align: left; }
+.step {
+  display: flex; align-items: center; gap: 10px;
+  font-size: .75rem; color: var(--tx3);
+  padding: 7px 12px; border-radius: var(--r-sm);
+  transition: all .35s;
+}
+.step.active { background: var(--violet-dim); color: var(--tx); border-left: 2px solid var(--violet); }
+.step.done   { color: var(--green); }
+.step-dot {
+  width: 16px; height: 16px;
+  border-radius: 50%; background: var(--card3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8px; flex-shrink: 0; transition: all .3s;
+  font-family: var(--mono); font-weight: 600; color: var(--tx3);
+}
+.step.active .step-dot { background: var(--violet); color: white; animation: stepPulse 1s ease infinite; }
+.step.done .step-dot   { background: var(--green); color: white; }
+@keyframes stepPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(124,92,252,.5); }
+  50%      { box-shadow: 0 0 0 4px rgba(124,92,252,0); }
+}
+
+/* ── RESULTS ── */
+.results { display: none; }
+.results.show { display: block; }
+
+.results-header {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px; flex-wrap: wrap; gap: 8px;
+}
+.results-title { font-size: 1rem; font-weight: 700; }
+.seo-score {
+  font-size: .72rem; font-weight: 700;
+  padding: 4px 13px; border-radius: 100px;
+}
+.seo-score.good   { background: var(--green-dim); border: 1px solid var(--green-border); color: var(--green); }
+.seo-score.medium { background: var(--amber-dim); border: 1px solid var(--amber-border); color: var(--amber); }
+.seo-score.poor   { background: var(--red-dim); border: 1px solid var(--red-border); color: var(--red); }
+
+/* ── SERIES INFO BAR ── */
+.series-info-bar {
+  display: none;
+  background: var(--violet-dim);
+  border: 1px solid var(--violet-border);
+  border-radius: var(--r-md);
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  flex-wrap: wrap; gap: 10px; align-items: center;
+}
+.series-info-bar.show { display: flex; }
+.series-ep-badge {
+  font-size: .78rem; font-weight: 800;
+  font-family: var(--mono);
+  color: var(--violet);
+  background: rgba(124,92,252,.15);
+  border: 1px solid var(--violet-border);
+  padding: 4px 12px; border-radius: 6px;
+}
+.series-info-name { font-size: .82rem; font-weight: 600; }
+.series-info-case { font-size: .68rem; color: var(--tx3); font-family: var(--mono); margin-top: 1px; }
+
+/* ── STAT CARDS ── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px; margin-bottom: 12px;
+}
+@media(max-width: 480px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  text-align: center;
+}
+.stat-val {
+  font-size: .95rem; font-weight: 700;
+  font-family: var(--mono);
+  line-height: 1.2;
+}
+.stat-lbl {
+  font-size: .58rem; color: var(--tx3);
+  text-transform: uppercase; letter-spacing: .07em;
+  margin-top: 3px;
+}
+
+/* ── RESULT CARD (collapsible) ── */
+.res-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  margin-bottom: 10px;
+  transition: border-color .2s;
+}
+.res-card:hover { border-color: var(--border2); }
+.res-card-head {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background .15s;
+}
+.res-card-head:hover { background: rgba(255,255,255,.018); }
+.res-card-left { display: flex; align-items: center; gap: 10px; }
+.res-icon {
+  width: 28px; height: 28px;
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.res-icon svg { width: 14px; height: 14px; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ic-red    { background: var(--red-dim);   border: 1px solid var(--red-border); }
+.ic-red svg    { stroke: var(--red); fill: none; }
+.ic-violet { background: var(--violet-dim); border: 1px solid var(--violet-border); }
+.ic-violet svg { stroke: var(--violet); fill: none; }
+.ic-cyan   { background: var(--cyan-dim);  border: 1px solid var(--cyan-border); }
+.ic-cyan svg   { stroke: var(--cyan); fill: none; }
+.ic-amber  { background: var(--amber-dim); border: 1px solid var(--amber-border); }
+.ic-amber svg  { stroke: var(--amber); fill: none; }
+.ic-green  { background: var(--green-dim); border: 1px solid var(--green-border); }
+.ic-green svg  { stroke: var(--green); fill: none; }
+.res-card-lbl { font-size: .6rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--tx3); }
+.res-card-name { font-size: .8rem; font-weight: 600; margin-top: 1px; }
+.chevron-icon { width: 16px; height: 16px; color: var(--tx3); transition: transform .25s; }
+.chevron-icon.open { transform: rotate(180deg); }
+.res-card-body { padding: 14px 16px; display: none; }
+.res-card-body.open { display: block; animation: fadeSlide .25s ease; }
+
+/* ── TITLE VARIANTS ── */
+.variants { display: flex; flex-direction: column; gap: 7px; }
+.variant {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 10px 13px;
+  display: flex; align-items: flex-start;
+  gap: 10px; cursor: pointer;
+  transition: border-color .18s, background .18s;
+}
+.variant:hover { border-color: var(--border2); background: var(--card3); }
+.variant-num {
+  min-width: 20px; height: 20px;
+  border-radius: 4px; background: var(--card3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .62rem; font-weight: 700;
+  color: var(--tx3); font-family: var(--mono); flex-shrink: 0;
+}
+.variant.best .variant-num { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+.variant-body { flex: 1; min-width: 0; }
+.variant-text { font-size: .82rem; line-height: 1.4; word-break: break-word; }
+.variant.best .variant-text { font-weight: 600; }
+.variant-reason { font-size: .65rem; color: var(--tx3); margin-top: 3px; font-family: var(--mono); }
+.variant-chars {
+  font-size: .62rem; font-family: var(--mono); margin-top: 3px;
+}
+.variant-chars.ok   { color: var(--green); }
+.variant-chars.warn { color: var(--amber); }
+.variant-chars.over { color: var(--red); }
+.best-badge {
+  font-size: .58rem; font-weight: 700;
+  padding: 2px 7px; border-radius: 4px;
+  text-transform: uppercase; letter-spacing: .07em;
+  white-space: nowrap; flex-shrink: 0;
+  background: var(--amber-dim);
+  border: 1px solid var(--amber-border);
+  color: var(--amber);
+}
+
+/* ── COPY BUTTON ── */
+.copy-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--tx3);
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-size: .64rem;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: all .18s;
+  white-space: nowrap; flex-shrink: 0;
+}
+.copy-btn:hover { border-color: var(--cyan-border); color: var(--cyan); }
+.copy-btn.copied { border-color: var(--green-border); color: var(--green); }
+
+/* ── DESCRIPTION ── */
+.desc-box {
+  font-size: .76rem; line-height: 1.7;
+  color: var(--tx);
+  white-space: pre-wrap;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+  font-family: var(--mono);
+  max-height: 300px; overflow-y: auto;
+  word-break: break-word;
+}
+.char-count {
+  font-size: .62rem; color: var(--tx3);
+  text-align: right; margin-top: 4px;
+  font-family: var(--mono);
+}
+.char-count.warn { color: var(--amber); }
+.char-count.over { color: var(--red); }
+.action-row { display: flex; gap: 7px; margin-top: 8px; flex-wrap: wrap; }
+
+/* ── TAGS CLOUD ── */
+.tag-legend {
+  display: flex; gap: 14px; margin-bottom: 10px;
+  font-size: .62rem; color: var(--tx3);
+}
+.tag-legend span { display: flex; align-items: center; gap: 5px; }
+.l-dot { width: 6px; height: 6px; border-radius: 50%; }
+.ld-h { background: var(--red); }
+.ld-m { background: var(--violet); }
+.ld-l { background: var(--cyan); }
+.tags-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag-pill {
+  display: flex; align-items: center; gap: 4px;
+  border-radius: 6px; padding: 4px 10px;
+  font-size: .7rem; font-weight: 500;
+  cursor: pointer; transition: opacity .18s;
+}
+.tag-pill:hover { opacity: .7; }
+.tag-pill.high { background: var(--red-dim); border: 1px solid var(--red-border); color: #ff8899; }
+.tag-pill.med  { background: var(--violet-dim); border: 1px solid var(--violet-border); color: #b4a0ff; }
+.tag-pill.low  { background: var(--cyan-dim); border: 1px solid var(--cyan-border); color: var(--cyan); }
+.tag-vol { font-size: .56rem; opacity: .55; font-family: var(--mono); }
+
+/* ── TIPS ── */
+.tips-list { display: flex; flex-direction: column; gap: 7px; }
+.tip {
+  display: flex; gap: 10px;
+  padding: 10px 12px;
+  background: var(--card2);
+  border-radius: var(--r-sm);
+  font-size: .76rem; line-height: 1.55;
+  border-left: 2px solid transparent;
+}
+.tip.critical  { border-left-color: var(--red); }
+.tip.important { border-left-color: var(--violet); }
+.tip.nice      { border-left-color: var(--cyan); }
+.tip-icon { flex-shrink: 0; margin-top: 1px; }
+.tip-icon svg { width: 14px; height: 14px; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tip.critical  .tip-icon svg { stroke: var(--red); fill: none; }
+.tip.important .tip-icon svg { stroke: var(--violet); fill: none; }
+.tip.nice      .tip-icon svg { stroke: var(--cyan); fill: none; }
+.tip-body strong { display: block; font-weight: 600; margin-bottom: 2px; font-size: .74rem; }
+
+/* ── MUSIC ── */
+.music-mood-bar {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--green-dim); border: 1px solid var(--green-border);
+  border-radius: var(--r-sm); padding: 10px 14px;
+  margin-bottom: 12px; font-size: .78rem; font-weight: 600; color: #6ee7b7;
+}
+.music-mood-bar svg { width: 16px; height: 16px; stroke: var(--green); fill: none; stroke-width: 2; flex-shrink: 0; }
+.music-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+@media(max-width: 500px) { .music-grid { grid-template-columns: 1fr; } }
+.music-track {
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: 12px 14px;
+  cursor: pointer; transition: border-color .18s, background .18s;
+}
+.music-track:hover { border-color: var(--green-border); background: rgba(16,185,129,.03); }
+.mt-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 5px; }
+.mt-name { font-size: .79rem; font-weight: 600; line-height: 1.35; }
+.mt-src {
+  font-size: .58rem; font-weight: 700; padding: 2px 7px;
+  border-radius: 4px; text-transform: uppercase; letter-spacing: .06em;
+  white-space: nowrap; flex-shrink: 0;
+}
+.ms-yt { background: var(--red-dim);    border: 1px solid var(--red-border);    color: #ff8899; }
+.ms-ep { background: var(--amber-dim);  border: 1px solid var(--amber-border);  color: var(--amber); }
+.ms-sc { background: var(--green-dim);  border: 1px solid var(--green-border);  color: var(--green); }
+.ms-sb { background: var(--violet-dim); border: 1px solid var(--violet-border); color: #b4a0ff; }
+.mt-meta { font-size: .67rem; color: var(--tx3); font-family: var(--mono); margin-bottom: 5px; }
+.mt-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.mt-tag { font-size: .6rem; padding: 2px 6px; border-radius: 4px; background: var(--card3); color: var(--tx3); }
+.mt-query { font-size: .66rem; color: var(--cyan); font-family: var(--mono); margin-top: 5px; }
+.music-where {
+  margin-top: 12px; padding: 10px 13px;
+  background: rgba(16,185,129,.05); border: 1px solid var(--green-border);
+  border-radius: var(--r-sm); font-size: .73rem; color: #6ee7b7; line-height: 1.65;
+}
+.music-where-label { font-size: .6rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--green); margin-bottom: 5px; }
+
+/* ── IMAGE UPLOAD ── */
+.image-drop-zone {
+  border: 1.5px dashed var(--border2);
+  border-radius: var(--r-md);
+  padding: 24px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+  background: var(--card2);
+}
+.image-drop-zone:hover, .image-drop-zone.drag-over {
+  border-color: var(--violet-border);
+  background: var(--violet-dim);
+}
+.idz-icon { margin: 0 auto 10px; width: 36px; height: 36px; opacity: .4; }
+.idz-icon svg { width: 36px; height: 36px; stroke: var(--tx2); }
+.idz-text { font-size: .8rem; font-weight: 600; color: var(--tx2); margin-bottom: 4px; }
+.idz-sub { font-size: .66rem; color: var(--tx3); }
+.image-preview-inner {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: 12px;
+}
+.image-preview-inner img {
+  width: 80px; height: 80px;
+  object-fit: cover; border-radius: var(--r-sm);
+  flex-shrink: 0; border: 1px solid var(--border);
+}
+.image-preview-info { flex: 1; min-width: 0; }
+.image-preview-name { font-size: .78rem; font-weight: 600; color: var(--tx); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.image-preview-size { font-size: .65rem; color: var(--tx3); font-family: var(--mono); margin: 2px 0 5px; }
+.image-preview-desc { font-size: .65rem; color: var(--green); }
+.image-remove-btn {
+  width: 28px; height: 28px; flex-shrink: 0;
+  background: var(--red-dim); border: 1px solid var(--red-border);
+  border-radius: 6px; cursor: pointer; color: var(--red);
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.image-remove-btn:hover { background: rgba(230,57,80,.2); }
+.image-remove-btn svg { width: 12px; height: 12px; }
+
+/* ── ERROR ── */
+.error-box {
+  display: none;
+  background: var(--red-dim); border: 1px solid var(--red-border);
+  border-radius: var(--r-md); padding: 11px 14px;
+  color: #ffaab5; font-size: .78rem;
+  margin-bottom: 12px;
+}
+.error-box.show { display: block; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 20px; right: 20px;
+  background: var(--card3); border: 1px solid var(--border2);
+  color: var(--tx); padding: 8px 16px;
+  border-radius: var(--r-sm); font-size: .74rem;
+  pointer-events: none; opacity: 0;
+  transform: translateY(8px); transition: all .28s;
+  z-index: 9999;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+
+/* ── HISTORY ── */
+.hist-empty { font-size: .7rem; color: var(--tx3); text-align: center; padding: 16px 8px; font-family: var(--mono); }
+.hist-item {
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--r-sm); padding: 9px 11px;
+  cursor: pointer; transition: border-color .18s, background .18s;
+  margin-bottom: 6px;
+}
+.hist-item:hover { border-color: var(--violet-border); background: var(--violet-dim); }
+.hist-item-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; }
+.hist-item-title { font-size: .74rem; font-weight: 600; color: var(--tx); line-height: 1.3; flex: 1; }
+.hist-item-plat {
+  font-size: .55rem; font-weight: 700; padding: 1px 5px;
+  border-radius: 4px; text-transform: uppercase; letter-spacing: .06em;
+  flex-shrink: 0; white-space: nowrap;
+}
+.hp-yt  { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); }
+.hp-yts { background: rgba(255,100,130,.1); color: #ff7090; border: 1px solid rgba(255,100,130,.3); }
+.hp-tkt { background: var(--cyan-dim); color: var(--cyan); border: 1px solid var(--cyan-border); }
+.hist-item-meta { font-size: .62rem; color: var(--tx3); font-family: var(--mono); margin-top: 4px; }
+.hist-item-series { font-size: .62rem; color: var(--violet); margin-top: 2px; font-family: var(--mono); }
+.hist-item-del {
+  width: 18px; height: 18px; flex-shrink: 0;
+  background: none; border: none; color: var(--tx3);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  border-radius: 3px; transition: color .15s, background .15s;
+  margin-left: 2px;
+}
+.hist-item-del:hover { color: var(--red); background: var(--red-dim); }
+.hist-item-del svg { width: 10px; height: 10px; }
+
+/* ── VIDIQ-STYLE SCORE PANEL ── */
+.vidiq-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.vidiq-header {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.vidiq-title { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--tx3); }
+.vidiq-overall {
+  display: flex; align-items: center; gap: 8px;
+  font-size: .78rem; font-weight: 700;
+}
+.vidiq-score-ring {
+  width: 38px; height: 38px; position: relative;
+  flex-shrink: 0;
+}
+.vidiq-score-ring svg { transform: rotate(-90deg); }
+.vidiq-score-num {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .68rem; font-weight: 800; font-family: var(--mono);
+}
+.vidiq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.vidiq-metric {
+  padding: 10px 14px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.vidiq-metric:nth-child(even) { border-right: none; }
+.vidiq-metric:nth-last-child(-n+2) { border-bottom: none; }
+.vm-label { font-size: .6rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--tx3); margin-bottom: 6px; }
+.vm-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.vm-bar-track {
+  flex: 1; height: 6px; background: var(--card3);
+  border-radius: 3px; overflow: hidden;
+}
+.vm-bar-fill { height: 100%; border-radius: 3px; transition: width .8s ease; }
+.vm-val { font-size: .72rem; font-weight: 700; font-family: var(--mono); min-width: 30px; text-align: right; }
+.vm-sub { font-size: .63rem; color: var(--tx3); margin-top: 3px; }
+
+/* ── KEYWORD SCORES ── */
+.kw-scores { display: flex; flex-direction: column; gap: 6px; }
+.kw-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px; background: var(--card2);
+  border-radius: var(--r-sm); border: 1px solid var(--border);
+}
+.kw-text { font-size: .74rem; font-family: var(--mono); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kw-vol-bar { width: 60px; height: 4px; background: var(--card3); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
+.kw-vol-fill { height: 100%; border-radius: 2px; }
+.kw-comp { font-size: .62rem; font-weight: 700; padding: 1px 5px; border-radius: 3px; flex-shrink: 0; }
+.kw-comp.easy   { background: var(--green-dim); color: var(--green); border: 1px solid var(--green-border); }
+.kw-comp.medium { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+.kw-comp.hard   { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); }
+.kw-score { font-size: .7rem; font-weight: 700; font-family: var(--mono); min-width: 28px; text-align: right; }
+
+/* ── LIGHT THEME OVERRIDES ── */
+[data-theme="light"] .tip { background: var(--card3); }
+[data-theme="light"] .variant { background: var(--card2); }
+[data-theme="light"] .variant:hover { background: var(--card3); }
+[data-theme="light"] .stat-card { box-shadow: var(--shadow); }
+[data-theme="light"] .res-card { box-shadow: var(--shadow); }
+[data-theme="light"] .card { box-shadow: var(--shadow); }
+[data-theme="light"] .api-box { background: rgba(245,158,11,0.06); }
+[data-theme="light"] .series-block { box-shadow: var(--shadow); }
+[data-theme="light"] .music-track { background: var(--card2); }
+[data-theme="light"] .music-track:hover { background: var(--card3); }
+[data-theme="light"] .tags-wrap { background: var(--card2); }
+[data-theme="light"] .desc-box { background: var(--card2); }
+[data-theme="light"] .image-drop-zone { background: var(--card2); }
+[data-theme="light"] .step.active { background: var(--violet-dim); }
+[data-theme="light"] .plat-pill.tkt { color: #0284c7; }
+[data-theme="light"] .tag-pill.low { color: #0284c7; }
+[data-theme="light"] .mt-query { color: #0284c7; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--card3); border-radius: 2px; }
+
+/* ── MOBILE BOTTOM NAV ── */
+.mobile-fab {
+  display: none;
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  z-index: 200;
+}
+@media(max-width: 768px) {
+  .mobile-fab { display: block; }
+  .main { padding-bottom: 80px; }
+}
+</style>
+</head>
+<body>
+<div class="glow-bg"></div>
+
+<div class="app">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3L10 15z"/></svg>
+    </div>
+    <div>
+      <div class="topbar-title">SpeedCubing SEO Pro</div>
+    </div>
+    <div class="topbar-sub">F2L · OLL · PLL · CFOP · Shorts · TikTok</div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Змінити тему">
+      <svg id="themeIconDark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg id="themeIconLight" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <div class="topbar-badge">AI Powered</div>
+  </header>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <!-- API KEY -->
+    <div class="section-label">Доступ до AI</div>
+    <div class="api-box">
+      <div class="api-box-label">
+        <svg class="api-key-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        API Ключ
+      </div>
+      <input type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off">
+      <div class="api-hint">Отримай на <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></div>
+    </div>
+
+    <!-- PLATFORM -->
+    <div class="section-label" style="margin-top:16px">Платформа</div>
+    <div class="platform-tabs">
+      <div class="ptab active-yt" id="tab-yt" onclick="setPlat('yt')">
+        <span class="ptab-name">YouTube</span>
+        <span class="ptab-desc">5–20 хв</span>
+      </div>
+      <div class="ptab" id="tab-yts" onclick="setPlat('yts')">
+        <span class="ptab-name">Shorts</span>
+        <span class="ptab-desc">до 60 сек</span>
+      </div>
+      <div class="ptab" id="tab-tkt" onclick="setPlat('tkt')">
+        <span class="ptab-name">TikTok</span>
+        <span class="ptab-desc">короткі</span>
+      </div>
+    </div>
+    <div class="plat-pill yt" id="platPill">
+      <span class="plat-dot yt" id="platDot"></span>
+      <span id="platPillText">YouTube — назва до 100 символів · опис до 5000</span>
+    </div>
+
+    <!-- OPTIONS -->
+    <div class="section-label" style="margin-top:16px">Налаштування</div>
+    <div class="card">
+      <div class="card-inner">
+        <div class="field-grid">
+          <div class="field">
+            <label class="field-label">Тип відео</label>
+            <select id="vtype">
+              <option value="breakdown">Розбір ситуації</option>
+              <option value="tutorial">Туторіал</option>
+              <option value="speedsolve">Спідсолв / PB</option>
+              <option value="tips">Поради</option>
+              <option value="alg">Алгоритм</option>
+              <option value="review">Огляд куба</option>
+              <option value="comp">Змагання</option>
+              <option value="challenge">Челендж</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">Мова</label>
+            <select id="lang">
+              <option value="ukrainian">Українська</option>
+              <option value="english">English</option>
+              <option value="russian">Русский</option>
+              <option value="polish">Polski</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Advanced toggle -->
+        <div class="adv-toggle" id="advToggle" onclick="toggleAdv()">
+          <svg class="adv-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          Розширені параметри
+        </div>
+        <div class="adv-panel" id="advPanel">
+          <div class="field-grid" style="margin-bottom:10px">
+            <div class="field">
+              <label class="field-label">Аудиторія</label>
+              <select id="level">
+                <option value="beginner">Початківці</option>
+                <option value="intermediate">Середній</option>
+                <option value="advanced">Просунуті</option>
+                <option value="all">Всі рівні</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="field-label">Тон</label>
+              <select id="tone">
+                <option value="energetic">Енергійний</option>
+                <option value="educational">Навчальний</option>
+                <option value="casual">Невимушений</option>
+                <option value="hype">Хайповий</option>
+              </select>
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:10px">
+            <label class="field-label">Ціль</label>
+            <select id="goal">
+              <option value="views">Максимум переглядів</option>
+              <option value="subs">Нові підписники</option>
+              <option value="viral">Вірусність</option>
+              <option value="community">Ком'юніті</option>
+            </select>
+          </div>
+          <div class="toggle-row">
+            <div><div class="toggle-label">Хештеги</div><div class="toggle-sub">Додати в опис</div></div>
+            <div class="toggle-sw on" id="ht" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div class="toggle-row">
+            <div><div class="toggle-label">Таймкоди</div><div class="toggle-sub">Тільки YouTube</div></div>
+            <div class="toggle-sw" id="tt" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div class="toggle-row">
+            <div><div class="toggle-label">Call to Action</div><div class="toggle-sub">Підписка / лайк</div></div>
+            <div class="toggle-sw on" id="ct" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div class="toggle-row">
+            <div><div class="toggle-label">Фонова музика</div><div class="toggle-sub">Підбір треків</div></div>
+            <div class="toggle-sw on" id="mt" onclick="this.classList.toggle('on')"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY PANEL -->
+    <div style="margin-top:20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div class="section-label" style="margin:0">Історія аналізів</div>
+        <button class="copy-btn" onclick="clearHistory()" id="clearHistBtn" style="display:none;font-size:.6rem">Очистити</button>
+      </div>
+      <div id="historyList">
+        <div class="hist-empty" id="histEmpty">Тут зберігатимуться попередні аналізи</div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- SERIES BLOCK -->
+    <div class="section-label">Серія відео</div>
+    <div class="series-block" style="margin-bottom:16px">
+      <div class="series-header" onclick="toggleSeries()">
+        <div class="series-header-left">
+          <div class="series-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <div>
+            <div class="series-head-title">Режим серії</div>
+            <div class="series-head-sub" id="seriesSubtitle">Вимкнено — для одиночних відео</div>
+          </div>
+        </div>
+        <svg class="series-chevron" id="seriesChevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="series-body" id="seriesBody">
+        <div style="padding-top:14px">
+          <div class="field-grid" style="margin-bottom:10px">
+            <div class="field">
+              <label class="field-label">Назва серії</label>
+              <input type="text" id="seriesName" placeholder="Хрест, F2L, OLL, PLL..." oninput="updateSeriesPreview()">
+            </div>
+            <div class="field">
+              <label class="field-label">Всього частин</label>
+              <div style="display:flex;gap:6px">
+                <select id="totalParts" onchange="onTotalPartsChange()" style="flex:1">
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4" selected>4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="8">8</option>
+                  <option value="10">10</option>
+                  <option value="15">15</option>
+                  <option value="20">20</option>
+                  <option value="custom">Своє...</option>
+                  <option value="?">Невідомо</option>
+                </select>
+                <input type="number" id="totalPartsCustom" min="1" max="999"
+                  placeholder="К-сть" oninput="updateSeriesPreview()"
+                  style="display:none;width:80px;flex-shrink:0">
+              </div>
+            </div>
+          </div>
+          <div class="field-grid-3" style="margin-bottom:10px">
+            <div class="field">
+              <label class="field-label">Номер частини</label>
+              <div class="ep-counter-wrap">
+                <button class="ep-btn" onclick="changeEp(-1)">−</button>
+                <div class="ep-num" id="epNum">2</div>
+                <button class="ep-btn" onclick="changeEp(1)">+</button>
+              </div>
+            </div>
+            <div class="field">
+              <label class="field-label">Конкретний випадок</label>
+              <input type="text" id="seriesCase" placeholder="задній хрест, edge flip..." oninput="updateSeriesPreview()">
+            </div>
+            <div class="field">
+              <label class="field-label">Складність</label>
+              <select id="seriesDiff" onchange="updateSeriesPreview()">
+                <option value="basic">Базові</option>
+                <option value="medium">Середні</option>
+                <option value="advanced">Складні</option>
+                <option value="all">Всі підряд</option>
+              </select>
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:10px">
+            <label class="field-label">Що розбирається (необов'язково)</label>
+            <textarea id="seriesContent" placeholder="Розбираємо 3 випадки заднього хреста, finger trick для швидкого переходу..." oninput="updateSeriesPreview()"></textarea>
+          </div>
+          <div class="series-preview" id="seriesPreview">
+            <div class="series-preview-label">Контекст для AI</div>
+            <div class="series-preview-text" id="seriesPreviewText"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KEYWORDS -->
+    <div class="section-label">Ключові слова</div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-inner">
+        <div class="tags-wrap" id="tagsWrap" onclick="document.getElementById('tagInput').focus()">
+          <input type="text" id="tagInput" placeholder="Введіть слово і натисніть Enter..." autocomplete="off">
+        </div>
+        <div class="hint-text">Enter або кома для додавання · backspace для видалення · макс. 20</div>
+        <div class="qtag-row" id="qtags">
+          <span class="qtag-lbl">Швидкий вибір:</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMAGE UPLOAD -->
+    <div class="section-label" style="margin-top:16px">Фото / скріншот ситуації <span style="font-size:.6rem;color:var(--tx3);font-weight:400;text-transform:none;letter-spacing:0">(необов'язково — для кращого розуміння AI)</span></div>
+    <div class="card" style="margin-bottom:16px" id="imageUploadCard">
+      <div class="card-inner">
+        <div class="image-drop-zone" id="imageDropZone" onclick="document.getElementById('imageFileInput').click()" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+          <div class="idz-inner" id="idzInner">
+            <div class="idz-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </div>
+            <div class="idz-text">Перетягни фото або натисни для вибору</div>
+            <div class="idz-sub">JPG, PNG, WEBP до 5 МБ · AI проаналізує ситуацію на фото</div>
+          </div>
+        </div>
+        <input type="file" id="imageFileInput" accept="image/*" style="display:none" onchange="onImageSelect(event)">
+        <div class="image-preview-wrap" id="imagePreviewWrap" style="display:none">
+          <div class="image-preview-inner">
+            <img id="imagePreview" src="" alt="Прев'ю">
+            <div class="image-preview-info">
+              <div class="image-preview-name" id="imagePreviewName"></div>
+              <div class="image-preview-size" id="imagePreviewSize"></div>
+              <div class="image-preview-desc">AI побачить це фото та краще зрозуміє ситуацію на кубі</div>
+            </div>
+            <button class="image-remove-btn" onclick="removeImage()" title="Видалити">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALYZE BUTTON -->
+    <div class="error-box" id="errorBox"></div>
+    <button class="analyze-btn yt" id="analyzeBtn" onclick="go()">
+      <span class="btn-inner">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+        <span id="btnText">Аналіз для YouTube</span>
+      </span>
+    </button>
+
+    <!-- LOADING -->
+    <div class="loading" id="loading" style="margin-top:16px">
+      <div class="spinner"></div>
+      <div class="loading-text">AI аналізує контент для спідкубінгу...</div>
+      <div class="steps">
+        <div class="step active" id="s1"><div class="step-dot">1</div><span>Аналіз ключових слів та теми</span></div>
+        <div class="step" id="s2"><div class="step-dot">2</div><span>Генерація назв з урахуванням частини серії</span></div>
+        <div class="step" id="s3"><div class="step-dot">3</div><span>Створення SEO-опису та хештегів</span></div>
+        <div class="step" id="s4"><div class="step-dot">4</div><span>Підбір тегів за популярністю</span></div>
+        <div class="step" id="s5"><div class="step-dot">5</div><span>Стратегія та рекомендації</span></div>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results" id="results" style="margin-top:16px">
+      <div class="results-header">
+        <div class="results-title">Результати аналізу <span id="platBadge"></span></div>
+        <div class="seo-score" id="seoScore"></div>
+      </div>
+
+      <div class="series-info-bar" id="seriesInfoBar">
+        <div class="series-ep-badge" id="resEpBadge"></div>
+        <div>
+          <div class="series-info-name" id="resSeriesName"></div>
+          <div class="series-info-case" id="resSeriesCase"></div>
+        </div>
+      </div>
+
+      <!-- VIDIQ-STYLE PANEL -->
+      <div class="vidiq-panel" id="vidiqPanel" style="display:none">
+        <div class="vidiq-header">
+          <div class="vidiq-title">SEO Аналіз — VidIQ стиль</div>
+          <div class="vidiq-overall">
+            <div class="vidiq-score-ring">
+              <svg width="38" height="38" viewBox="0 0 38 38">
+                <circle cx="19" cy="19" r="15" fill="none" stroke="var(--card3)" stroke-width="3"/>
+                <circle id="vidiqRingFill" cx="19" cy="19" r="15" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="94.2" stroke-dashoffset="94.2" stroke-linecap="round"/>
+              </svg>
+              <div class="vidiq-score-num" id="vidiqRingNum">0</div>
+            </div>
+            <div>
+              <div id="vidiqOverallLabel" style="font-size:.72rem;font-weight:700"></div>
+              <div id="vidiqOverallSub" style="font-size:.62rem;color:var(--tx3)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="vidiq-grid" id="vidiqGrid"></div>
+      </div>
+
+      <!-- KEYWORD SCORES (VidIQ style) -->
+      <div class="res-card" id="kwScoresCard" style="display:none">
+        <div class="res-card-head" onclick="toggleResCard('kwScoresBody','kwScoresChev')">
+          <div class="res-card-left">
+            <div class="res-icon ic-violet">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div>
+              <div class="res-card-lbl">Аналіз ключових слів</div>
+              <div class="res-card-name">Популярність · Конкуренція · Оцінка</div>
+            </div>
+          </div>
+          <svg class="chevron-icon open" id="kwScoresChev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="res-card-body open" id="kwScoresBody">
+          <div class="kw-scores" id="kwScoresContent"></div>
+        </div>
+      </div>
+
+      <div class="stat-grid" id="statGrid"></div>
+
+      <!-- TITLES -->
+      <div class="res-card">
+        <div class="res-card-head" onclick="toggleResCard('titlesBody','titlesChev')">
+          <div class="res-card-left">
+            <div class="res-icon ic-red">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            </div>
+            <div>
+              <div class="res-card-lbl">SEO Назви</div>
+              <div class="res-card-name" id="titlesLabel">6 варіантів</div>
+            </div>
+          </div>
+          <svg class="chevron-icon open" id="titlesChev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="res-card-body open" id="titlesBody">
+          <div class="variants" id="titlesContent"></div>
+        </div>
+      </div>
+
+      <!-- DESCRIPTION -->
+      <div class="res-card">
+        <div class="res-card-head" onclick="toggleResCard('descBody','descChev')">
+          <div class="res-card-left">
+            <div class="res-icon ic-violet">
+              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <div>
+              <div class="res-card-lbl">Опис</div>
+              <div class="res-card-name" id="descLabel">SEO опис</div>
+            </div>
+          </div>
+          <svg class="chevron-icon" id="descChev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="res-card-body" id="descBody">
+          <div class="desc-box" id="descContent"></div>
+          <div class="char-count" id="descCharCount"></div>
+          <div class="action-row">
+            <button class="copy-btn" id="copyDescBtn" onclick="cpDesc()">Копіювати опис</button>
+            <button class="copy-btn" onclick="toggleResCard('descBody','descChev')">Згорнути</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- HASHTAGS (TikTok) -->
+      <div class="res-card" id="hashCard" style="display:none">
+        <div class="res-card-head" onclick="toggleResCard('hashBody','hashChev')">
+          <div class="res-card-left">
+            <div class="res-icon ic-green">
+              <svg viewBox="0 0 24 24"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+            </div>
+            <div>
+              <div class="res-card-lbl">TikTok Хештеги</div>
+              <div class="res-card-name">Оптимальний набір</div>
+            </div>
+          </div>
+          <svg class="chevron-icon" id="hashChev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="res-card-body" id="hashBody">
+          <div class="tags-cloud" id="hashContent"></div>
+          <div class="action-row" style="margin-top:10px">
+            <button class="copy-btn" id="copyHashBtn" onclick="cpHash()">Копіювати хештеги</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAGS -->
+      <div class="res-card" id="tagsCard">
+        <div class="res-card-head" onclick="toggleResCard('tagsBody','tagsChev')">
+          <div class="res-card-left">
+            <div class="res-icon ic-cyan">
+              <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+            </div>
+            <div>
+              <div class="res-card-lbl">YouTube Теги</div>
+              <div class="res-card-name" id="tagsLabel">Теги</div>
+            </div>
+          </div>
+          <svg class="chevron-icon" id="tagsChev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="res-card-body" id="tagsBody">
+          <div class="tag-legend">
+            <span><span class="l-dot ld-h"></span>Висока</span>
+            <span><span class="l-dot ld-m"></span>Середня</span>
+            <span><span class="l-dot ld-l"></span>Нішева</span>
+          </div>
+          <div class="tags-cloud" id="tagsContent"></div>
+          <div class="action-row" style="margin-top:10px">
+            <button class="copy-btn" id="copyTagsBtn" onclick="cpTags()">Копіювати всі теги</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TIPS -->
+      <div class="res-card">
+        <div class="res-card-head" onclick="toggleResCard('tipsBody','tipsChev')">
+          <div class="res-card-left">
+            <div class="res-icon ic-amber">
+              <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </div>
+            <div>
+              <div class="res-card-lbl">Стратегія</div>
+              <div class="res-card-name" id="tipsLabel">Рекомендації</div>
+            </div>
+          </div>
+          <svg class="chevron-icon" id="tipsChev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="res-card-body" id="tipsBody">
+          <div class="tips-list" id="tipsContent"></div>
+        </div>
+      </div>
+
+      <!-- MUSIC -->
+      <div class="res-card" id="musicCard" style="display:none">
+        <div class="res-card-head" onclick="toggleResCard('musicBody','musicChev')">
+          <div class="res-card-left">
+            <div class="res-icon ic-green">
+              <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            </div>
+            <div>
+              <div class="res-card-lbl">Фонова музика</div>
+              <div class="res-card-name">Треки без копірайту</div>
+            </div>
+          </div>
+          <svg class="chevron-icon" id="musicChev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="res-card-body" id="musicBody">
+          <div class="music-mood-bar" id="musicMood">
+            <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            <span id="musicMoodText"></span>
+          </div>
+          <div class="music-grid" id="musicGrid"></div>
+          <div class="music-where" id="musicWhere" style="display:none">
+            <div class="music-where-label">Де шукати</div>
+            <div id="musicWhereText"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /results -->
+
+  </main>
+</div><!-- /app -->
+
+<div class="toast" id="toast">Скопійовано</div>
+
+<script>
+'use strict';
+let tags=[], plat='yt', epNum=2, seriesOpen=false;
+let uploadedImageBase64=null, uploadedImageType=null;
+
+/* ── THEME ── */
+function toggleTheme(){
+  const html=document.documentElement;
+  const isDark=html.getAttribute('data-theme')==='dark';
+  const next=isDark?'light':'dark';
+  html.setAttribute('data-theme',next);
+  localStorage.setItem('theme',next);
+  document.getElementById('themeIconDark').style.display=next==='dark'?'block':'none';
+  document.getElementById('themeIconLight').style.display=next==='light'?'block':'none';
+}
+(function(){
+  const saved=localStorage.getItem('theme')||'dark';
+  document.documentElement.setAttribute('data-theme',saved);
+  document.addEventListener('DOMContentLoaded',()=>{
+    document.getElementById('themeIconDark').style.display=saved==='dark'?'block':'none';
+    document.getElementById('themeIconLight').style.display=saved==='light'?'block':'none';
+  });
+})();
+
+/* ── IMAGE UPLOAD ── */
+function onDragOver(e){ e.preventDefault(); document.getElementById('imageDropZone').classList.add('drag-over'); }
+function onDragLeave(e){ document.getElementById('imageDropZone').classList.remove('drag-over'); }
+function onDrop(e){ e.preventDefault(); document.getElementById('imageDropZone').classList.remove('drag-over'); const f=e.dataTransfer.files[0]; if(f&&f.type.startsWith('image/')) processImage(f); }
+function onImageSelect(e){ const f=e.target.files[0]; if(f) processImage(f); }
+function processImage(file){
+  if(file.size>5*1024*1024){ alert('Файл занадто великий. Максимум 5 МБ.'); return; }
+  const reader=new FileReader();
+  reader.onload=function(e){
+    uploadedImageBase64=e.target.result.split(',')[1];
+    uploadedImageType=file.type||'image/jpeg';
+    document.getElementById('imagePreview').src=e.target.result;
+    document.getElementById('imagePreviewName').textContent=file.name;
+    document.getElementById('imagePreviewSize').textContent=formatBytes(file.size);
+    document.getElementById('imageDropZone').style.display='none';
+    document.getElementById('imagePreviewWrap').style.display='block';
+  };
+  reader.readAsDataURL(file);
+}
+function removeImage(){
+  uploadedImageBase64=null; uploadedImageType=null;
+  document.getElementById('imageFileInput').value='';
+  document.getElementById('imageDropZone').style.display='block';
+  document.getElementById('imagePreviewWrap').style.display='none';
+}
+function formatBytes(b){ if(b<1024) return b+'B'; if(b<1048576) return (b/1024).toFixed(1)+'KB'; return (b/1048576).toFixed(1)+'MB'; }
+
+/* ── TOTAL PARTS CUSTOM ── */
+function onTotalPartsChange(){
+  const sel=document.getElementById('totalParts');
+  const inp=document.getElementById('totalPartsCustom');
+  if(sel.value==='custom'){ inp.style.display='block'; inp.focus(); }
+  else { inp.style.display='none'; }
+  updateSeriesPreview();
+}
+function getTotalParts(){
+  const sel=document.getElementById('totalParts');
+  if(sel.value==='custom'){
+    const v=document.getElementById('totalPartsCustom').value.trim();
+    return v||'?';
+  }
+  return sel.value;
+}
+
+const quickTagsData={
+  yt:['F2L','OLL','PLL','CFOP','Cross','Look-Ahead','Finger Tricks','Sub-10','Sub-15','Sub-20','3x3','2x2','4x4','Megaminx','Pyraminx','Roux','ZZ','Blindfold','FMC','Edge Control'],
+  yts:['F2L tips','OLL skip','PLL skip','CFOP','Sub-20','2x2','Pyraminx','one-look OLL','ZBLL','T-perm','Sune','cross first'],
+  tkt:['speedcubing','CFOP','F2L','rubikscube','cubing','learnontiktok','solve','cross','algorithm','3x3','PLL skip','Кубік Рубіка']
+};
+const platCfg={
+  yt: {name:'YouTube',    cls:'yt',  titleMax:100, descMax:5000, tagsMax:500, tagsCount:30, descWords:'350-500 слів'},
+  yts:{name:'YT Shorts',  cls:'yts', titleMax:70,  descMax:800,  tagsMax:500, tagsCount:20, descWords:'100-180 слів'},
+  tkt:{name:'TikTok',     cls:'tkt', titleMax:2200,descMax:2200, tagsMax:null,tagsCount:5,  descWords:'80-150 слів'}
+};
+
+/* PLATFORM */
+function setPlat(p){
+  plat=p;
+  const cfg=platCfg[p];
+  ['yt','yts','tkt'].forEach(x=>{
+    const t=document.getElementById('tab-'+x);
+    t.className='ptab'+(x===p?' active-'+x:'');
+  });
+  const pill=document.getElementById('platPill');
+  pill.className='plat-pill '+p;
+  document.getElementById('platDot').className='plat-dot '+p;
+  const lim=p==='tkt'?'Caption до 2200 · хештеги замість тегів':
+    `Назва до ${cfg.titleMax} символів · опис до ${cfg.descMax}`;
+  document.getElementById('platPillText').textContent=`${cfg.name} — ${lim}`;
+  const btn=document.getElementById('analyzeBtn');
+  btn.className='analyze-btn '+p;
+  document.getElementById('btnText').textContent=`Аналіз для ${cfg.name}`;
+  if(p!=='yt') document.getElementById('tt').classList.remove('on');
+  renderQuickTags();
+}
+
+function renderQuickTags(){
+  const c=document.getElementById('qtags');
+  c.innerHTML='<span class="qtag-lbl">Швидкий вибір:</span>';
+  (quickTagsData[plat]||quickTagsData.yt).forEach(t=>{
+    const el=document.createElement('span');
+    el.className='qtag'; el.textContent=t;
+    el.onclick=()=>addTag(t);
+    c.appendChild(el);
+  });
+}
+renderQuickTags();
+
+/* SERIES */
+function toggleSeries(){
+  seriesOpen=!seriesOpen;
+  document.getElementById('seriesBody').classList.toggle('open',seriesOpen);
+  document.getElementById('seriesChevron').classList.toggle('open',seriesOpen);
+  document.getElementById('seriesSubtitle').textContent=
+    seriesOpen?'Увімкнено — вказуй номер і тему частини':'Вимкнено — для одиночних відео';
+  if(seriesOpen) updateSeriesPreview();
+}
+function changeEp(d){
+  epNum=Math.max(1,epNum+d);
+  document.getElementById('epNum').textContent=epNum;
+  updateSeriesPreview();
+}
+function updateSeriesPreview(){
+  const name=document.getElementById('seriesName').value.trim();
+  const total=getTotalParts();
+  const cas=document.getElementById('seriesCase').value.trim();
+  const diff=document.getElementById('seriesDiff');
+  const diffTxt=diff.options[diff.selectedIndex].text;
+  const cont=document.getElementById('seriesContent').value.trim();
+  const prev=document.getElementById('seriesPreview');
+  if(!name){prev.style.display='none';return;}
+  let txt=`Серія: "${name}" · Частина ${epNum}${total!=='?'?' з '+total:''}\n`;
+  if(cas) txt+=`Випадок: ${cas}\n`;
+  txt+=`Складність: ${diffTxt}`;
+  if(cont) txt+=`\nЩо в відео: ${cont}`;
+  document.getElementById('seriesPreviewText').textContent=txt;
+  prev.style.display='block';
+}
+
+/* TAGS */
+const tagInput=document.getElementById('tagInput');
+document.getElementById('tagsWrap').addEventListener('click',e=>{
+  if(e.target===document.getElementById('tagsWrap')) tagInput.focus();
+});
+tagInput.addEventListener('keydown',e=>{
+  if((e.key==='Enter'||e.key===',')&&tagInput.value.trim()){
+    e.preventDefault(); addTag(tagInput.value.trim().replace(/,/g,'')); tagInput.value='';
+  } else if(e.key==='Backspace'&&!tagInput.value&&tags.length) rmTag(tags.length-1);
+});
+function addTag(v){
+  if(!v||tags.map(t=>t.toLowerCase()).includes(v.toLowerCase())||tags.length>=20) return;
+  tags.push(v); renderTags();
+}
+function rmTag(i){ tags.splice(i,1); renderTags(); }
+function renderTags(){
+  document.getElementById('tagsWrap').querySelectorAll('.chip').forEach(c=>c.remove());
+  tags.forEach((t,i)=>{
+    const c=document.createElement('div'); c.className='chip';
+    c.innerHTML=`${eH(t)}<button class="chip-del" onclick="rmTag(${i})"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>`;
+    document.getElementById('tagsWrap').insertBefore(c,tagInput);
+  });
+}
+
+/* UI HELPERS */
+function toggleAdv(){ document.getElementById('advToggle').classList.toggle('open'); document.getElementById('advPanel').classList.toggle('open'); }
+function toggleResCard(bodyId,chevId){ document.getElementById(bodyId).classList.toggle('open'); document.getElementById(chevId).classList.toggle('open'); }
+function showToast(msg='Скопійовано'){
+  const t=document.getElementById('toast'); t.textContent=msg;
+  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800);
+}
+function cpText(txt,btn){
+  navigator.clipboard.writeText(txt).then(()=>{
+    if(btn){const o=btn.textContent;btn.textContent='Скопійовано';btn.classList.add('copied');setTimeout(()=>{btn.textContent=o;btn.classList.remove('copied');},1800);}
+    showToast();
+  }).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;opacity:0';
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast();
+  });
+}
+function cpDesc(){ cpText(document.getElementById('descContent').innerText, document.getElementById('copyDescBtn')); }
+function cpTags(){ const t=Array.from(document.querySelectorAll('#tagsContent .tag-pill')).map(el=>el.getAttribute('data-tag')).join(', '); cpText(t,document.getElementById('copyTagsBtn')); }
+function cpHash(){ const t=Array.from(document.querySelectorAll('#hashContent .tag-pill')).map(el=>el.getAttribute('data-tag')).join(' '); cpText(t,document.getElementById('copyHashBtn')); }
+
+/* STEPS ANIMATION */
+let stepTimer, stepCur=1;
+function animateSteps(){
+  stepCur=1;
+  for(let i=1;i<=5;i++){const el=document.getElementById('s'+i);el.className='step';el.querySelector('.step-dot').textContent=i;}
+  document.getElementById('s1').className='step active';
+  stepTimer=setInterval(()=>{
+    if(stepCur<=5){const el=document.getElementById('s'+stepCur);el.className='step done';el.querySelector('.step-dot').textContent='✓';}
+    stepCur++;
+    if(stepCur<=5) document.getElementById('s'+stepCur).className='step active';
+    else clearInterval(stepTimer);
+  },1700);
+}
+
+/* MAIN ANALYSIS */
+async function go(){
+  const apiKey=document.getElementById('apiKey').value.trim();
+  if(!apiKey){showErr('Введіть API ключ Anthropic (sk-ant-api03-...)');return;}
+  if(!apiKey.startsWith('sk-ant')){showErr('Невірний формат ключа. Починається з sk-ant-...');return;}
+  if(!tags.length){showErr('Додайте хоча б одне ключове слово.');return;}
+  hideErr();
+  document.getElementById('loading').classList.add('show');
+  document.getElementById('results').classList.remove('show');
+  document.getElementById('analyzeBtn').disabled=true;
+  animateSteps();
+
+  const cfg=platCfg[plat];
+  const vtype=document.getElementById('vtype').value;
+  const lang=document.getElementById('lang').value;
+  const level=document.getElementById('level').value;
+  const tone=document.getElementById('tone').value;
+  const goal=document.getElementById('goal').value;
+  const ht=document.getElementById('ht').classList.contains('on');
+  const tt2=document.getElementById('tt').classList.contains('on');
+  const cta=document.getElementById('ct').classList.contains('on');
+  const wMusic=document.getElementById('mt').classList.contains('on');
+  const sName=document.getElementById('seriesName').value.trim();
+  const sTotal=getTotalParts();
+  const sCase=document.getElementById('seriesCase').value.trim();
+  const sDiff=document.getElementById('seriesDiff');
+  const sDiffTxt=sDiff.options[sDiff.selectedIndex].text;
+  const sCont=document.getElementById('seriesContent').value.trim();
+
+  let seriesCtx='';
+  if(seriesOpen&&sName){
+    seriesCtx=`\n═══ СЕРІЯ ВІДЕО ═══\nНазва серії: "${sName}"\nЦя частина: ${epNum}${sTotal!=='?'?' з '+sTotal:''}\n${sCase?'Тема частини: '+sCase+'\n':''}Складність: ${sDiffTxt}\n${sCont?'Зміст: '+sCont+'\n':''}\nВИМОГИ ДО НАЗВ СЕРІЇ:\n- Назва ОБОВ'ЯЗКОВО містить "Частина ${epNum}" або "#${epNum}" або "Ч.${epNum}"\n- Стиль схожий на попередні частини, але унікальний акцент\n- В описі: згадати серію, порадити попередні частини\n- Теги: загальні для серії + специфічні для цієї частини\n═══════════════════`;
+  }
+
+  const platI={
+    yt:`YouTube: назви до ${cfg.titleMax} символів (60-70 ідеально), опис ${cfg.descWords}, перші 150 символів — найважливіші.${tt2?' Додай таймкоди: 00:00 Назва.':''} ${cfg.tagsCount} YouTube tags.`,
+    yts:`YouTube Shorts: назва МАКСИМУМ ${cfg.titleMax} символів, обов'язково #Shorts. Перший рядок опису до 100 символів = preview. Опис ${cfg.descWords}. ${cfg.tagsCount} тегів.`,
+    tkt:`TikTok ВАЖЛИВО: в TikTok є ОДНЕ поле — "caption" (до 2200 символів). Це одночасно і назва і опис. Перші 1-2 рядки (до 100 символів) — це те що видно без розгортання, тому вони мають бути чіпляючими. Потім основний текст. В КІНЦІ caption обов'язково максимум 5 хештегів (не більше! TikTok не індексує більше 5). Повний caption ${cfg.descWords}. Теги НЕ ПОТРІБНІ — тільки хештеги в caption.`
+  };
+
+  const musicInstruction=wMusic?`,
+  "music": {
+    "mood": "одне речення — яка атмосфера музики для цього відео",
+    "bpm": "рекомендований BPM наприклад 120-140",
+    "tracks": [
+      {"name":"назва треку або плейлиста","artist":"виконавець або канал","source":"YouTube Audio Library|Epidemic Sound|SoundCloud|StreamBeats","genre":"жанр","energy":"low|medium|high","tags":["тег1","тег2"],"searchQuery":"пошуковий запит для знаходження"},
+      ... мінімум 6 треків
+    ],
+    "where": "де шукати безкоштовну музику для спідкубінг відео — конкретні поради"
+  }`:'' ;
+
+  const prompt=`Ти — провідний SEO-спеціаліст для SPEEDCUBING каналу.
+${seriesCtx}
+ПЛАТФОРМА: ${cfg.name}
+${platI[plat]}
+
+КЛЮЧОВІ СЛОВА: ${tags.join(', ')}
+ТИП ВІДЕО: ${vtype}
+МОВА: ${lang}
+АУДИТОРІЯ: ${level}
+ТОН: ${tone}
+ЦІЛЬ: ${goal}
+ХЕШТЕГИ: ${ht?'так':'ні'}
+CTA: ${cta?'так':'ні'}
+
+SPEEDCUBING: F2L, OLL, PLL, CFOP, Cross, Look-Ahead, Finger Tricks, sub-10/15/20, T-perm, Y-perm, Sune, ZBLL, OLL skip, PLL skip, BLD, FMC, 3x3/2x2/4x4/Pyraminx/Megaminx, WCA.
+
+Відповідай ТІЛЬКИ чистим JSON без markdown:
+{
+  "seoScore": число 0-100,
+  "seriesContext": ${seriesOpen&&sName?`{"episodeNum":${epNum},"seriesName":"${sName.replace(/"/g,"'")}","totalParts":"${sTotal}","caseTopic":"${sCase.replace(/"/g,"'")}"}`:'null'},
+  "analytics": {"searchVolume":"рядок","competition":"рядок","ctrPotential":"рядок","rankingChance":"рядок"},
+  "titles": [
+    {"text":"","type":"best","reason":"","charCount":0},
+    {"text":"","type":"normal","reason":"","charCount":0},
+    {"text":"","type":"normal","reason":"","charCount":0},
+    {"text":"","type":"normal","reason":"","charCount":0},
+    {"text":"","type":"normal","reason":"","charCount":0},
+    {"text":"","type":"normal","reason":"","charCount":0}
+  ],
+  "description": "повний опис МОВОЮ ${lang}${tt2&&plat==='yt'?', з таймкодами':''}${cta?', з CTA':''}${seriesOpen&&sName?', з посиланням на плейлист і згадкою попередніх частин':''}",
+  "hashtags": ${plat==='tkt'?'["#хеш1","#хеш2","#хеш3","#хеш4","#хеш5"] — РІВНО 5 хештегів, не більше! В caption вже включені, але повертай окремим масивом теж':'null'},
+  "tags": ${plat!=='tkt'?`[мінімум ${cfg.tagsCount} об'єктів {"tag":"","volume":"high|med|low","reason":""}]`:'null'},
+  "tips": [мінімум 6 {"priority":"critical|important|nice","title":"","text":""}],
+  "vidiq": {
+    "overallScore": число 0-100,
+    "searchVolScore": число 0-100,
+    "competitionScore": число 0-100,
+    "ctrScore": число 0-100,
+    "rankChanceScore": число 0-100,
+    "searchVolLabel": "рядок напр Дуже Високий",
+    "competitionLabel": "рядок напр Висока",
+    "ctrLabel": "рядок напр 8-12%",
+    "rankChanceLabel": "рядок напр Хороший",
+    "overallLabel": "Відмінно|Добре|Задовільно|Слабо",
+    "overallSub": "коротка порада що покращити"
+  },
+  "kwScores": [
+    {"kw":"ключове слово","volScore":число 0-100,"volLabel":"рядок","competition":"easy|medium|hard","compLabel":"рядок","score":число 0-100},
+    ... для кожного ключового слова
+  ]${musicInstruction}
+}`;
+
+  try{
+    // Build message content - add image if uploaded
+    let msgContent;
+    if(uploadedImageBase64){
+      msgContent=[
+        {type:'image',source:{type:'base64',media_type:uploadedImageType,data:uploadedImageBase64}},
+        {type:'text',text:prompt+"\n\nНа зображенні вище показана ситуація з кубом. Врахуй це при генерації назв, описів та порад."}
+      ];
+    } else {
+      msgContent=prompt;
+    }
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:5500,messages:[{role:'user',content:msgContent}]})
+    });
+    if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error?.message||`HTTP ${r.status}`);}
+    const d=await r.json();
+    const raw=d.content.map(b=>b.text||'').join('');
+    clearInterval(stepTimer);
+    for(let i=1;i<=5;i++){const el=document.getElementById('s'+i);el.className='step done';el.querySelector('.step-dot').textContent='✓';}
+    await new Promise(res=>setTimeout(res,350));
+    let parsed;
+    try{ parsed=JSON.parse(raw.replace(/```json|```/g,'').trim()); }
+    catch{ const m=raw.match(/\{[\s\S]*\}/); if(m) parsed=JSON.parse(m[0]); else throw new Error('Не вдалося розібрати відповідь. Спробуйте ще раз.'); }
+    document.getElementById('loading').classList.remove('show');
+    renderResults(parsed,cfg);
+  } catch(e){
+    clearInterval(stepTimer);
+    document.getElementById('loading').classList.remove('show');
+    let msg=e.message;
+    if(msg.includes('401')||msg.includes('authentication')) msg='Невірний API ключ. Перевірте на console.anthropic.com';
+    else if(msg.includes('429')) msg='Ліміт запитів вичерпано. Зачекайте хвилину.';
+    else if(msg.includes('CORS')||msg.includes('fetch')) msg='Відкрийте файл через сервер: cd до папки з файлом → npx serve .';
+    showErr(msg);
+  } finally{ document.getElementById('analyzeBtn').disabled=false; }
+}
+
+function renderResults(d, cfg){
+  /* SCORE */
+  const sc=d.seoScore||0;
+  const scoreEl=document.getElementById('seoScore');
+  scoreEl.textContent=`SEO ${sc}/100`;
+  scoreEl.className='seo-score '+(sc>=80?'good':sc>=60?'medium':'poor');
+
+  /* PLATFORM BADGE */
+  const pClr={yt:'rgba(230,57,80,.12)|rgba(230,57,80,.3)|#ff8899',yts:'rgba(255,100,130,.1)|rgba(255,100,130,.3)|#ffaabb',tkt:'rgba(34,211,238,.08)|rgba(34,211,238,.25)|#22d3ee'};
+  const [bg,br,clr]=(pClr[plat]||pClr.yt).split('|');
+  document.getElementById('platBadge').innerHTML=`<span style="display:inline-flex;align-items:center;font-size:.62rem;font-weight:700;padding:2px 9px;border-radius:100px;text-transform:uppercase;letter-spacing:.07em;background:${bg};border:1px solid ${br};color:${clr};margin-left:8px;vertical-align:middle">${cfg.name}</span>`;
+
+  /* SERIES BAR */
+  const sib=document.getElementById('seriesInfoBar');
+  if(d.seriesContext){
+    const sc2=d.seriesContext;
+    const totStr=sc2.totalParts&&sc2.totalParts!=='?'?' / '+sc2.totalParts:'';
+    document.getElementById('resEpBadge').textContent=`Ч.${sc2.episodeNum}${totStr}`;
+    document.getElementById('resSeriesName').textContent=`Серія: ${sc2.seriesName}`;
+    document.getElementById('resSeriesCase').textContent=sc2.caseTopic||'';
+    sib.classList.add('show');
+  } else { sib.classList.remove('show'); }
+
+  /* STATS */
+  const a=d.analytics||{};
+  const stats=[
+    {v:a.searchVolume||'—',l:'Попит',c:'#7c5cfc'},
+    {v:a.ctrPotential||'—',l:'CTR',c:'#22d3ee'},
+    {v:a.competition||'—',l:'Конкуренція',c:'#e63950'},
+    {v:sc+'/100',l:'SEO Score',c:'#10b981'},
+    {v:a.rankingChance||'—',l:'Ранжування',c:'#f59e0b'},
+    {v:((d.tags||d.hashtags||[]).length)+'шт',l:plat==='tkt'?'Хештегів':'Тегів',c:'#b4a0ff'}
+  ];
+  document.getElementById('statGrid').innerHTML=stats.map(s=>`<div class="stat-card"><div class="stat-val" style="color:${s.c}">${eH(String(s.v))}</div><div class="stat-lbl">${s.l}</div></div>`).join('');
+
+  /* TITLES */
+  document.getElementById('titlesLabel').textContent=`${(d.titles||[]).length} варіантів для ${cfg.name}`;
+  document.getElementById('titlesContent').innerHTML=(d.titles||[]).map((t,i)=>{
+    const over=t.charCount>cfg.titleMax, warn=t.charCount>(cfg.titleMax*.9);
+    const chCls=over?'over':warn?'warn':'ok';
+    const chTxt=t.charCount?`${t.charCount}/${cfg.titleMax} символів${over?' — занадто довга':''}`:'' ;
+    return `<div class="variant ${t.type==='best'?'best':''}" onclick="cpText('${eA(t.text)}')">
+      <div class="variant-num">${i+1}</div>
+      <div class="variant-body">
+        <div class="variant-text">${eH(t.text)}</div>
+        ${t.reason?`<div class="variant-reason">${eH(t.reason)}</div>`:''}
+        ${chTxt?`<div class="variant-chars ${chCls}">${chTxt}</div>`:''}
+      </div>
+      ${t.type==='best'?'<div class="best-badge">Найкраща</div>':''}
+      <button class="copy-btn" onclick="event.stopPropagation();cpText('${eA(t.text)}',this)">Копіювати</button>
+    </div>`;
+  }).join('');
+
+  /* DESC */
+  const descTxt=d.description||'';
+  document.getElementById('descContent').textContent=descTxt;
+  const dl=descTxt.length;
+  const dcEl=document.getElementById('descCharCount');
+  dcEl.textContent=`${dl} / ${cfg.descMax} символів`;
+  dcEl.className='char-count'+(dl>cfg.descMax?' over':dl>cfg.descMax*.85?' warn':'');
+  document.getElementById('descLabel').textContent=plat==='tkt'?'TikTok Caption':plat==='yts'?'Shorts Опис':'YouTube Опис';
+
+  /* HASHTAGS */
+  const hCard=document.getElementById('hashCard');
+  if(plat==='tkt'&&d.hashtags?.length){
+    hCard.style.display='block';
+    document.getElementById('hashContent').innerHTML=d.hashtags.map(h=>`<span class="tag-pill high" data-tag="${eA(h)}" onclick="cpText('${eA(h)}')">${eH(h)}</span>`).join('');
+  } else hCard.style.display='none';
+
+  /* TAGS */
+  const tCard=document.getElementById('tagsCard');
+  if(plat==='tkt'){ tCard.style.display='none'; }
+  else {
+    tCard.style.display='block';
+    document.getElementById('tagsLabel').textContent=`${cfg.name} теги — ${(d.tags||[]).length} шт`;
+    document.getElementById('tagsContent').innerHTML=(d.tags||[]).map(t=>`<span class="tag-pill ${t.volume==='high'?'high':t.volume==='low'?'low':'med'}" data-tag="${eA(t.tag)}" title="${eA(t.reason||'')}" onclick="cpText('${eA(t.tag)}')">${eH(t.tag)}<span class="tag-vol">${t.volume==='high'?'H':t.volume==='low'?'L':'M'}</span></span>`).join('');
+  }
+
+  /* TIPS */
+  document.getElementById('tipsLabel').textContent=`Рекомендації для ${cfg.name}`;
+  const tipIcons={
+    critical:`<svg viewBox="0 0 24 24"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+    important:`<svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+    nice:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`
+  };
+  document.getElementById('tipsContent').innerHTML=(d.tips||[]).map(t=>`<div class="tip ${t.priority||'nice'}"><div class="tip-icon">${tipIcons[t.priority]||tipIcons.nice}</div><div class="tip-body"><strong>${eH(t.title||'')}</strong>${eH(t.text||'')}</div></div>`).join('');
+
+  /* MUSIC */
+  const mCard=document.getElementById('musicCard');
+  if(d.music?.tracks?.length){
+    mCard.style.display='block';
+    const m=d.music;
+    document.getElementById('musicMoodText').textContent=`${m.mood||''}${m.bpm?' · '+m.bpm+' BPM':''}`;
+    const srcCls={'YouTube Audio Library':'ms-yt','Epidemic Sound':'ms-ep','SoundCloud':'ms-sc','StreamBeats':'ms-sb'};
+    const eLbl={low:'Спокійна',medium:'Середня',high:'Енергійна'};
+    document.getElementById('musicGrid').innerHTML=(m.tracks||[]).map(t=>`<div class="music-track" onclick="cpText('${eA(t.searchQuery||t.name)}')">
+      <div class="mt-top"><div class="mt-name">${eH(t.name)}</div><span class="mt-src ${srcCls[t.source]||'ms-sb'}">${eH(t.source||'')}</span></div>
+      <div class="mt-meta">${eH(t.artist||'')} · ${eH(t.genre||'')} · ${eLbl[t.energy]||'Середня'}</div>
+      ${t.tags?.length?`<div class="mt-tags">${t.tags.map(tg=>`<span class="mt-tag">${eH(tg)}</span>`).join('')}</div>`:''}
+      ${t.searchQuery?`<div class="mt-query">Пошук: ${eH(t.searchQuery)}</div>`:''}
+    </div>`).join('');
+    if(m.where){
+      document.getElementById('musicWhereText').textContent=m.where;
+      document.getElementById('musicWhere').style.display='block';
+    }
+  } else mCard.style.display='none';
+
+  document.getElementById('results').classList.add('show');
+  document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function eH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function eA(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;').replace(/\n/g,' ');}
+function showErr(m){const b=document.getElementById('errorBox');b.textContent=m;b.classList.add('show');}
+function hideErr(){document.getElementById('errorBox').classList.remove('show');}
+
+/* ══════════════════════════════════════════════
+   LOCALSTORAGE — SAVE / RESTORE ALL FORM STATE
+   ══════════════════════════════════════════════ */
+const SAVE_KEY='seo_pro_state';
+const HISTORY_KEY='seo_pro_history';
+
+function saveState(){
+  try{
+    const state={
+      apiKey: document.getElementById('apiKey').value,
+      plat,
+      tags,
+      vtype: document.getElementById('vtype').value,
+      lang:  document.getElementById('lang').value,
+      level: document.getElementById('level').value,
+      tone:  document.getElementById('tone').value,
+      goal:  document.getElementById('goal').value,
+      ht:    document.getElementById('ht').classList.contains('on'),
+      tt:    document.getElementById('tt').classList.contains('on'),
+      ct:    document.getElementById('ct').classList.contains('on'),
+      mt:    document.getElementById('mt').classList.contains('on'),
+      seriesOpen,
+      epNum,
+      seriesName:    document.getElementById('seriesName').value,
+      totalParts:    document.getElementById('totalParts').value,
+      totalPartsCustom: document.getElementById('totalPartsCustom').value,
+      seriesCase:    document.getElementById('seriesCase').value,
+      seriesDiff:    document.getElementById('seriesDiff').value,
+      seriesContent: document.getElementById('seriesContent').value,
+    };
+    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+  }catch(e){}
+}
+
+function restoreState(){
+  try{
+    const raw=localStorage.getItem(SAVE_KEY);
+    if(!raw) return;
+    const s=JSON.parse(raw);
+    if(s.apiKey)  document.getElementById('apiKey').value=s.apiKey;
+    if(s.plat)    setPlat(s.plat);
+    if(s.tags)    { tags=s.tags; renderTags(); }
+    if(s.vtype)   document.getElementById('vtype').value=s.vtype;
+    if(s.lang)    document.getElementById('lang').value=s.lang;
+    if(s.level)   document.getElementById('level').value=s.level;
+    if(s.tone)    document.getElementById('tone').value=s.tone;
+    if(s.goal)    document.getElementById('goal').value=s.goal;
+    document.getElementById('ht').classList.toggle('on',!!s.ht);
+    document.getElementById('tt').classList.toggle('on',!!s.tt);
+    document.getElementById('ct').classList.toggle('on',!!s.ct);
+    document.getElementById('mt').classList.toggle('on',!!s.mt);
+    if(s.seriesOpen){ seriesOpen=false; toggleSeries(); }
+    if(s.epNum)   { epNum=s.epNum; document.getElementById('epNum').textContent=epNum; }
+    if(s.seriesName)    document.getElementById('seriesName').value=s.seriesName;
+    if(s.totalParts)    document.getElementById('totalParts').value=s.totalParts;
+    if(s.totalPartsCustom){ document.getElementById('totalPartsCustom').value=s.totalPartsCustom; if(s.totalParts==='custom') document.getElementById('totalPartsCustom').style.display='block'; }
+    if(s.seriesCase)    document.getElementById('seriesCase').value=s.seriesCase;
+    if(s.seriesDiff)    document.getElementById('seriesDiff').value=s.seriesDiff;
+    if(s.seriesContent) document.getElementById('seriesContent').value=s.seriesContent;
+    updateSeriesPreview();
+  }catch(e){}
+}
+
+// Auto-save on any input change
+document.addEventListener('change', saveState);
+document.addEventListener('input', saveState);
+
+/* ══════════════════════════════════════════════
+   HISTORY — ЗБЕРІГАННЯ ПОПЕРЕДНІХ АНАЛІЗІВ
+   ══════════════════════════════════════════════ */
+let history=[];
+
+function loadHistory(){
+  try{ history=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]'); }catch(e){ history=[]; }
+  renderHistory();
+}
+
+function saveToHistory(result, cfg, kwList, seriesInfo){
+  const bestTitle=(result.titles||[]).find(t=>t.type==='best')||result.titles?.[0];
+  const entry={
+    id: Date.now(),
+    date: new Date().toLocaleDateString('uk',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}),
+    plat,
+    platName: cfg.name,
+    title: bestTitle?.text||kwList.join(', '),
+    keywords: kwList.slice(0,4),
+    seoScore: result.seoScore||0,
+    seriesName: seriesInfo?.name||null,
+    seriesEp:   seriesInfo?.ep||null,
+    vtype: document.getElementById('vtype').value,
+    lang:  document.getElementById('lang').value,
+    // Store full result for restore
+    result,
+    cfgName: cfg.name,
+  };
+  history.unshift(entry);
+  if(history.length>20) history=history.slice(0,20);
+  try{ localStorage.setItem(HISTORY_KEY, JSON.stringify(history)); }catch(e){}
+  renderHistory();
+}
+
+function renderHistory(){
+  const container=document.getElementById('historyList');
+  const empty=document.getElementById('histEmpty');
+  const clearBtn=document.getElementById('clearHistBtn');
+  if(!history.length){ empty.style.display='block'; clearBtn.style.display='none'; return; }
+  empty.style.display='none'; clearBtn.style.display='block';
+  container.innerHTML=history.map((h,i)=>`
+    <div class="hist-item" onclick="restoreFromHistory(${i})">
+      <div class="hist-item-top">
+        <div class="hist-item-title">${eH(h.title.substring(0,50)+(h.title.length>50?'...':''))}</div>
+        <span class="hist-item-plat hp-${h.plat}">${eH(h.platName)}</span>
+        <button class="hist-item-del" onclick="event.stopPropagation();deleteHistory(${i})" title="Видалити">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="hist-item-meta">${eH(h.date)} · SEO ${h.seoScore}/100 · ${eH(h.keywords.join(', '))}</div>
+      ${h.seriesName?`<div class="hist-item-series">Серія: ${eH(h.seriesName)} · Ч.${h.seriesEp}</div>`:''}
+    </div>
+  `).join('');
+}
+
+function restoreFromHistory(idx){
+  const h=history[idx];
+  if(!h||!h.result) return;
+  const cfg=platCfg[h.plat]||platCfg.yt;
+  setPlat(h.plat);
+  tags=h.keywords; renderTags();
+  renderResults(h.result,cfg);
+  showToast('Відновлено з історії');
+  document.getElementById('results').scrollIntoView({behavior:'smooth'});
+}
+
+function deleteHistory(idx){
+  history.splice(idx,1);
+  try{ localStorage.setItem(HISTORY_KEY, JSON.stringify(history)); }catch(e){}
+  renderHistory();
+}
+
+function clearHistory(){
+  if(!confirm('Очистити всю історію?')) return;
+  history=[];
+  try{ localStorage.removeItem(HISTORY_KEY); }catch(e){}
+  renderHistory();
+}
+
+function getHistoryContext(){
+  if(!history.length) return 'Це перший аналіз — попередніх даних немає.';
+  const recent=history.slice(0,5);
+  return 'Попередні відео на каналі (для контексту та уникнення повторів):' +
+    recent.map((h,i)=>`\n${i+1}. [${h.platName}] "${h.title.substring(0,60)}" — теги: ${h.keywords.join(', ')}${h.seriesName?' | Серія: '+h.seriesName+' Ч.'+h.seriesEp:''}`).join('');
+}
+
+/* ══════════════════════════════════════════════
+   VIDIQ-STYLE PANEL RENDER
+   ══════════════════════════════════════════════ */
+function renderVidiqPanel(d){
+  const v=d.vidiq;
+  if(!v){ document.getElementById('vidiqPanel').style.display='none'; return; }
+  document.getElementById('vidiqPanel').style.display='block';
+
+  // Ring animation
+  const score=v.overallScore||0;
+  const circumference=94.2;
+  const offset=circumference-(circumference*score/100);
+  const ringColor=score>=75?'#10b981':score>=50?'#f59e0b':'#e63950';
+  setTimeout(()=>{
+    const ring=document.getElementById('vidiqRingFill');
+    ring.style.stroke=ringColor;
+    ring.style.strokeDashoffset=offset;
+  },100);
+  document.getElementById('vidiqRingNum').textContent=score;
+  document.getElementById('vidiqRingNum').style.color=ringColor;
+
+  const lbl=v.overallLabel||'';
+  document.getElementById('vidiqOverallLabel').textContent=lbl;
+  document.getElementById('vidiqOverallLabel').style.color=ringColor;
+  document.getElementById('vidiqOverallSub').textContent=v.overallSub||'';
+
+  // Metrics grid
+  const metrics=[
+    {label:'Пошуковий попит', score:v.searchVolScore||0, text:v.searchVolLabel||'', color:'#7c5cfc'},
+    {label:'Конкуренція',     score:100-(v.competitionScore||0), text:v.competitionLabel||'', color:'#e63950', invertBar:true},
+    {label:'Потенціал CTR',   score:v.ctrScore||0, text:v.ctrLabel||'', color:'#0ea5e9'},
+    {label:'Шанс ранжування', score:v.rankChanceScore||0, text:v.rankChanceLabel||'', color:'#10b981'},
+  ];
+  document.getElementById('vidiqGrid').innerHTML=metrics.map(m=>{
+    const barW=Math.min(100,Math.max(0,m.score));
+    return `<div class="vidiq-metric">
+      <div class="vm-label">${eH(m.label)}</div>
+      <div class="vm-bar-wrap">
+        <div class="vm-bar-track"><div class="vm-bar-fill" style="width:${barW}%;background:${m.color}"></div></div>
+        <div class="vm-val" style="color:${m.color}">${m.score}</div>
+      </div>
+      <div class="vm-sub">${eH(m.text)}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderKwScores(d){
+  const kws=d.kwScores;
+  if(!kws||!kws.length){ document.getElementById('kwScoresCard').style.display='none'; return; }
+  document.getElementById('kwScoresCard').style.display='block';
+  const compColor={easy:'var(--green)',medium:'var(--amber)',hard:'var(--red)'};
+  document.getElementById('kwScoresContent').innerHTML=kws.map(k=>`
+    <div class="kw-row">
+      <div class="kw-text">${eH(k.kw)}</div>
+      <div class="kw-vol-bar"><div class="kw-vol-fill" style="width:${Math.min(100,k.volScore||0)}%;background:var(--violet)"></div></div>
+      <span class="kw-comp ${k.competition||'medium'}">${eH(k.compLabel||k.competition||'')}</span>
+      <div class="kw-score" style="color:${compColor[k.competition]||'var(--amber)'}">${k.score||0}</div>
+    </div>
+  `).join('');
+}
+
+/* ══════════════════════════════════════════════
+   PATCH renderResults TO CALL NEW FUNCTIONS + SAVE HISTORY
+   ══════════════════════════════════════════════ */
+const _origRenderResults = renderResults;
+renderResults = function(d, cfg){
+  _origRenderResults(d, cfg);
+  renderVidiqPanel(d);
+  renderKwScores(d);
+  // Save to history
+  const sName2=seriesOpen?document.getElementById('seriesName').value.trim():null;
+  const serInfo=sName2?{name:sName2,ep:epNum}:null;
+  saveToHistory(d, cfg, [...tags], serInfo);
+  saveState();
+};
+
+/* ══════════════════════════════════════════════
+   INIT ON PAGE LOAD
+   ══════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded',()=>{
+  restoreState();
+  loadHistory();
+});
+</script>
+</body>
+</html>
