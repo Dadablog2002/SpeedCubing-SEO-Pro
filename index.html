@@ -1496,6 +1496,8 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
       </div>
 
       <!-- QUICK INSIGHTS -->
+      <div class="quick-insights mb10" id="quickInsights" style="display:none"></div>
+
             <div class="res-card">
         <div class="res-card-head" onclick="toggleResCard('titlesBody','titlesChev')">
           <div class="res-card-left">
@@ -2165,17 +2167,6 @@ function renderResults(d, cfg){
     sib.classList.add('show');
   } else { sib.classList.remove('show'); }
 
-  /* STATS */
-  const a=d.analytics||{};
-  const stats=[
-    {v:a.searchVolume||'—',l:'Попит',c:'#7c5cfc'},
-    {v:a.ctrPotential||'—',l:'CTR',c:'#22d3ee'},
-    {v:a.competition||'—',l:'Конкуренція',c:'#e63950'},
-    {v:sc+'/100',l:'SEO',c:'#10b981'},
-    {v:a.rankingChance||'—',l:'Ранжування',c:'#f59e0b'},
-    {v:((d.tags||d.hashtags||[]).length)+'шт',l:plat==='tkt'?'Хештегів':'Тегів',c:'#b4a0ff'}
-  ];
-  document.getElementById('statGrid').innerHTML=stats.map(s=>`<div class="stat-card"><div class="stat-val" style="color:${s.c}">${eH(String(s.v))}</div><div class="stat-lbl">${s.l}</div></div>`).join('');
 
   /* QUICK INSIGHTS (hook, thumbnail, pinned comment, post time) */
   const qiEl=document.getElementById('quickInsights');
