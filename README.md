@@ -1,1 +1,0 @@
-# SpeedCubing-SEO-Pro
