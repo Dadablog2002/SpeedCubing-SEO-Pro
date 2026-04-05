@@ -2082,21 +2082,36 @@ Caption загалом: ${cfg.descWords}.`
   const today=new Date();
   const dateStr=today.toLocaleDateString('uk',{day:'2-digit',month:'2-digit',year:'numeric'}).replace(/\./g,'.')+' ('+today.toLocaleDateString('en',{weekday:'long'})+')';
 
-  const prompt=`SEO-спеціаліст speedcubing каналу 2026. Мова відповіді: УКРАЇНСЬКА. Теги/ключові слова — мовою відео.
+  const prompt=`Ти — провідний SEO-спеціаліст speedcubing YouTube каналу. 
 
-ДАТА: ${dateStr}. Через Google Search знайди актуальне: "speedcubing trending ${today.getFullYear()} ${cfg.name}" — врахуй результати.
+КРИТИЧНО ВАЖЛИВО — ОБОВ'ЯЗКОВІ ПРАВИЛА:
+1. ВСІ пояснення, описи, поради, підписи — ТІЛЬКИ УКРАЇНСЬКОЮ мовою
+2. Назви відео, теги, ключові слова — мовою відео: ${lang}
+3. Опис відео — мовою відео: ${lang}
+4. МІНІМАЛЬНА довжина опису: ${cfg.descWords} — НЕ КОРОТШЕ! Розгорнуто, детально, з абзацами.
+5. МІНІМУМ ${cfg.tagsCount} тегів — не менше!
+6. МІНІМУМ 6 порад у "tips" — детальних, не однорядкових
+7. Відповідь ТІЛЬКИ чистий JSON — без markdown-блоків, без пояснень до або після
 
-ПЛАТФОРМА: ${cfg.name}. ${platI[plat]}
+ДАТА: ${dateStr}. ПЛАТФОРМА: ${cfg.name}.
+${platI[plat]}
 ${seriesCtx}${histCtx}
 
 ВІДЕО: теги=[${tags.join(', ')}] | тип=${vtype} | мова=${lang}${!isSeriesMode&&singleTitle?' | тема='+singleTitle:''}${!isSeriesMode&&singleCase?' | випадок='+singleCase:''} | режим=${isSeriesMode?'серія':'одиночне'} | хештеги=${ht?'так':'ні'} | CTA=${cta?'так':'ні'}${uploadedImageBase64?' | є фото куба — врахуй в назвах':''}
 
-НАЗВИ (3 штуки, різні стилі): 1=curiosity gap/питання, 2=число/факт/результат, 3=POV hook 2026. По 1-2 емодзі. До ${cfg.titleMax} символів.
-ОПИС: структурований, 1-3 емодзі, hook першим рядком${plat==='yt'?', chapters':''}. ${cfg.descWords}.
-ПОРАДИ: 6+ порад (critical/important/nice) — hook перших секунд, thumbnail, час публікації, стратегія 24год.${wMusic?'\nМУЗИКА: 3 трендових треки 2026 для speedcubing, з назвою виконавця і де шукати.':''}
-SPEEDCUBING: F2L OLL PLL CFOP Cross sub-10/15/20 T-perm Sune ZBLL BLD FMC WCA Roux ZZ.
+НАЗВИ (рівно 3, різні стилі, мовою ${lang}):
+- Назва 1: curiosity gap або питання що інтригує
+- Назва 2: число/факт/конкретний результат  
+- Назва 3: POV hook або шок-факт
+Кожна: 1-2 емодзі, до ${cfg.titleMax} символів, чіпляюча.
 
-Відповідай ТІЛЬКИ чистим JSON без markdown:
+ОПИС (мовою ${lang}): мінімум ${cfg.descWords}, структурований абзацами, hook першим рядком${plat==='yt'?', timestamps/chapters':''}. Розгорнутий і детальний — не скорочуй!
+
+ПОРАДИ: мінімум 6 детальних порад — hook відео, thumbnail стратегія, час публікації, перші 24 години, взаємодія з коментарями.${wMusic?'\nМУЗИКА: 3 конкретних треки для speedcubing відео 2026 з назвою, виконавцем і де знайти.':''}
+
+SPEEDCUBING терміни для контексту: F2L OLL PLL CFOP Cross sub-10/15/20 T-perm Sune ZBLL BLD FMC WCA Roux ZZ.
+
+Відповідай ТІЛЬКИ чистим JSON без markdown, без тексту до або після:
 {
   "seoScore":0-100,
   "detectedAudience":"beginner|intermediate|advanced|mixed",
@@ -2130,9 +2145,9 @@ SPEEDCUBING: F2L OLL PLL CFOP Cross sub-10/15/20 T-perm Sune ZBLL BLD FMC WCA Ro
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
       body:JSON.stringify({
-        model:'llama-3.3-70b-versatile',
+        model:'deepseek-r1-distill-llama-70b',
         messages:[{role:'user',content:msgText}],
-        max_tokens:6000,
+        max_tokens:8000,
         temperature:0.7
       })
     });
@@ -2722,7 +2737,7 @@ async function searchTrends(){
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
       body:JSON.stringify({
-        model:'llama-3.3-70b-versatile',
+        model:'deepseek-r1-distill-llama-70b',
         messages:[{role:'user',content:prompt}],
         max_tokens:2000,
         temperature:0.7
