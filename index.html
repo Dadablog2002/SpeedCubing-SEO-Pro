@@ -2065,7 +2065,7 @@ Caption загалом: ${cfg.descWords}.`
   const today=new Date();
   const dateStr=today.toLocaleDateString('uk',{day:'2-digit',month:'2-digit',year:'numeric'}).replace(/\./g,'.')+' ('+today.toLocaleDateString('en',{weekday:'long'})+')';
 
-  const prompt=`Ти — провідний SEO-спеціаліст і контент-стратег для SPEEDCUBING каналу у 2026 році. Пишеш УКРАЇНСЬКОЮ МОВОЮ (назви, описи, поради, стратегії — все українською; ключові слова та теги — мовою відео).
+  const prompt=`Ти — провідний SEO-спеціаліст і контент-стратег для SPEEDCUBING каналу у 2026 році. МОВА КОНТЕНТУ (назви, описи, теги, поради, стратегії, hookи, pinnedComment, thumbnailText — АБСОЛЮТНО ВСЕ): ${lang}. Це найважливіша вимога — жодного слова іншою мовою у полях контенту.
 
 ПОТОЧНА ДАТА: ${dateStr}. Дуже важливо: використай web_search щоб ПЕРЕВІРИТИ актуальні тренди саме на цю дату перед тим як генерувати контент. Шукай: "YouTube Shorts trends ${today.toLocaleDateString('en',{month:'long',year:'numeric'})}", "TikTok speedcubing trends ${today.getFullYear()}", "speedcubing viral videos ${today.getFullYear()}", "#cubechallenge trending". Після пошуку — враховуй тільки те що реально трендить ЗАРАЗ.
 
@@ -2128,15 +2128,15 @@ SPEEDCUBING контекст: F2L, OLL, PLL, CFOP, Cross, Look-Ahead, Finger Tri
   "detectedAudience": "beginner|intermediate|advanced|mixed — визнач сам",
   "detectedTone": "energetic|educational|hype|casual — визнач сам",
   "seriesContext": ${isSeriesMode&&sName?`{"episodeNum":${epNum},"seriesName":"${sName.replace(/"/g,"'")}","totalParts":"${sTotal}","caseTopic":"${sCase.replace(/"/g,"'")}"}`:'null'},
-  "analytics": {"searchVolume":"рядок","competition":"рядок","ctrPotential":"рядок","rankingChance":"рядок"},
+  "analytics": {"searchVolume":"рядок (мовою ${lang})","competition":"рядок (мовою ${lang})","ctrPotential":"рядок (мовою ${lang})","rankingChance":"рядок (мовою ${lang})"},
   "titles": [
-    {"text":"назва 1 — curiosity gap стиль","type":"best","reason":"чому найкраща (укр)","charCount":0},
-    {"text":"назва 2 — число/факт стиль","type":"normal","reason":"чому хороша (укр)","charCount":0},
-    {"text":"назва 3 — трендовий hook 2026","type":"normal","reason":"чому хороша (укр)","charCount":0}
+    {"text":"назва 1 — curiosity gap стиль МОВОЮ ${lang}","type":"best","reason":"чому найкраща (мовою ${lang})","charCount":0},
+    {"text":"назва 2 — число/факт стиль МОВОЮ ${lang}","type":"normal","reason":"чому хороша (мовою ${lang})","charCount":0},
+    {"text":"назва 3 — трендовий hook 2026 МОВОЮ ${lang}","type":"normal","reason":"чому хороша (мовою ${lang})","charCount":0}
   ],
-  "hookSuggestion": "перші 2-3 секунди відео — конкретна фраза або дія яка чіпляє (укр)",
+  "hookSuggestion": "перші 2-3 секунди відео — конкретна фраза або дія яка чіпляє (мовою ${lang})",
   "thumbnailText": "3-5 слів для тексту на thumbnail — максимально провокаційно",
-  "pinnedComment": "готовий текст для закріпленого коментаря — питання до глядачів (укр)",
+  "pinnedComment": "готовий текст для закріпленого коментаря — питання до глядачів (мовою ${lang})",
   "bestPostTime": "найкращий час публікації для цього типу відео і платформи",
   "description": "${plat==='yt'?`повний SEO опис для YouTube мовою ${lang}${cta?', з CTA':''}, структурований з абзацами і chapters`:plat==='yts'?`структурований опис для Shorts мовою ${lang}, hook першим рядком`:`TikTok caption мовою ${lang} — назва\\n\\nопис\\n\\n#теги`}",
   ${plat==='yts'?`"shortsDescription": "красивий структурований опис для Shorts (абзаци, hook першим рядком) мовою ${lang}",
@@ -2145,22 +2145,22 @@ SPEEDCUBING контекст: F2L, OLL, PLL, CFOP, Cross, Look-Ahead, Finger Tri
   "tiktokDescription": "основний текст опису 2-4 рядки мовою ${lang}",`:''}
   "hashtags": ${plat==='tkt'?`["#хеш1","#хеш2","#хеш3","#хеш4","#хеш5"]`:'null'},
   "tags": ${plat!=='tkt'?`[мінімум ${cfg.tagsCount} об'єктів {"tag":"","volume":"high|med|low","reason":""}]`:'null'},
-  "tips": [мінімум 6 {"priority":"critical|important|nice","title":"(укр)","text":"(укр)"}],
+  "tips": [мінімум 6 {"priority":"critical|important|nice","title":"(мовою ${lang})","text":"(мовою ${lang})"}],
   "vidiq": {
     "overallScore": число 0-100,
     "searchVolScore": число 0-100,
     "competitionScore": число 0-100,
     "ctrScore": число 0-100,
     "rankChanceScore": число 0-100,
-    "searchVolLabel": "рядок (укр)",
-    "competitionLabel": "рядок (укр)",
+    "searchVolLabel": "рядок (мовою ${lang})",
+    "competitionLabel": "рядок (мовою ${lang})",
     "ctrLabel": "рядок напр 8-12%",
-    "rankChanceLabel": "рядок (укр)",
+    "rankChanceLabel": "рядок (мовою ${lang})",
     "overallLabel": "Відмінно|Добре|Задовільно|Слабо",
-    "overallSub": "коротка порада (укр)"
+    "overallSub": "коротка порада (мовою ${lang})"
   },
   "kwScores": [
-    {"kw":"ключове слово","volScore":число 0-100,"volLabel":"рядок (укр)","competition":"easy|medium|hard","compLabel":"рядок (укр)","score":число 0-100}
+    {"kw":"ключове слово","volScore":число 0-100,"volLabel":"рядок (мовою ${lang})","competition":"easy|medium|hard","compLabel":"рядок (мовою ${lang})","score":число 0-100}
   ]${musicInstruction}
 }`;
 
