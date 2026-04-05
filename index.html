@@ -2370,6 +2370,9 @@ function showErr(m){const b=document.getElementById('errorBox');b.textContent=m;
 function hideErr(){document.getElementById('errorBox').classList.remove('show');}
 
 
+const SAVE_KEY='seo_pro_state_v1';
+const HISTORY_KEY='seo_pro_history_v1';
+
 function saveState(){
   try{
     const state={
