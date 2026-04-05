@@ -1495,33 +1495,8 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
         </div>
       </div>
 
-      <!-- VIDIQ-STYLE PANEL -->
-      <div class="vidiq-panel" id="vidiqPanel" style="display:none">
-        <div class="vidiq-header">
-          <div class="vidiq-title">SEO Аналіз</div>
-          <div class="vidiq-overall">
-            <div class="vidiq-score-ring">
-              <svg width="38" height="38" viewBox="0 0 38 38">
-                <circle cx="19" cy="19" r="15" fill="none" stroke="var(--card3)" stroke-width="3"/>
-                <circle id="vidiqRingFill" cx="19" cy="19" r="15" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="94.2" stroke-dashoffset="94.2" stroke-linecap="round"/>
-              </svg>
-              <div class="vidiq-score-num" id="vidiqRingNum">0</div>
-            </div>
-            <div>
-              <div id="vidiqOverallLabel" style="font-size:.72rem;font-weight:700"></div>
-              <div id="vidiqOverallSub" style="font-size:.62rem;color:var(--tx3)"></div>
-            </div>
-          </div>
-        </div>
-        <div class="vidiq-grid" id="vidiqGrid"></div>
-      </div>
-
-      
-      <div class="stat-grid" id="statGrid"></div>
-
       <!-- QUICK INSIGHTS -->
-      <div class="quick-insights" id="quickInsights" style="display:none"></div>
-      <div class="res-card">
+            <div class="res-card">
         <div class="res-card-head" onclick="toggleResCard('titlesBody','titlesChev')">
           <div class="res-card-left">
             <div class="res-icon ic-red">
@@ -2108,11 +2083,7 @@ SPEEDCUBING контекст: F2L, OLL, PLL, CFOP, Cross, Look-Ahead, Finger Tri
 
 Відповідай ТІЛЬКИ чистим JSON без markdown:
 {
-  "seoScore": число 0-100,
-  "detectedAudience": "beginner|intermediate|advanced|mixed — визнач сам",
-  "detectedTone": "energetic|educational|hype|casual — визнач сам",
   "seriesContext": ${isSeriesMode&&sName?`{"episodeNum":${epNum},"seriesName":"${sName.replace(/"/g,"'")}","totalParts":"${sTotal}","caseTopic":"${sCase.replace(/"/g,"'")}"}`:'null'},
-  "analytics": {"searchVolume":"рядок УКРАЇНСЬКОЮ","competition":"рядок УКРАЇНСЬКОЮ","ctrPotential":"рядок УКРАЇНСЬКОЮ","rankingChance":"рядок УКРАЇНСЬКОЮ"},
   "titles": [
     {"text":"назва 1","type":"best","reason":"причина (укр)","charCount":0},
     {"text":"назва 2","type":"normal","reason":"причина (укр)","charCount":0},
@@ -2130,19 +2101,8 @@ SPEEDCUBING контекст: F2L, OLL, PLL, CFOP, Cross, Look-Ahead, Finger Tri
   "hashtags": ${plat==='tkt'?`["#хеш1","#хеш2","#хеш3","#хеш4","#хеш5"]`:'null'},
   "tags": ${plat!=='tkt'?`[мінімум ${cfg.tagsCount} об'єктів {"tag":"","volume":"high|med|low","reason":""}]`:'null'},
   "tips": [6 об'єктів {"priority":"critical|important|nice","title":"укр","text":"укр"}],
-  "vidiq": {
-    "overallScore": число 0-100,
-    "searchVolScore": число 0-100,
-    "competitionScore": число 0-100,
-    "ctrScore": число 0-100,
-    "rankChanceScore": число 0-100,
-    "searchVolLabel": "рядок УКРАЇНСЬКОЮ",
-    "competitionLabel": "рядок УКРАЇНСЬКОЮ",
-    "ctrLabel": "рядок напр 8-12%",
-    "rankChanceLabel": "рядок УКРАЇНСЬКОЮ",
-    "overallLabel": "Відмінно|Добре|Задовільно|Слабо",
-    "overallSub": "коротка порада (мовою ${lang})"
-  },${musicInstruction}
+  "seoScore": число від 0 до 100 на основі якості SEO,
+  "analytics": {"searchVolume":"High|Medium|Low","ctrPotential":"5-15%","competition":"Low|Medium|High","rankingChance":"висока|середня|низька"}${musicInstruction}
 }`;
 
   try{
@@ -2412,7 +2372,6 @@ function renderResults(d, cfg){
   const serInfo=videoMode==='series'&&document.getElementById('seriesName').value.trim()?
     {name:document.getElementById('seriesName').value.trim(),ep:epNum}:null;
   saveToHistory(d, cfg, [...tags], serInfo);
-  renderVidiqPanel(d);
   renderKwScores(d);
   saveState();
 }
@@ -2422,42 +2381,6 @@ function eA(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replac
 function showErr(m){const b=document.getElementById('errorBox');b.textContent=m;b.classList.add('show');}
 function hideErr(){document.getElementById('errorBox').classList.remove('show');}
 
-/* ── VIDIQ PANEL ── */
-function renderVidiqPanel(d){
-  const v=d.vidiq;
-  if(!v){ document.getElementById('vidiqPanel').style.display='none'; return; }
-  document.getElementById('vidiqPanel').style.display='block';
-  const score=v.overallScore||0;
-  const circumference=94.2;
-  const offset=circumference-(circumference*score/100);
-  const ringColor=score>=75?'#10b981':score>=50?'#f59e0b':'#e63950';
-  setTimeout(()=>{
-    const ring=document.getElementById('vidiqRingFill');
-    if(ring){ ring.style.stroke=ringColor; ring.style.strokeDashoffset=offset; }
-  },100);
-  document.getElementById('vidiqRingNum').textContent=score;
-  document.getElementById('vidiqRingNum').style.color=ringColor;
-  document.getElementById('vidiqOverallLabel').textContent=v.overallLabel||'';
-  document.getElementById('vidiqOverallLabel').style.color=ringColor;
-  document.getElementById('vidiqOverallSub').textContent=v.overallSub||'';
-  const metrics=[
-    {label:'Пошуковий попит', score:v.searchVolScore||0, text:v.searchVolLabel||'', color:'#7c5cfc'},
-    {label:'Конкуренція',     score:100-(v.competitionScore||0), text:v.competitionLabel||'', color:'#e63950'},
-    {label:'Потенціал CTR',   score:v.ctrScore||0, text:v.ctrLabel||'', color:'#0ea5e9'},
-    {label:'Шанс ранжування', score:v.rankChanceScore||0, text:v.rankChanceLabel||'', color:'#10b981'},
-  ];
-  document.getElementById('vidiqGrid').innerHTML=metrics.map(m=>{
-    const barW=Math.min(100,Math.max(0,m.score));
-    return `<div class="vidiq-metric">
-      <div class="vm-label">${eH(m.label)}</div>
-      <div class="vm-bar-wrap">
-        <div class="vm-bar-track"><div class="vm-bar-fill" style="width:${barW}%;background:${m.color}"></div></div>
-        <div class="vm-val" style="color:${m.color}">${m.score}</div>
-      </div>
-      <div class="vm-sub">${eH(m.text)}</div>
-    </div>`;
-  }).join('');
-}
 
 function saveState(){
   try{
