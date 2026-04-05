@@ -1154,23 +1154,11 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 .mb10 { margin-bottom: 10px; }
 .mb14 { margin-bottom: 14px; }
 .mb16 { margin-bottom: 16px; }
-
-/* ── FILE:// WARNING BANNER ── */
-.file-warning {
-  background: rgba(245,158,11,0.1);
-  border: 1px solid var(--amber-border);
-  border-radius: var(--r-md);
-  padding: 12px 16px; margin-bottom: 14px; display: none;
-}
-.file-warning.show { display: block; }
-.file-warning-title { font-size:.72rem;font-weight:700;color:var(--amber);margin-bottom:5px; }
-.file-warning-body { font-size:.7rem;color:var(--tx2);line-height:1.7;font-family:var(--mono); }
-.file-warning-body code { background:var(--card3);border-radius:4px;padding:2px 7px;color:var(--amber); }
-
 </style>
 </head>
 <body>
 <div class="glow-bg"></div>
+
 
 <!-- HISTORY DRAWER OVERLAY -->
 <div class="hist-drawer-overlay" id="histOverlay" onclick="closeHistory()"></div>
@@ -1253,30 +1241,15 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
   <!-- MAIN -->
   <main class="main">
 
-    <!-- FILE:// WARNING -->
-    <div class="file-warning" id="fileWarning">
-      <div class="file-warning-title">
-        <svg style="width:14px;height:14px;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        Відкрийте файл через локальний сервер
-      </div>
-      <div class="file-warning-body">
-        Зараз файл відкрито через <code>file://</code> — API не працюватиме через CORS.<br>
-        1. Відкрийте термінал у папці з файлом<br>
-        2. Виконайте: <code>npx serve .</code><br>
-        3. Відкрийте <code>http://localhost:3000</code> у браузері
-      </div>
-    </div>
-
     <!-- API KEY -->
     <div class="section-label">Доступ до AI</div>
     <div class="api-box mb14">
       <div class="api-box-label">
         <svg style="width:14px;height:14px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-        Groq API Ключ
-        <span style="font-size:.55rem;background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);color:#10b981;padding:1px 7px;border-radius:4px;font-weight:800;letter-spacing:.06em">БЕЗКОШТОВНО</span>
+        API Ключ Anthropic
       </div>
-      <input type="password" id="apiKey" placeholder="gsk_..." autocomplete="off">
-      <div class="api-hint">Отримай безкоштовно → <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a> · реєстрація без карти</div>
+      <input type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off">
+      <div class="api-hint">Отримай на <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></div>
     </div>
 
     <!-- PLATFORM -->
@@ -1666,10 +1639,15 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
               <div class="shorts-section-label s-title">3 Назви для Shorts</div>
               <div class="variants" id="shortsTitlesContent" style="padding:10px 12px;gap:6px;display:flex;flex-direction:column;"></div>
             </div>
-            <!-- DESCRIPTION + KEYWORDS -->
+            <!-- DESCRIPTION -->
             <div class="shorts-section">
               <div class="shorts-section-label s-desc">Опис (з хуком у першому рядку)</div>
               <div class="shorts-section-content" id="shortsDesc"></div>
+            </div>
+            <!-- KEYWORDS (English label) -->
+            <div class="shorts-section">
+              <div class="shorts-section-label s-kw">Keywords (one per line)</div>
+              <div class="shorts-kw-list" id="shortsKw"></div>
             </div>
             <!-- TAGS — більше тегів окремо -->
             <div class="shorts-section">
@@ -1994,8 +1972,9 @@ function cpShortsTags(){
 function cpShortsAll(){
   const titles=Array.from(document.querySelectorAll('#shortsTitlesContent .variant-text')).map((el,i)=>`Назва ${i+1}: ${el.textContent}`).join('\n');
   const desc=document.getElementById('shortsDesc').textContent;
+  const kws=Array.from(document.querySelectorAll('#shortsKw .shorts-kw-item')).map(el=>el.textContent).join('\n');
   const tagsArr=Array.from(document.querySelectorAll('#shortsTagsContent .tag-pill')).map(el=>el.getAttribute('data-tag')).join(' ');
-  cpText(`${titles}\n\n${desc}\n\nTAGS:\n${tagsArr}`);
+  cpText(`${titles}\n\n${desc}\n\nKEYWORDS:\n${kws}\n\nTAGS:\n${tagsArr}`);
 }
 function cpShortsDesc(btn){
   const desc=document.getElementById('shortsDesc').textContent;
@@ -2018,14 +1997,9 @@ function animateSteps(){
 
 /* ── MAIN ANALYSIS ── */
 async function go(){
-  // Перевірка file:// протоколу
-  if(location.protocol==='file:'){
-    showErr('⚠️ Відкрийте файл через локальний сервер, не через file://\n\nКроки:\n1. Відкрийте термінал у папці з файлом\n2. Виконайте: npx serve .\n3. Відкрийте http://localhost:3000 у браузері');
-    return;
-  }
   const apiKey=document.getElementById('apiKey').value.trim();
-  if(!apiKey){showErr('Введіть API ключ Groq (починається з gsk_...)');return;}
-  if(!apiKey.startsWith('gsk_')){showErr('Перевірте ключ — отримайте безкоштовно на console.groq.com/keys');return;}
+  if(!apiKey){showErr('Введіть API ключ Anthropic (sk-ant-api03-...)');return;}
+  if(!apiKey.startsWith('sk-ant')){showErr('Невірний формат ключа. Починається з sk-ant-...');return;}
   if(!tags.length){showErr('Додайте хоча б одне ключове слово.');return;}
   hideErr();
   document.getElementById('loading').classList.add('show');
@@ -2077,83 +2051,137 @@ Caption загалом: ${cfg.descWords}.`
   const histCtx=getHistoryContext();
 
   const musicInstruction=wMusic?`,
-  "music":{"mood":"атмосфера","bpm":"BPM","tracks":[{"name":"","artist":"","source":"YouTube Audio Library|Epidemic Sound|SoundCloud|StreamBeats","genre":"","energy":"low|medium|high","trendNote":"чому 2026","searchQuery":""},{"name":"","artist":"","source":"","genre":"","energy":"","trendNote":"","searchQuery":""},{"name":"","artist":"","source":"","genre":"","energy":"","trendNote":"","searchQuery":""}],"where":"де шукати (укр)"}`:''
+  "music": {
+    "mood": "одне речення — яка атмосфера музики підходить до цього відео",
+    "bpm": "рекомендований BPM напр 120-140",
+    "tracks": [
+      {"name":"точна назва треку","artist":"виконавець","source":"YouTube Audio Library|Epidemic Sound|SoundCloud|StreamBeats","genre":"жанр","energy":"low|medium|high","isTrending":true,"trendNote":"чому трендовий у 2026 році","tags":["тег1","тег2"],"searchQuery":"пошуковий запит для знаходження"},
+      {"name":"...","artist":"...","source":"...","genre":"...","energy":"...","isTrending":true,"trendNote":"...","tags":[],"searchQuery":"..."},
+      {"name":"...","artist":"...","source":"...","genre":"...","energy":"...","isTrending":true,"trendNote":"...","tags":[],"searchQuery":"..."}
+    ],
+    "where": "де шукати трендову безкоштовну музику для спідкубінг відео у 2026 році — конкретні поради"
+  }`:'';
 
   const today=new Date();
   const dateStr=today.toLocaleDateString('uk',{day:'2-digit',month:'2-digit',year:'numeric'}).replace(/\./g,'.')+' ('+today.toLocaleDateString('en',{weekday:'long'})+')';
 
-  const prompt=`Ти — провідний SEO-спеціаліст speedcubing YouTube каналу. 
+  const prompt=`Ти — провідний SEO-спеціаліст і контент-стратег для SPEEDCUBING каналу у 2026 році. Пишеш УКРАЇНСЬКОЮ МОВОЮ (назви, описи, поради, стратегії — все українською; ключові слова та теги — мовою відео).
 
-КРИТИЧНО ВАЖЛИВО — ОБОВ'ЯЗКОВІ ПРАВИЛА:
-1. ВСІ пояснення, описи, поради, підписи — ТІЛЬКИ УКРАЇНСЬКОЮ мовою
-2. Назви відео, теги, ключові слова — мовою відео: ${lang}
-3. Опис відео — мовою відео: ${lang}
-4. МІНІМАЛЬНА довжина опису: ${cfg.descWords} — НЕ КОРОТШЕ! Розгорнуто, детально, з абзацами.
-5. МІНІМУМ ${cfg.tagsCount} тегів — не менше!
-6. МІНІМУМ 6 порад у "tips" — детальних, не однорядкових
-7. Відповідь ТІЛЬКИ чистий JSON — без markdown-блоків, без пояснень до або після
+ПОТОЧНА ДАТА: ${dateStr}. Дуже важливо: використай web_search щоб ПЕРЕВІРИТИ актуальні тренди саме на цю дату перед тим як генерувати контент. Шукай: "YouTube Shorts trends ${today.toLocaleDateString('en',{month:'long',year:'numeric'})}", "TikTok speedcubing trends ${today.getFullYear()}", "speedcubing viral videos ${today.getFullYear()}", "#cubechallenge trending". Після пошуку — враховуй тільки те що реально трендить ЗАРАЗ.
 
-ДАТА: ${dateStr}. ПЛАТФОРМА: ${cfg.name}.
+ТРЕНДИ (перевір актуальність через пошук, оновлюй якщо знайдеш нові):
+TikTok: "POV:" відео, "tell me without telling me", duet-провокації, sub-10 flex, satisfying solves під lo-fi/phonk/hardwave, #cubecheck тренд, "rate my solve 1-10", хук у перші 0.5 секунди — ключовий фактор
+YouTube Shorts: перші 2 секунди вирішують all, loop-відео (кінець = початок), challenge формат (#cubechallenge2026), ASMR розкладання, side-by-side порівняння before/after
+YouTube довге: серійний контент б'є одиночний, "road to sub-X" формати, live-розбір чужих солвів, collab з іншими кубістами, timestamp-навігація критична, опис з chapters обов'язковий
+Загальне 2026: алгоритм цінує watch time% > переглядів, community posts + відео = x2 охоплення, перші 24 години вирішують долю відео, коментар-питання в кінці опису = +40% коментарів
+${seriesCtx}
+${histCtx}
+
+ПЛАТФОРМА: ${cfg.name}
 ${platI[plat]}
-${seriesCtx}${histCtx}
 
-ВІДЕО: теги=[${tags.join(', ')}] | тип=${vtype} | мова=${lang}${!isSeriesMode&&singleTitle?' | тема='+singleTitle:''}${!isSeriesMode&&singleCase?' | випадок='+singleCase:''} | режим=${isSeriesMode?'серія':'одиночне'} | хештеги=${ht?'так':'ні'} | CTA=${cta?'так':'ні'}${uploadedImageBase64?' | є фото куба — врахуй в назвах':''}
+ВІДЕО ІНФОРМАЦІЯ:
+Ключові слова: ${tags.join(', ')}
+Тип відео: ${vtype}
+Мова відео: ${lang}
+${!isSeriesMode&&singleTitle?'Назва/тема відео: '+singleTitle:''}
+${!isSeriesMode&&singleCase?'Конкретний випадок: '+singleCase:''}
+Режим: ${isSeriesMode?'серія':'одиночне відео'}
+Хештеги в описі: ${ht?'так':'ні'}
+CTA (підписка/лайк): ${cta?'так':'ні'}
 
-НАЗВИ (рівно 3, різні стилі, мовою ${lang}):
-- Назва 1: curiosity gap або питання що інтригує
-- Назва 2: число/факт/конкретний результат  
-- Назва 3: POV hook або шок-факт
-Кожна: 1-2 емодзі, до ${cfg.titleMax} символів, чіпляюча.
+АВТОМАТИЧНО ВИЗНАЧ (не питай, зроби сам):
+- Аудиторія: проаналізуй ключові слова і тип відео, визнач рівень самостійно (beginner/intermediate/advanced/mixed)
+- Тон: підбери оптимальний тон під платформу і тип контенту сам (energetic/educational/hype/casual)
+- Ціль — МАКСИМУМ ВСЬОГО ОДРАЗУ: максимум переглядів + нові підписники + вірусність + залучення ком'юніті + watch time + shares + comments + saves. Кожне рішення має оптимізуватись під всі ці метрики одночасно.
 
-ОПИС (мовою ${lang}): мінімум ${cfg.descWords}, структурований абзацами, hook першим рядком${plat==='yt'?', timestamps/chapters':''}. Розгорнутий і детальний — не скорочуй!
+ВИМОГИ ДО НАЗВ (критично важливо):
+- Рівно 3 назви — лише найкращі, максимально різні за стилем
+- Стиль 1: curiosity gap / питання / незавершеність ("Чому я НЕ міг...")
+- Стиль 2: число/факт/результат ("За 3 дні до sub-15...")
+- Стиль 3: трендовий hook 2026 ("POV: твій F2L нарешті...")
+- ЕМОДЗІ: додай 1-2 доречних емодзі в кожну назву — на початку або в середині, не наприкінці. Приклади: ⚡ 🔥 😤 💀 🎯 🧩 ⏱️ 😱 👀 🚀 — але тільки якщо підходять до змісту, не переборщуй
+- ЗАБОРОНЕНО: clickbait без суті, загальні слова "відео про", "як зробити", більше 2 емодзі в одній назві
+- Враховуй тренди платформи 2026 року
+${uploadedImageBase64?'- На фото видно ситуацію з кубом — ОБОВ\'ЯЗКОВО врахуй це в назвах та описі':''}
 
-ПОРАДИ: мінімум 6 детальних порад — hook відео, thumbnail стратегія, час публікації, перші 24 години, взаємодія з коментарями.${wMusic?'\nМУЗИКА: 3 конкретних треки для speedcubing відео 2026 з назвою, виконавцем і де знайти.':''}
+ВИМОГИ ДО ОПИСУ:
+- Додай 1-3 емодзі в опис — щоб виділити ключові секції або підсилити Hook у першому рядку
+- Наприклад: "⚡ За 3 дні я зробив це..." або "🎯 В цьому відео:" — природно, не спам
+- Для YouTube chapters: кожен chapter може мати 1 емодзі перед текстом
 
-SPEEDCUBING терміни для контексту: F2L OLL PLL CFOP Cross sub-10/15/20 T-perm Sune ZBLL BLD FMC WCA Roux ZZ.
+ВИМОГИ ДО ПОРАД (tips):
+- Мінімум 6 порад, mix: critical + important + nice
+- Обов'язково включи: hook-стратегію для перших секунд, thumbnail рекомендацію, час публікації, стратегію для перших 24 годин, пораду про community post
+- Всі поради — конкретні, не загальні, прив'язані до типу відео і платформи
 
-Відповідай ТІЛЬКИ чистим JSON без markdown, без тексту до або після:
+ВИМОГИ ДО МУЗИКИ (якщо запитується):
+- Лише 3 треки, реально трендові у 2026 році
+- Підходять КОНКРЕТНО до цього типу speedcubing відео
+- Вкажи чому саме цей трек підходить і де знайти
+
+SPEEDCUBING контекст: F2L, OLL, PLL, CFOP, Cross, Look-Ahead, Finger Tricks, sub-10/15/20, T-perm, Y-perm, Sune, ZBLL, OLL skip, PLL skip, BLD, FMC, 3x3/2x2/4x4/Pyraminx/Megaminx, WCA, Roux, ZZ, COLL, CMLL, 4LLL, WCA 2026.
+
+Відповідай ТІЛЬКИ чистим JSON без markdown:
 {
-  "seoScore":0-100,
-  "detectedAudience":"beginner|intermediate|advanced|mixed",
-  "detectedTone":"energetic|educational|hype|casual",
-  "seriesContext":${isSeriesMode&&sName?`{"episodeNum":${epNum},"seriesName":"${sName.replace(/"/g,"'")}","totalParts":"${sTotal}","caseTopic":"${sCase.replace(/"/g,"'")}"}`:'null'},
-  "analytics":{"searchVolume":"рядок","competition":"рядок","ctrPotential":"рядок","rankingChance":"рядок"},
-  "titles":[
-    {"text":"назва1","type":"best","reason":"укр","charCount":0},
-    {"text":"назва2","type":"normal","reason":"укр","charCount":0},
-    {"text":"назва3","type":"normal","reason":"укр","charCount":0}
+  "seoScore": число 0-100,
+  "detectedAudience": "beginner|intermediate|advanced|mixed — визнач сам",
+  "detectedTone": "energetic|educational|hype|casual — визнач сам",
+  "seriesContext": ${isSeriesMode&&sName?`{"episodeNum":${epNum},"seriesName":"${sName.replace(/"/g,"'")}","totalParts":"${sTotal}","caseTopic":"${sCase.replace(/"/g,"'")}"}`:'null'},
+  "analytics": {"searchVolume":"рядок","competition":"рядок","ctrPotential":"рядок","rankingChance":"рядок"},
+  "titles": [
+    {"text":"назва 1 — curiosity gap стиль","type":"best","reason":"чому найкраща (укр)","charCount":0},
+    {"text":"назва 2 — число/факт стиль","type":"normal","reason":"чому хороша (укр)","charCount":0},
+    {"text":"назва 3 — трендовий hook 2026","type":"normal","reason":"чому хороша (укр)","charCount":0}
   ],
-  "hookSuggestion":"перші 2-3 сек відео (укр)",
-  "thumbnailText":"3-5 слів для thumbnail",
-  "pinnedComment":"закріплений коментар-питання (укр)",
-  "bestPostTime":"найкращий час публікації",
-  "description":"${plat==='yt'?`SEO опис YouTube мовою ${lang}${cta?', CTA':''}`:plat==='yts'?`опис Shorts мовою ${lang}`:`TikTok caption мовою ${lang}`}",
-  ${plat==='yts'?`"shortsDescription":"структурований опис Shorts (абзаци, hook першим рядком, і в КІНЦІ опису — ключові слова кожне з нового рядку) мовою ${lang}","shortsKeywords":["kw1","kw2","kw3","kw4","kw5","kw6","kw7","kw8","kw9","kw10"],`:''}${plat==='tkt'?`"tiktokTitle":"ultra-hook до 80 символів мовою ${lang}","tiktokDescription":"опис 2-4 рядки мовою ${lang}",`:''}
-  "hashtags":${plat==='tkt'?'["#хеш1","#хеш2","#хеш3","#хеш4","#хеш5"]':'null'},
-  "tags":${plat!=='tkt'?`[мін.${cfg.tagsCount} штук {"tag":"","volume":"high|med|low","reason":""}]`:'null'},
-  "tips":[мін.6 {"priority":"critical|important|nice","title":"укр","text":"укр"}],
-  "vidiq":{"overallScore":0-100,"searchVolScore":0-100,"competitionScore":0-100,"ctrScore":0-100,"rankChanceScore":0-100,"searchVolLabel":"укр","competitionLabel":"укр","ctrLabel":"8-12%","rankChanceLabel":"укр","overallLabel":"Відмінно|Добре|Задовільно|Слабо","overallSub":"укр"},
-  "kwScores":[{"kw":"слово","volScore":0-100,"volLabel":"укр","competition":"easy|medium|hard","compLabel":"укр","score":0-100}]${musicInstruction}
+  "hookSuggestion": "перші 2-3 секунди відео — конкретна фраза або дія яка чіпляє (укр)",
+  "thumbnailText": "3-5 слів для тексту на thumbnail — максимально провокаційно",
+  "pinnedComment": "готовий текст для закріпленого коментаря — питання до глядачів (укр)",
+  "bestPostTime": "найкращий час публікації для цього типу відео і платформи",
+  "description": "${plat==='yt'?`повний SEO опис для YouTube мовою ${lang}${cta?', з CTA':''}, структурований з абзацами і chapters`:plat==='yts'?`структурований опис для Shorts мовою ${lang}, hook першим рядком`:`TikTok caption мовою ${lang} — назва\\n\\nопис\\n\\n#теги`}",
+  ${plat==='yts'?`"shortsDescription": "красивий структурований опис для Shorts (абзаци, hook першим рядком) мовою ${lang}",
+  "shortsKeywords": ["keyword 1","keyword 2","keyword 3","keyword 4","keyword 5","keyword 6","keyword 7","keyword 8","keyword 9","keyword 10"],`:''}
+  ${plat==='tkt'?`"tiktokTitle": "перший рядок caption — ultra-hook до 80 символів мовою ${lang}",
+  "tiktokDescription": "основний текст опису 2-4 рядки мовою ${lang}",`:''}
+  "hashtags": ${plat==='tkt'?`["#хеш1","#хеш2","#хеш3","#хеш4","#хеш5"]`:'null'},
+  "tags": ${plat!=='tkt'?`[мінімум ${cfg.tagsCount} об'єктів {"tag":"","volume":"high|med|low","reason":""}]`:'null'},
+  "tips": [мінімум 6 {"priority":"critical|important|nice","title":"(укр)","text":"(укр)"}],
+  "vidiq": {
+    "overallScore": число 0-100,
+    "searchVolScore": число 0-100,
+    "competitionScore": число 0-100,
+    "ctrScore": число 0-100,
+    "rankChanceScore": число 0-100,
+    "searchVolLabel": "рядок (укр)",
+    "competitionLabel": "рядок (укр)",
+    "ctrLabel": "рядок напр 8-12%",
+    "rankChanceLabel": "рядок (укр)",
+    "overallLabel": "Відмінно|Добре|Задовільно|Слабо",
+    "overallSub": "коротка порада (укр)"
+  },
+  "kwScores": [
+    {"kw":"ключове слово","volScore":число 0-100,"volLabel":"рядок (укр)","competition":"easy|medium|hard","compLabel":"рядок (укр)","score":число 0-100}
+  ]${musicInstruction}
 }`;
 
   try{
-    const msgText = uploadedImageBase64
-      ? prompt + "\n\nУ відео є зображення куба — врахуй це при генерації назв, описів та порад."
-      : prompt;
-
-    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+    let msgContent;
+    if(uploadedImageBase64){
+      msgContent=[
+        {type:'image',source:{type:'base64',media_type:uploadedImageType,data:uploadedImageBase64}},
+        {type:'text',text:prompt+"\n\nНа зображенні вище показана ситуація з кубом. Детально проаналізуй що зображено — яке положення куба, які елементи видно, і максимально використай цю інформацію при генерації назв, описів та порад."}
+      ];
+    } else {
+      msgContent=prompt;
+    }
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
-      body:JSON.stringify({
-        model:'llama-3.3-70b-versatile',
-        messages:[{role:'user',content:msgText}],
-        max_tokens:8000,
-        temperature:0.7
-      })
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:5000,messages:[{role:'user',content:msgContent}]})
     });
     if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error?.message||`HTTP ${r.status}`);}
     const d=await r.json();
-    const raw=d.choices?.[0]?.message?.content||'';
+    const raw=d.content.filter(b=>b.type==='text').map(b=>b.text||'').join('');
     clearInterval(stepTimer);
     for(let i=1;i<=5;i++){const el=document.getElementById('s'+i);el.className='step done';el.querySelector('.step-dot').textContent='✓';}
     await new Promise(res=>setTimeout(res,350));
@@ -2166,9 +2194,9 @@ SPEEDCUBING терміни для контексту: F2L OLL PLL CFOP Cross sub
     clearInterval(stepTimer);
     document.getElementById('loading').classList.remove('show');
     let msg=e.message;
-    if(msg.includes('401')||msg.includes('invalid_api_key')||msg.includes('authentication')) msg='Невірний API ключ. Перевірте на console.groq.com/keys';
-    else if(msg.includes('429')){ show429Countdown(60); return; }
-    else if(msg.includes('CORS')||msg.includes('fetch')||msg.includes('Failed')) msg='🌐 CORS помилка — відкрийте через локальний сервер: npx serve . → http://localhost:3000';
+    if(msg.includes('401')||msg.includes('authentication')) msg='Невірний API ключ. Перевірте на console.anthropic.com';
+    else if(msg.includes('429')) msg='Ліміт запитів вичерпано. Зачекайте хвилину.';
+    else if(msg.includes('CORS')||msg.includes('fetch')||msg.includes('Failed to fetch')) msg='⚠️ Файл відкрито через file:// — браузер блокує запити. Завантажте index.html на https://tiiny.host або запустіть: npx serve . (потрібен Node.js)';
     showErr(msg);
   } finally{ document.getElementById('analyzeBtn').disabled=false; }
 }
@@ -2333,9 +2361,8 @@ function renderResults(d, cfg){
       }).join('');
     }
 
-    // Keywords вбудовуємо в кінець опису
-    const sDescFull = sKws.length ? sDesc + '\n\n' + sKws.join('\n') : sDesc;
-    document.getElementById('shortsDesc').textContent=sDescFull;
+    document.getElementById('shortsDesc').textContent=sDesc;
+    document.getElementById('shortsKw').innerHTML=sKws.map(k=>`<div class="shorts-kw-item">${eH(k)}</div>`).join('');
 
     // Shorts tags in shorts block — more tags
     const stArr=d.tags||[];
@@ -2703,9 +2730,8 @@ function renderTrendsHistory(){
 }
 
 async function searchTrends(){
-  if(location.protocol==='file:'){ showToast('Відкрийте через локальний сервер (npx serve .)'); return; }
   const apiKey=document.getElementById('apiKey').value.trim();
-  if(!apiKey){showToast('Спочатку введіть Groq API ключ');return;}
+  if(!apiKey){showToast('Спочатку введіть API ключ');return;}
   const query=document.getElementById('trendsQuery').value.trim()||'speedcubing';
   const dateVal=document.getElementById('trendsDate').value;
   const dateDisplay=dateVal?new Date(dateVal).toLocaleDateString('uk',{day:'2-digit',month:'long',year:'numeric'}):'сьогодні';
@@ -2717,7 +2743,7 @@ async function searchTrends(){
 
   const prompt=`Ти — топ-аналітик спідкубінг контенту. Дата запиту: ${dateDisplay}. Тема пошуку: "${query}".
 
-Через Google Search знайди актуальні тренди. Шукай: "speedcubing trending ${new Date().getFullYear()}", "${query} speedcubing viral", "YouTube speedcubing ${dateDisplay}", "#speedcubing TikTok trend".
+Використай web_search щоб знайти актуальні тренди. Шукай: "speedcubing trending ${new Date().getFullYear()}", "${query} speedcubing viral", "YouTube speedcubing ${dateDisplay}", "#speedcubing TikTok trend".
 
 Поверни ТІЛЬКИ чистий JSON (без markdown):
 {
@@ -2733,19 +2759,14 @@ async function searchTrends(){
 Поверни 4-7 трендів. status: hot = вірусний прямо зараз, rising = набирає оберти, stable = стабільно популярний. Відповідь ТІЛЬКИ JSON.`;
 
   try{
-    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
-      body:JSON.stringify({
-        model:'llama-3.3-70b-versatile',
-        messages:[{role:'user',content:prompt}],
-        max_tokens:2000,
-        temperature:0.7
-      })
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1500,messages:[{role:'user',content:prompt}]})
     });
     if(!r.ok) throw new Error(`HTTP ${r.status}`);
     const data=await r.json();
-    const raw=data.choices?.[0]?.message?.content||'';
+    const raw=data.content.filter(b=>b.type==='text').map(b=>b.text).join('');
     let parsed;
     try{ parsed=JSON.parse(raw.replace(/```json|```/g,'').trim()); }
     catch{ const m=raw.match(/\{[\s\S]*\}/); if(m) parsed=JSON.parse(m[0]); else throw new Error('Не вдалося розібрати відповідь'); }
@@ -2768,39 +2789,19 @@ async function searchTrends(){
   }
 }
 
-/* ── FILE:// DETECTION ── */
-(function(){
-  if(location.protocol==='file:'){
-    document.addEventListener('DOMContentLoaded',()=>{
-      const w=document.getElementById('fileWarning');
-      if(w) w.classList.add('show');
-    });
-  }
-})();
-
-/* ── 429 RATE LIMIT COUNTDOWN ── */
-let rateLimitTimer=null;
-function show429Countdown(seconds){
-  let s=seconds;
-  const btn=document.getElementById('analyzeBtn');
-  if(btn) btn.disabled=true;
-  clearInterval(rateLimitTimer);
-  rateLimitTimer=setInterval(()=>{
-    s--;
-    showErr(`⏳ Rate limit. Зачекайте ${s}с... (безкоштовний Gemini має ліміт ~15 запитів/хв)`);
-    if(s<=0){
-      clearInterval(rateLimitTimer);
-      if(btn) btn.disabled=false;
-      hideErr();
-    }
-  },1000);
-}
-
 /* ── INIT ── */
 document.addEventListener('DOMContentLoaded',()=>{
   restoreState();
   loadHistory();
   loadTrendsHistory();
+
+  // Show warning if opened via file://
+  if(location.protocol==='file:'){
+    const w=document.createElement('div');
+    w.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#f59e0b;color:#000;font-size:.76rem;font-weight:600;padding:10px 16px;text-align:center;font-family:sans-serif;line-height:1.5';
+    w.innerHTML='⚠️ Файл відкрито через file:// — API не працює. Завантажте на <a href="https://tiiny.host" target="_blank" style="color:#000">tiiny.host</a> або запустіть <b>npx serve .</b> у папці з файлом &nbsp;<button onclick="this.parentNode.remove()" style="background:rgba(0,0,0,.2);border:none;border-radius:4px;padding:2px 8px;cursor:pointer;font-weight:700">✕</button>';
+    document.body.appendChild(w);
+  }
 });
 </script>
 </body>
