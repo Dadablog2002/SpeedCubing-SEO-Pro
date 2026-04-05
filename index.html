@@ -1665,15 +1665,10 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
               <div class="shorts-section-label s-title">3 Назви для Shorts</div>
               <div class="variants" id="shortsTitlesContent" style="padding:10px 12px;gap:6px;display:flex;flex-direction:column;"></div>
             </div>
-            <!-- DESCRIPTION -->
+            <!-- DESCRIPTION + KEYWORDS -->
             <div class="shorts-section">
               <div class="shorts-section-label s-desc">Опис (з хуком у першому рядку)</div>
               <div class="shorts-section-content" id="shortsDesc"></div>
-            </div>
-            <!-- KEYWORDS (English label) -->
-            <div class="shorts-section">
-              <div class="shorts-section-label s-kw">Keywords (one per line)</div>
-              <div class="shorts-kw-list" id="shortsKw"></div>
             </div>
             <!-- TAGS — більше тегів окремо -->
             <div class="shorts-section">
@@ -1998,9 +1993,8 @@ function cpShortsTags(){
 function cpShortsAll(){
   const titles=Array.from(document.querySelectorAll('#shortsTitlesContent .variant-text')).map((el,i)=>`Назва ${i+1}: ${el.textContent}`).join('\n');
   const desc=document.getElementById('shortsDesc').textContent;
-  const kws=Array.from(document.querySelectorAll('#shortsKw .shorts-kw-item')).map(el=>el.textContent).join('\n');
   const tagsArr=Array.from(document.querySelectorAll('#shortsTagsContent .tag-pill')).map(el=>el.getAttribute('data-tag')).join(' ');
-  cpText(`${titles}\n\n${desc}\n\nKEYWORDS:\n${kws}\n\nTAGS:\n${tagsArr}`);
+  cpText(`${titles}\n\n${desc}\n\nTAGS:\n${tagsArr}`);
 }
 function cpShortsDesc(btn){
   const desc=document.getElementById('shortsDesc').textContent;
@@ -2118,7 +2112,7 @@ SPEEDCUBING: F2L OLL PLL CFOP Cross sub-10/15/20 T-perm Sune ZBLL BLD FMC WCA Ro
   "pinnedComment":"закріплений коментар-питання (укр)",
   "bestPostTime":"найкращий час публікації",
   "description":"${plat==='yt'?`SEO опис YouTube мовою ${lang}${cta?', CTA':''}`:plat==='yts'?`опис Shorts мовою ${lang}`:`TikTok caption мовою ${lang}`}",
-  ${plat==='yts'?`"shortsDescription":"структурований опис Shorts (абзаци, hook першим рядком) мовою ${lang}","shortsKeywords":["kw1","kw2","kw3","kw4","kw5","kw6","kw7","kw8","kw9","kw10"],`:''}${plat==='tkt'?`"tiktokTitle":"ultra-hook до 80 символів мовою ${lang}","tiktokDescription":"опис 2-4 рядки мовою ${lang}",`:''}
+  ${plat==='yts'?`"shortsDescription":"структурований опис Shorts (абзаци, hook першим рядком, і в КІНЦІ опису — ключові слова кожне з нового рядку) мовою ${lang}","shortsKeywords":["kw1","kw2","kw3","kw4","kw5","kw6","kw7","kw8","kw9","kw10"],`:''}${plat==='tkt'?`"tiktokTitle":"ultra-hook до 80 символів мовою ${lang}","tiktokDescription":"опис 2-4 рядки мовою ${lang}",`:''}
   "hashtags":${plat==='tkt'?'["#хеш1","#хеш2","#хеш3","#хеш4","#хеш5"]':'null'},
   "tags":${plat!=='tkt'?`[мін.${cfg.tagsCount} штук {"tag":"","volume":"high|med|low","reason":""}]`:'null'},
   "tips":[мін.6 {"priority":"critical|important|nice","title":"укр","text":"укр"}],
@@ -2323,8 +2317,9 @@ function renderResults(d, cfg){
       }).join('');
     }
 
-    document.getElementById('shortsDesc').textContent=sDesc;
-    document.getElementById('shortsKw').innerHTML=sKws.map(k=>`<div class="shorts-kw-item">${eH(k)}</div>`).join('');
+    // Keywords вбудовуємо в кінець опису
+    const sDescFull = sKws.length ? sDesc + '\n\n' + sKws.join('\n') : sDesc;
+    document.getElementById('shortsDesc').textContent=sDescFull;
 
     // Shorts tags in shorts block — more tags
     const stArr=d.tags||[];
