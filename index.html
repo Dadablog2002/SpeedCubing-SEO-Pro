@@ -2363,7 +2363,7 @@ function renderResults(d, cfg){
   const serInfo=videoMode==='series'&&document.getElementById('seriesName').value.trim()?
     {name:document.getElementById('seriesName').value.trim(),ep:epNum}:null;
   saveToHistory(d, cfg, [...tags], serInfo);
-  renderKwScores(d);
+
   saveState();
 }
 
