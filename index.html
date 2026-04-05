@@ -2131,14 +2131,13 @@ SPEEDCUBING: F2L OLL PLL CFOP Cross sub-10/15/20 T-perm Sune ZBLL BLD FMC WCA Ro
     } else {
       msgContent=prompt;
     }
-    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,{
+    const r=await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         contents:[{role:'user',parts: typeof msgContent==='string'
           ? [{text:msgContent}]
           : msgContent}],
-        tools:[{google_search:{}}],
         generationConfig:{maxOutputTokens:6000,temperature:0.7}
       })
     });
@@ -2724,12 +2723,11 @@ async function searchTrends(){
 Поверни 4-7 трендів. status: hot = вірусний прямо зараз, rising = набирає оберти, stable = стабільно популярний. Відповідь ТІЛЬКИ JSON.`;
 
   try{
-    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,{
+    const r=await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         contents:[{role:'user',parts:[{text:prompt}]}],
-        tools:[{google_search:{}}],
         generationConfig:{maxOutputTokens:2000,temperature:0.7}
       })
     });
