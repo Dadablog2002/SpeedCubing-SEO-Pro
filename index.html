@@ -2459,5 +2459,308 @@ function renderVidiqPanel(d){
   }).join('');
 }
 
-function renderKwScores(d){
+function saveState(){
+  try{
+    const state={
+      apiKey: document.getElementById('apiKey').value,
+      plat,
+      tags,
+      vtype: document.getElementById('vtype').value,
+      lang:  document.getElementById('lang').value,
+      ht:    document.getElementById('ht').classList.contains('on'),
+      ct:    document.getElementById('ct').classList.contains('on'),
+      mt:    document.getElementById('mt').classList.contains('on'),
+      videoMode,
+      epNum,
+      seriesName:    document.getElementById('seriesName').value,
+      totalParts:    document.getElementById('totalParts').value,
+      totalPartsCustom: document.getElementById('totalPartsCustom').value,
+      seriesCase:    document.getElementById('seriesCase').value,
+      seriesDiff:    document.getElementById('seriesDiff').value,
+      seriesContent: document.getElementById('seriesContent').value,
+      singleTitle:   document.getElementById('singleTitle').value,
+      singleCase:    document.getElementById('singleCase').value,
+    };
+    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+  }catch(e){}
+}
 
+function restoreState(){
+  try{
+    const raw=localStorage.getItem(SAVE_KEY);
+    if(!raw) return;
+    const s=JSON.parse(raw);
+    if(s.apiKey)  document.getElementById('apiKey').value=s.apiKey;
+    if(s.plat)    setPlat(s.plat);
+    if(s.tags)    { tags=s.tags; renderTags(); }
+    if(s.vtype)   document.getElementById('vtype').value=s.vtype;
+    if(s.lang)    document.getElementById('lang').value=s.lang;
+    if(s.ht!==undefined)    document.getElementById('ht').classList.toggle('on',!!s.ht);
+    if(s.ct!==undefined)    document.getElementById('ct').classList.toggle('on',!!s.ct);
+    if(s.mt!==undefined)    document.getElementById('mt').classList.toggle('on',!!s.mt);
+    if(s.videoMode) setVmode(s.videoMode);
+    if(s.epNum)   { epNum=s.epNum; document.getElementById('epNum').textContent=epNum; }
+    if(s.seriesName)    document.getElementById('seriesName').value=s.seriesName;
+    if(s.totalParts)    document.getElementById('totalParts').value=s.totalParts;
+    if(s.totalPartsCustom){ document.getElementById('totalPartsCustom').value=s.totalPartsCustom; if(s.totalParts==='custom') document.getElementById('totalPartsCustom').style.display='block'; }
+    if(s.seriesCase)    document.getElementById('seriesCase').value=s.seriesCase;
+    if(s.seriesDiff)    document.getElementById('seriesDiff').value=s.seriesDiff;
+    if(s.seriesContent) document.getElementById('seriesContent').value=s.seriesContent;
+    if(s.singleTitle)   document.getElementById('singleTitle').value=s.singleTitle;
+    if(s.singleCase)    document.getElementById('singleCase').value=s.singleCase;
+    if(s.videoMode==='series') updateSeriesPreview();
+  }catch(e){}
+}
+
+document.addEventListener('change', saveState);
+document.addEventListener('input', saveState);
+
+/* ── HISTORY ── */
+let history=[];
+
+function loadHistory(){
+  try{ history=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]'); }catch(e){ history=[]; }
+  renderHistory();
+}
+
+function saveToHistory(result, cfg, kwList, seriesInfo){
+  const bestTitle=(result.titles||[]).find(t=>t.type==='best')||result.titles?.[0];
+  const entry={
+    id: Date.now(),
+    date: new Date().toLocaleDateString('uk',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}),
+    plat,
+    platName: cfg.name,
+    title: bestTitle?.text||kwList.join(', '),
+    keywords: kwList.slice(0,4),
+    seoScore: result.seoScore||0,
+    seriesName: seriesInfo?.name||null,
+    seriesEp:   seriesInfo?.ep||null,
+    vtype: document.getElementById('vtype').value,
+    lang:  document.getElementById('lang').value,
+    result,
+    cfgName: cfg.name,
+  };
+  history.unshift(entry);
+  if(history.length>20) history=history.slice(0,20);
+  try{ localStorage.setItem(HISTORY_KEY, JSON.stringify(history)); }catch(e){}
+  renderHistory();
+}
+
+function renderHistory(){
+  const container=document.getElementById('historyList');
+  const emptyEl=document.getElementById('histEmpty');
+  const clearBtn=document.getElementById('clearHistBtn');
+  const badge=document.getElementById('histBadge');
+
+  if(!history.length){
+    if(emptyEl) emptyEl.style.display='block';
+    if(clearBtn) clearBtn.style.display='none';
+    if(badge) badge.classList.remove('show');
+    if(container) container.innerHTML='<div class="hist-empty" id="histEmpty">Тут зберігатимуться попередні аналізи</div>';
+    return;
+  }
+
+  if(emptyEl) emptyEl.style.display='none';
+  if(clearBtn) clearBtn.style.display='block';
+  if(badge){ badge.textContent=history.length; badge.classList.add('show'); }
+
+  if(container) container.innerHTML=history.map((h,i)=>`
+    <div class="hist-item" onclick="restoreFromHistory(${i})">
+      <div class="hist-item-top">
+        <div class="hist-item-title">${eH(h.title.substring(0,50)+(h.title.length>50?'...':''))}</div>
+        <span class="hist-item-plat hp-${h.plat}">${eH(h.platName)}</span>
+        <button class="hist-item-del" onclick="event.stopPropagation();deleteHistory(${i})" title="Видалити">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="hist-item-meta">${eH(h.date)} · SEO ${h.seoScore}/100 · ${eH(h.keywords.join(', '))}</div>
+      ${h.seriesName?`<div class="hist-item-series">Серія: ${eH(h.seriesName)} · Ч.${h.seriesEp}</div>`:''}
+    </div>
+  `).join('');
+}
+
+function restoreFromHistory(idx){
+  const h=history[idx];
+  if(!h||!h.result) return;
+  const cfg=platCfg[h.plat]||platCfg.yt;
+  setPlat(h.plat);
+  tags=h.keywords; renderTags();
+  renderResults(h.result, cfg);
+  closeHistory();
+  showToast('Відновлено з історії');
+  document.getElementById('results').scrollIntoView({behavior:'smooth'});
+}
+
+function deleteHistory(idx){
+  history.splice(idx,1);
+  try{ localStorage.setItem(HISTORY_KEY, JSON.stringify(history)); }catch(e){}
+  renderHistory();
+}
+
+function clearHistory(){
+  if(!confirm('Очистити всю історію?')) return;
+  history=[];
+  try{ localStorage.removeItem(HISTORY_KEY); }catch(e){}
+  renderHistory();
+  closeHistory();
+}
+
+function getHistoryContext(){
+  if(!history.length) return 'Це перший аналіз — попередніх даних немає.';
+  const recent=history.slice(0,5);
+  return 'Попередні відео на каналі (для контексту та уникнення повторів):'+
+    recent.map((h,i)=>`\n${i+1}. [${h.platName}] "${h.title.substring(0,60)}" — теги: ${h.keywords.join(', ')}${h.seriesName?' | Серія: '+h.seriesName+' Ч.'+h.seriesEp:''}`).join('');
+}
+
+/* ── TRENDS DRAWER ── */
+const TRENDS_HISTORY_KEY='seo_pro_trends_v1';
+let trendsHistory=[];
+
+function openTrends(){
+  document.getElementById('trendsDrawer').classList.add('open');
+  document.getElementById('trendsOverlay').classList.add('open');
+  loadTrendsHistory();
+  // set today's date as default
+  const d=new Date();
+  const pad=n=>String(n).padStart(2,'0');
+  document.getElementById('trendsDate').value=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+function closeTrends(){
+  document.getElementById('trendsDrawer').classList.remove('open');
+  document.getElementById('trendsOverlay').classList.remove('open');
+}
+
+function loadTrendsHistory(){
+  try{ trendsHistory=JSON.parse(localStorage.getItem(TRENDS_HISTORY_KEY)||'[]'); }catch(e){ trendsHistory=[]; }
+  renderTrendsHistory();
+}
+
+function saveTrendsEntry(entry){
+  trendsHistory.unshift(entry);
+  if(trendsHistory.length>15) trendsHistory=trendsHistory.slice(0,15);
+  try{ localStorage.setItem(TRENDS_HISTORY_KEY,JSON.stringify(trendsHistory)); }catch(e){}
+  renderTrendsHistory();
+}
+
+function deleteTrendsEntry(idx){
+  trendsHistory.splice(idx,1);
+  try{ localStorage.setItem(TRENDS_HISTORY_KEY,JSON.stringify(trendsHistory)); }catch(e){}
+  renderTrendsHistory();
+}
+
+function clearTrendsHistory(){
+  if(!confirm('Очистити всю історію трендів?')) return;
+  trendsHistory=[];
+  try{ localStorage.removeItem(TRENDS_HISTORY_KEY); }catch(e){}
+  renderTrendsHistory();
+}
+
+function renderTrendsHistory(){
+  const body=document.getElementById('trendsBody');
+  const footer=document.getElementById('trendsFooter');
+  if(!trendsHistory.length){
+    body.innerHTML=`<div class="trends-empty"><div class="trends-empty-icon">📈</div>Натисни "Пошук" щоб дізнатись<br>що зараз трендить у спідкубінгу<br><span style="font-size:.62rem;opacity:.6">з AI-прогнозом та аналізом</span></div>`;
+    footer.style.display='none';
+    return;
+  }
+  footer.style.display='block';
+  body.innerHTML=trendsHistory.map((entry,idx)=>`
+    <div class="trends-item">
+      <div class="trends-item-head">
+        <div>
+          <div class="trends-item-query">${eH(entry.query)}</div>
+          <div class="trends-item-meta">
+            <span class="trends-item-date">${eH(entry.date)}</span>
+            ${entry.dateFor?`<span style="font-size:.6rem;font-family:var(--mono);color:var(--violet)">· ${eH(entry.dateFor)}</span>`:''}
+          </div>
+        </div>
+        <button class="trends-item-del" onclick="deleteTrendsEntry(${idx})" title="Видалити">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="trends-item-body">
+        <div class="trends-trend-list">
+          ${(entry.trends||[]).map(tr=>`
+            <div class="trend-entry ${tr.status||'stable'}">
+              <div class="trend-entry-top">
+                <div class="trend-name">${eH(tr.name)}</div>
+                <span class="trend-badge ${tr.status||'stable'}">${tr.status==='hot'?'🔥 Гаряче':tr.status==='rising'?'📈 Зростає':'📊 Стабільно'}</span>
+              </div>
+              <div class="trend-desc">${eH(tr.description)}</div>
+              <div class="trend-forecast">🔮 ${eH(tr.forecast)}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function searchTrends(){
+  const apiKey=document.getElementById('apiKey').value.trim();
+  if(!apiKey){showToast('Спочатку введіть API ключ');return;}
+  const query=document.getElementById('trendsQuery').value.trim()||'speedcubing';
+  const dateVal=document.getElementById('trendsDate').value;
+  const dateDisplay=dateVal?new Date(dateVal).toLocaleDateString('uk',{day:'2-digit',month:'long',year:'numeric'}):'сьогодні';
+
+  const btn=document.getElementById('trendsSearchBtn');
+  btn.disabled=true;
+  btn.textContent='Шукаю...';
+  document.getElementById('trendsBody').innerHTML=`<div class="trends-loading"><div class="trends-spinner"></div>AI аналізує тренди...</div>`;
+
+  const prompt=`Ти — топ-аналітик спідкубінг контенту. Дата запиту: ${dateDisplay}. Тема пошуку: "${query}".
+
+Використай web_search щоб знайти актуальні тренди. Шукай: "speedcubing trending ${new Date().getFullYear()}", "${query} speedcubing viral", "YouTube speedcubing ${dateDisplay}", "#speedcubing TikTok trend".
+
+Поверни ТІЛЬКИ чистий JSON (без markdown):
+{
+  "trends": [
+    {
+      "name": "Назва тренду (укр)",
+      "status": "hot|rising|stable",
+      "description": "Що це за тренд, чому популярний зараз (2-3 речення укр)",
+      "forecast": "Прогноз: що буде з цим трендом наступні 2-4 тижні (укр)"
+    }
+  ]
+}
+Поверни 4-7 трендів. status: hot = вірусний прямо зараз, rising = набирає оберти, stable = стабільно популярний. Відповідь ТІЛЬКИ JSON.`;
+
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1500,messages:[{role:'user',content:prompt}]})
+    });
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data=await r.json();
+    const raw=data.content.filter(b=>b.type==='text').map(b=>b.text).join('');
+    let parsed;
+    try{ parsed=JSON.parse(raw.replace(/```json|```/g,'').trim()); }
+    catch{ const m=raw.match(/\{[\s\S]*\}/); if(m) parsed=JSON.parse(m[0]); else throw new Error('Не вдалося розібрати відповідь'); }
+    
+    const pad=n=>String(n).padStart(2,'0');
+    const now=new Date();
+    const entry={
+      id:Date.now(),
+      query,
+      date:`${pad(now.getDate())}.${pad(now.getMonth()+1)} ${pad(now.getHours())}:${pad(now.getMinutes())}`,
+      dateFor:dateDisplay,
+      trends:parsed.trends||[]
+    };
+    saveTrendsEntry(entry);
+  }catch(e){
+    document.getElementById('trendsBody').innerHTML=`<div class="trends-empty"><div class="trends-empty-icon">⚠️</div>Помилка: ${eH(e.message)}<br><span style="font-size:.62rem;opacity:.6">Перевірте API ключ та спробуйте знову</span></div>`;
+  }finally{
+    btn.disabled=false;
+    btn.textContent='Пошук';
+  }
+}
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded',()=>{
+  restoreState();
+  loadHistory();
+  loadTrendsHistory();
+});
+</script>
+</body>
+</html>
