@@ -2145,7 +2145,7 @@ SPEEDCUBING терміни для контексту: F2L OLL PLL CFOP Cross sub
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
       body:JSON.stringify({
-        model:'deepseek-r1-distill-llama-70b',
+        model:'llama-3.3-70b-versatile',
         messages:[{role:'user',content:msgText}],
         max_tokens:8000,
         temperature:0.7
@@ -2737,7 +2737,7 @@ async function searchTrends(){
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
       body:JSON.stringify({
-        model:'deepseek-r1-distill-llama-70b',
+        model:'llama-3.3-70b-versatile',
         messages:[{role:'user',content:prompt}],
         max_tokens:2000,
         temperature:0.7
