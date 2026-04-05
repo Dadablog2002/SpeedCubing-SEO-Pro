@@ -2035,25 +2035,9 @@ async function go(){
   }
 
   const platI={
-    yt:`YouTube (2026 SEO):
-НАЗВА: до ${cfg.titleMax} символів МОВОЮ ${lang}. Curiosity gap або число+факт. 1-2 emoji. 60-70 символів ідеально.
-ОПИС: МОВОЮ ${lang}. ${cfg.descWords}. Структура: Hook → Про відео → Chapters → CTA → ключові слова кожне з нового рядка → теги #хештег.
-Перші 150 символів — найважливіші для SEO. Chapters формат: 0:00 Назва розділу.
-ТЕГИ: ${cfg.tagsCount} тегів МОВОЮ ${lang}. Мікс: широкі + нішеві + брендові.`,
-    yts:`YouTube Shorts (2026 алгоритм):
-НАЗВА: до ${cfg.titleMax} символів МОВОЮ ${lang}, обов'язково #Shorts в кінці. Перші 3 слова — гачок.
-ОПИС: МОВОЮ ${lang}. Структура: [Hook 1й рядок] → [2-3 речення суті] → [CTA] → [ключові слова кожне з нового рядка] → [теги #].
-НЕ суцільний текст — чіткі абзаци. ${cfg.descWords}.
-КЛЮЧОВІ СЛОВА: мінімум 10, кожне з нового рядка, МОВОЮ ${lang}.
-ТЕГИ: мінімум 25 хештегів #, МОВОЮ ${lang}.`,
-    tkt:`TikTok Caption (2026):
-ВСЕ В ОДНОМУ ПОЛІ caption. Формат МОВОЮ ${lang}:
-Рядок 1: ultra-hook до 80 симв — питання або шок-факт
-(порожній рядок)
-Рядок 2-4: опис 2-3 речення — розпалює цікавість без спойлерів
-(порожній рядок)
-Хештеги: 5 штук — 2 мега + 2 нішеві + 1 тренд.
-ТЕГИ: рівно 5 хештегів — 2 мегапопулярних + 2 нішевих + 1 тренд тижня.
+    yt:`YouTube: назва до ${cfg.titleMax} симв мовою ${lang}, опис ${cfg.descWords} мовою ${lang} з Hook→Chapters→CTA→ключові слова→теги, ${cfg.tagsCount} тегів мовою ${lang}.`,
+    yts:`Shorts: назва до ${cfg.titleMax} симв мовою ${lang} + #Shorts в кінці. Опис мовою ${lang}: Hook→суть→CTA→ключові слова кожне з нового рядка→теги. 10+ keywords, 25+ тегів.`,
+    tkt:`TikTok: caption мовою ${lang}: hook рядок 1 (до 80 симв) → порожній рядок → опис 2-3 речення → порожній рядок → 5 хештегів. ТЕГИ: рівно 5 хештегів — 2 мегапопулярних + 2 нішевих + 1 тренд тижня.
 Caption загалом: ${cfg.descWords}.`
   };
 
@@ -2061,14 +2045,14 @@ Caption загалом: ${cfg.descWords}.`
 
   const musicInstruction=wMusic?`,
   "music": {
-    "mood": "одне речення — яка атмосфера музики підходить до цього відео",
-    "bpm": "рекомендований BPM напр 120-140",
+    "mood": "атмосфера укр",
+    "bpm": "BPM",
     "tracks": [
-      {"name":"точна назва треку","artist":"виконавець","source":"YouTube Audio Library|Epidemic Sound|SoundCloud|StreamBeats","genre":"жанр","energy":"low|medium|high","isTrending":true,"trendNote":"чому трендовий у 2026 році","tags":["тег1","тег2"],"searchQuery":"пошуковий запит для знаходження"},
-      {"name":"...","artist":"...","source":"...","genre":"...","energy":"...","isTrending":true,"trendNote":"...","tags":[],"searchQuery":"..."},
-      {"name":"...","artist":"...","source":"...","genre":"...","energy":"...","isTrending":true,"trendNote":"...","tags":[],"searchQuery":"..."}
+      {"name":"назва","artist":"артист","source":"YouTube Audio Library|Epidemic Sound|SoundCloud|StreamBeats","genre":"жанр","energy":"low|medium|high","isTrending":true,"trendNote":"чому трендовий укр","tags":["тег"],"searchQuery":"запит"},
+      {"name":"назва","artist":"артист","source":"...","genre":"жанр","energy":"high","isTrending":true,"trendNote":"укр","tags":[],"searchQuery":"запит"},
+      {"name":"назва","artist":"артист","source":"...","genre":"жанр","energy":"high","isTrending":true,"trendNote":"укр","tags":[],"searchQuery":"запит"}
     ],
-    "where": "де шукати трендову безкоштовну музику для спідкубінг відео у 2026 році — конкретні поради"
+    "where": "де шукати укр"
   }`:'';
 
   const today=new Date();
@@ -2086,11 +2070,7 @@ Caption загалом: ${cfg.descWords}.`
 Шукай актуальне: "speedcubing trending ${today.getFullYear()}", "speedcubing viral ${today.toLocaleDateString('en',{month:'long'})}", "#speedcubing TikTok ${today.getFullYear()}", "YouTube Shorts speedcubing trending now".
 Використовуй ТІЛЬКИ реальні тренди цього місяця — не вигадуй.
 
-АКТУАЛЬНІ ТРЕНДИ СПІДКУБІНГУ (станом на ${dateStr}):
-TikTok: "POV:" відео, sub-10 flex, satisfying solves під phonk/hardwave/lo-fi, #cubecheck, "rate my solve 1-10", хук у ПЕРШІ 0.5 секунди — вирішальний фактор, loop-відео
-YouTube Shorts: перші 2 секунди вирішують все, loop-відео, challenge формат, ASMR розкладання, before/after порівняння, #cubechallenge2026
-YouTube довге: "road to sub-X" серії, розбір чужих солвів, collab, chapters обов'язкові, коментар-питання в кінці = +40% коментарів
-2026 алгоритм: watch time% > переглядів, перші 24 год вирішують, community posts = x2 охоплення
+ТРЕНДИ ${dateStr}: TikTok — POV, sub-10 flex, phonk/hardwave, #cubecheck, hook 0.5 сек. Shorts — loop, challenge, before/after, перші 2 сек вирішують. YouTube — road to sub-X, chapters, розбір солвів. 2026: watch time > переглядів, перші 24 год критичні.
 ${seriesCtx}
 ${histCtx}
 
@@ -2152,9 +2132,9 @@ SPEEDCUBING контекст: F2L, OLL, PLL, CFOP, Cross, Look-Ahead, Finger Tri
   "seriesContext": ${isSeriesMode&&sName?`{"episodeNum":${epNum},"seriesName":"${sName.replace(/"/g,"'")}","totalParts":"${sTotal}","caseTopic":"${sCase.replace(/"/g,"'")}"}`:'null'},
   "analytics": {"searchVolume":"рядок УКРАЇНСЬКОЮ","competition":"рядок УКРАЇНСЬКОЮ","ctrPotential":"рядок УКРАЇНСЬКОЮ","rankingChance":"рядок УКРАЇНСЬКОЮ"},
   "titles": [
-    {"text":"назва 1 — curiosity gap стиль МОВОЮ ${lang}","type":"best","reason":"чому найкраща (мовою ${lang})","charCount":0},
-    {"text":"назва 2 — число/факт стиль МОВОЮ ${lang}","type":"normal","reason":"чому хороша (мовою ${lang})","charCount":0},
-    {"text":"назва 3 — трендовий hook 2026 МОВОЮ ${lang}","type":"normal","reason":"чому хороша (мовою ${lang})","charCount":0}
+    {"text":"назва 1","type":"best","reason":"причина (укр)","charCount":0},
+    {"text":"назва 2","type":"normal","reason":"причина (укр)","charCount":0},
+    {"text":"назва 3","type":"normal","reason":"причина (укр)","charCount":0}
   ],
   "hookSuggestion": "перші 2-3 секунди відео УКРАЇНСЬКОЮ — конкретна фраза або дія",
   "thumbnailText": "3-5 слів для тексту на thumbnail — максимально провокаційно",
@@ -2167,7 +2147,7 @@ SPEEDCUBING контекст: F2L, OLL, PLL, CFOP, Cross, Look-Ahead, Finger Tri
   "tiktokDescription": "основний текст опису 2-4 рядки мовою ${lang}",`:''}
   "hashtags": ${plat==='tkt'?`["#хеш1","#хеш2","#хеш3","#хеш4","#хеш5"]`:'null'},
   "tags": ${plat!=='tkt'?`[мінімум ${cfg.tagsCount} об'єктів {"tag":"","volume":"high|med|low","reason":""}]`:'null'},
-  "tips": [мінімум 6 {"priority":"critical|important|nice","title":"ЗАВЖДИ УКРАЇНСЬКОЮ","text":"ЗАВЖДИ УКРАЇНСЬКОЮ — конкретна порада прив'язана до типу відео і поточних трендів"}],
+  "tips": [6 об'єктів {"priority":"critical|important|nice","title":"укр","text":"укр"}],
   "vidiq": {
     "overallScore": число 0-100,
     "searchVolScore": число 0-100,
@@ -2181,9 +2161,7 @@ SPEEDCUBING контекст: F2L, OLL, PLL, CFOP, Cross, Look-Ahead, Finger Tri
     "overallLabel": "Відмінно|Добре|Задовільно|Слабо",
     "overallSub": "коротка порада (мовою ${lang})"
   },
-  "kwScores": [
-    {"kw":"ключове слово МОВОЮ ${lang}","volScore":число 0-100,"volLabel":"рядок УКРАЇНСЬКОЮ","competition":"easy|medium|hard","compLabel":"рядок УКРАЇНСЬКОЮ","score":число 0-100}
-  ]${musicInstruction}
+  "kwScores": [{"kw":"слово","volScore":0,"volLabel":"укр","competition":"easy|medium|hard","compLabel":"укр","score":0}]${musicInstruction}
 }`;
 
   try{
@@ -2199,7 +2177,7 @@ SPEEDCUBING контекст: F2L, OLL, PLL, CFOP, Cross, Look-Ahead, Finger Tri
     const r=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:5000,messages:[{role:'user',content:msgContent}]})
+      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:8000,messages:[{role:'user',content:msgContent}]})
     });
     if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error?.message||`HTTP ${r.status}`);}
     const d=await r.json();
