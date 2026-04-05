@@ -1272,11 +1272,11 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
     <div class="api-box mb14">
       <div class="api-box-label">
         <svg style="width:14px;height:14px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-        API Ключ Google Gemini
+        Groq API Ключ
         <span style="font-size:.55rem;background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);color:#10b981;padding:1px 7px;border-radius:4px;font-weight:800;letter-spacing:.06em">БЕЗКОШТОВНО</span>
       </div>
-      <input type="password" id="apiKey" placeholder="AIzaSy..." autocomplete="off">
-      <div class="api-hint">Отримай безкоштовно → <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a> · вхід через Google акаунт</div>
+      <input type="password" id="apiKey" placeholder="gsk_..." autocomplete="off">
+      <div class="api-hint">Отримай безкоштовно → <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a> · реєстрація без карти</div>
     </div>
 
     <!-- PLATFORM -->
@@ -2024,8 +2024,8 @@ async function go(){
     return;
   }
   const apiKey=document.getElementById('apiKey').value.trim();
-  if(!apiKey){showErr('Введіть API ключ Google Gemini (починається з AIza...)');return;}
-  if(!apiKey.startsWith('AIza')&&!apiKey.startsWith('AI')){showErr('Перевірте ключ — отримайте безкоштовно на aistudio.google.com');return;}
+  if(!apiKey){showErr('Введіть API ключ Groq (починається з gsk_...)');return;}
+  if(!apiKey.startsWith('gsk_')){showErr('Перевірте ключ — отримайте безкоштовно на console.groq.com/keys');return;}
   if(!tags.length){showErr('Додайте хоча б одне ключове слово.');return;}
   hideErr();
   document.getElementById('loading').classList.add('show');
@@ -2122,28 +2122,23 @@ SPEEDCUBING: F2L OLL PLL CFOP Cross sub-10/15/20 T-perm Sune ZBLL BLD FMC WCA Ro
 }`;
 
   try{
-    let msgContent;
-    if(uploadedImageBase64){
-      msgContent=[
-        {inlineData:{mimeType:uploadedImageType,data:uploadedImageBase64}},
-        {text:prompt+"\n\nНа зображенні вище показана ситуація з кубом. Детально проаналізуй що зображено — яке положення куба, які елементи видно, і максимально використай цю інформацію при генерації назв, описів та порад."}
-      ];
-    } else {
-      msgContent=prompt;
-    }
-    const r=await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,{
+    const msgText = uploadedImageBase64
+      ? prompt + "\n\nУ відео є зображення куба — врахуй це при генерації назв, описів та порад."
+      : prompt;
+
+    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
       body:JSON.stringify({
-        contents:[{role:'user',parts: typeof msgContent==='string'
-          ? [{text:msgContent}]
-          : msgContent}],
-        generationConfig:{maxOutputTokens:6000,temperature:0.7}
+        model:'llama-3.3-70b-versatile',
+        messages:[{role:'user',content:msgText}],
+        max_tokens:6000,
+        temperature:0.7
       })
     });
     if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error?.message||`HTTP ${r.status}`);}
     const d=await r.json();
-    const raw=(d.candidates?.[0]?.content?.parts||[]).filter(p=>p.text).map(p=>p.text).join('');
+    const raw=d.choices?.[0]?.message?.content||'';
     clearInterval(stepTimer);
     for(let i=1;i<=5;i++){const el=document.getElementById('s'+i);el.className='step done';el.querySelector('.step-dot').textContent='✓';}
     await new Promise(res=>setTimeout(res,350));
@@ -2156,7 +2151,7 @@ SPEEDCUBING: F2L OLL PLL CFOP Cross sub-10/15/20 T-perm Sune ZBLL BLD FMC WCA Ro
     clearInterval(stepTimer);
     document.getElementById('loading').classList.remove('show');
     let msg=e.message;
-    if(msg.includes('401')||msg.includes('API_KEY')||msg.includes('authentication')) msg='Невірний API ключ. Перевірте на aistudio.google.com';
+    if(msg.includes('401')||msg.includes('invalid_api_key')||msg.includes('authentication')) msg='Невірний API ключ. Перевірте на console.groq.com/keys';
     else if(msg.includes('429')){ show429Countdown(60); return; }
     else if(msg.includes('CORS')||msg.includes('fetch')||msg.includes('Failed')) msg='🌐 CORS помилка — відкрийте через локальний сервер: npx serve . → http://localhost:3000';
     showErr(msg);
@@ -2695,7 +2690,7 @@ function renderTrendsHistory(){
 async function searchTrends(){
   if(location.protocol==='file:'){ showToast('Відкрийте через локальний сервер (npx serve .)'); return; }
   const apiKey=document.getElementById('apiKey').value.trim();
-  if(!apiKey){showToast('Спочатку введіть Gemini API ключ');return;}
+  if(!apiKey){showToast('Спочатку введіть Groq API ключ');return;}
   const query=document.getElementById('trendsQuery').value.trim()||'speedcubing';
   const dateVal=document.getElementById('trendsDate').value;
   const dateDisplay=dateVal?new Date(dateVal).toLocaleDateString('uk',{day:'2-digit',month:'long',year:'numeric'}):'сьогодні';
@@ -2723,17 +2718,19 @@ async function searchTrends(){
 Поверни 4-7 трендів. status: hot = вірусний прямо зараз, rising = набирає оберти, stable = стабільно популярний. Відповідь ТІЛЬКИ JSON.`;
 
   try{
-    const r=await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,{
+    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
       body:JSON.stringify({
-        contents:[{role:'user',parts:[{text:prompt}]}],
-        generationConfig:{maxOutputTokens:2000,temperature:0.7}
+        model:'llama-3.3-70b-versatile',
+        messages:[{role:'user',content:prompt}],
+        max_tokens:2000,
+        temperature:0.7
       })
     });
     if(!r.ok) throw new Error(`HTTP ${r.status}`);
     const data=await r.json();
-    const raw=(data.candidates?.[0]?.content?.parts||[]).filter(p=>p.text).map(p=>p.text).join('');
+    const raw=data.choices?.[0]?.message?.content||'';
     let parsed;
     try{ parsed=JSON.parse(raw.replace(/```json|```/g,'').trim()); }
     catch{ const m=raw.match(/\{[\s\S]*\}/); if(m) parsed=JSON.parse(m[0]); else throw new Error('Не вдалося розібрати відповідь'); }
