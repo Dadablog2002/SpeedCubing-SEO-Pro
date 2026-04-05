@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>SpeedCubing SEO Pro</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -18,10 +18,10 @@
   --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 20px;
 }
 [data-theme="dark"], :root {
-  --bg:#0b0c12; --card:#13141d; --card2:#1a1b27; --card3:#202131;
-  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.13);
-  --tx:#f0f0f8; --tx2:#9090b0; --tx3:#505068;
-  --topbar-bg:rgba(11,12,18,0.92); --shadow:0 2px 8px rgba(0,0,0,0.35);
+  --bg:#111219; --card:#1c1d28; --card2:#232435; --card3:#2a2b3d;
+  --border:rgba(255,255,255,0.09); --border2:rgba(255,255,255,0.16);
+  --tx:#f2f2fa; --tx2:#a0a0c0; --tx3:#606080;
+  --topbar-bg:rgba(17,18,25,0.97); --shadow:0 2px 8px rgba(0,0,0,0.3);
 }
 [data-theme="light"] {
   --bg:#f1f2f8; --card:#ffffff; --card2:#f6f7fc; --card3:#eef0f7;
@@ -34,7 +34,6 @@
 }
 
 html { scroll-behavior: smooth; }
-
 body {
   font-family: var(--sans);
   background: var(--bg);
@@ -44,7 +43,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── NOISE TEXTURE OVERLAY ── */
 body::after {
   content: '';
   position: fixed; inset: 0;
@@ -52,7 +50,6 @@ body::after {
   pointer-events: none; z-index: 0; opacity: .4; mix-blend-mode: overlay;
 }
 
-/* ── AMBIENT GLOW ── */
 .glow-bg {
   position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
 }
@@ -78,57 +75,50 @@ body::after {
   to   { transform: translate(40px, 30px) scale(1.1); }
 }
 
-/* ── LAYOUT ── */
+/* ── LAYOUT: Mobile-first single column ── */
 .app {
   position: relative; z-index: 1;
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  grid-template-rows: auto 1fr;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  max-width: 1280px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
 /* ── TOPBAR ── */
 .topbar {
-  grid-column: 1 / -1;
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 0 24px;
-  height: 60px;
+  gap: 12px;
+  padding: 0 16px;
+  height: 54px;
   border-bottom: 1px solid var(--border);
   background: var(--topbar-bg);
   backdrop-filter: blur(12px);
-  position: sticky; top: 0; z-index: 100;
+  position: sticky; top: 0; z-index: 200;
 }
 
 .logo-mark {
-  width: 34px; height: 34px;
+  width: 32px; height: 32px;
   border-radius: var(--r-sm);
   background: var(--red);
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-.logo-mark svg { width: 18px; height: 18px; fill: white; }
+.logo-mark svg { width: 16px; height: 16px; fill: white; }
 
 .topbar-title {
-  font-size: .95rem;
+  font-size: .92rem;
   font-weight: 700;
   letter-spacing: -.02em;
   color: var(--tx);
+  flex: 1;
 }
 
-.topbar-sub {
-  font-size: .7rem;
-  color: var(--tx3);
-  font-family: var(--mono);
-  display: none;
-}
-@media(min-width: 600px) { .topbar-sub { display: block; } }
+.topbar-actions { display: flex; align-items: center; gap: 8px; }
 
-.theme-toggle {
-  width: 34px; height: 34px;
+.icon-btn {
+  width: 32px; height: 32px;
   background: var(--card2);
   border: 1px solid var(--border2);
   border-radius: var(--r-sm);
@@ -136,70 +126,112 @@ body::after {
   cursor: pointer; transition: background .2s, border-color .2s;
   flex-shrink: 0;
 }
-.theme-toggle:hover { background: var(--card3); border-color: var(--violet-border); }
-.theme-toggle svg { width: 16px; height: 16px; stroke: var(--tx2); }
-.topbar-badge {
-  margin-left: auto;
-  font-size: .62rem;
-  font-weight: 700;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--violet);
-  background: var(--violet-dim);
-  border: 1px solid var(--violet-border);
-  padding: 3px 10px;
-  border-radius: 100px;
-}
+.icon-btn:hover { background: var(--card3); border-color: var(--violet-border); }
+.icon-btn svg { width: 15px; height: 15px; stroke: var(--tx2); }
 
-/* ── SIDEBAR ── */
-.sidebar {
-  grid-column: 1;
-  grid-row: 2;
-  padding: 20px 16px;
-  border-right: 1px solid var(--border);
-  overflow-y: auto;
-  height: calc(100vh - 60px);
-  position: sticky; top: 60px;
+/* History drawer button */
+.hist-open-btn {
+  position: relative;
 }
+.hist-badge {
+  position: absolute;
+  top: -4px; right: -4px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--violet);
+  color: white;
+  font-size: .55rem;
+  font-weight: 800;
+  display: none;
+  align-items: center; justify-content: center;
+  font-family: var(--mono);
+}
+.hist-badge.show { display: flex; }
 
-/* ── MAIN ── */
+/* ── HISTORY DRAWER (slide-in from right) ── */
+.hist-drawer {
+  position: fixed;
+  top: 0; right: 0;
+  width: min(340px, 92vw);
+  height: 100vh;
+  background: var(--card);
+  border-left: 1px solid var(--border2);
+  z-index: 500;
+  transform: translateX(110%);
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+  display: flex; flex-direction: column;
+  box-shadow: -8px 0 32px rgba(0,0,0,0.35);
+}
+.hist-drawer.open { transform: translateX(0); }
+.hist-drawer-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 490;
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s;
+}
+.hist-drawer-overlay.open { opacity: 1; pointer-events: all; }
+
+.hist-drawer-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.hist-drawer-title { font-size: .9rem; font-weight: 700; }
+.hist-drawer-close {
+  width: 30px; height: 30px;
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--r-sm); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.hist-drawer-close svg { width: 14px; height: 14px; stroke: var(--tx2); }
+.hist-drawer-body { flex: 1; overflow-y: auto; padding: 12px; }
+.hist-drawer-foot { padding: 12px; border-top: 1px solid var(--border); flex-shrink: 0; }
+
+.hist-empty { font-size: .72rem; color: var(--tx3); text-align: center; padding: 24px 8px; font-family: var(--mono); }
+.hist-item {
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--r-sm); padding: 10px 12px;
+  cursor: pointer; transition: border-color .18s, background .18s;
+  margin-bottom: 7px;
+}
+.hist-item:hover { border-color: var(--violet-border); background: var(--violet-dim); }
+.hist-item-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; }
+.hist-item-title { font-size: .76rem; font-weight: 600; color: var(--tx); line-height: 1.3; flex: 1; }
+.hist-item-plat {
+  font-size: .55rem; font-weight: 700; padding: 2px 6px;
+  border-radius: 4px; text-transform: uppercase; letter-spacing: .06em;
+  flex-shrink: 0; white-space: nowrap;
+}
+.hp-yt  { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); }
+.hp-yts { background: rgba(255,100,130,.1); color: #ff7090; border: 1px solid rgba(255,100,130,.3); }
+.hp-tkt { background: var(--cyan-dim); color: var(--cyan); border: 1px solid var(--cyan-border); }
+.hist-item-meta { font-size: .62rem; color: var(--tx3); font-family: var(--mono); margin-top: 4px; }
+.hist-item-series { font-size: .62rem; color: var(--violet); margin-top: 2px; font-family: var(--mono); }
+.hist-item-del {
+  width: 20px; height: 20px; flex-shrink: 0;
+  background: none; border: none; color: var(--tx3);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  border-radius: 3px; transition: color .15s, background .15s;
+}
+.hist-item-del:hover { color: var(--red); background: var(--red-dim); }
+.hist-item-del svg { width: 10px; height: 10px; }
+
+/* ── MAIN CONTENT ── */
 .main {
-  grid-column: 2;
-  grid-row: 2;
-  padding: 24px;
-  overflow-y: auto;
-  min-height: calc(100vh - 60px);
-}
-
-/* ── MOBILE LAYOUT ── */
-@media(max-width: 768px) {
-  .app {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto 1fr;
-  }
-  .topbar { padding: 0 16px; height: 54px; }
-  .sidebar {
-    grid-column: 1; grid-row: 2;
-    height: auto;
-    position: static;
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-    padding: 16px;
-  }
-  .main {
-    grid-column: 1; grid-row: 3;
-    padding: 16px;
-  }
+  padding: 16px;
+  padding-bottom: 32px;
 }
 
 /* ── SECTION LABEL ── */
 .section-label {
-  font-size: .62rem;
+  font-size: .6rem;
   font-weight: 700;
   letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--tx3);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   padding-left: 2px;
 }
 
@@ -212,8 +244,6 @@ body::after {
   transition: border-color .2s;
 }
 .card:focus-within { border-color: var(--violet-border); }
-.card + .card { margin-top: 10px; }
-
 .card-inner { padding: 14px 16px; }
 
 /* ── PLATFORM TABS ── */
@@ -223,7 +253,6 @@ body::after {
   gap: 6px;
   margin-bottom: 10px;
 }
-
 .ptab {
   background: var(--card);
   border: 1.5px solid var(--border);
@@ -235,16 +264,8 @@ body::after {
   user-select: none;
 }
 .ptab:hover { border-color: var(--border2); }
-.ptab-name {
-  font-size: .72rem;
-  font-weight: 700;
-  letter-spacing: .04em;
-  color: var(--tx2);
-  display: block;
-  margin-bottom: 2px;
-}
+.ptab-name { font-size: .72rem; font-weight: 700; letter-spacing: .04em; color: var(--tx2); display: block; margin-bottom: 2px; }
 .ptab-desc { font-size: .6rem; color: var(--tx3); }
-
 .ptab.active-yt  { background: rgba(230,57,80,.08); border-color: var(--red-border); }
 .ptab.active-yt .ptab-name  { color: var(--red); }
 .ptab.active-yts { background: rgba(230,57,80,.05); border-color: rgba(255,100,130,.4); }
@@ -255,10 +276,10 @@ body::after {
 /* ── PLATFORM PILL ── */
 .plat-pill {
   display: flex; align-items: center; gap: 8px;
-  padding: 8px 12px;
+  padding: 7px 12px;
   border-radius: var(--r-sm);
-  font-size: .72rem; font-weight: 600;
-  margin-bottom: 10px;
+  font-size: .7rem; font-weight: 600;
+  margin-bottom: 12px;
 }
 .plat-pill.yt  { background: rgba(230,57,80,.07); border: 1px solid rgba(230,57,80,.2); color: #ff8899; }
 .plat-pill.yts { background: rgba(255,100,130,.06); border: 1px solid rgba(255,100,130,.2); color: #ffaabb; }
@@ -272,13 +293,9 @@ body::after {
 .field { margin-bottom: 10px; }
 .field:last-child { margin-bottom: 0; }
 .field-label {
-  font-size: .62rem;
-  font-weight: 600;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--tx3);
-  display: block;
-  margin-bottom: 6px;
+  font-size: .6rem; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--tx3);
+  display: block; margin-bottom: 6px;
 }
 
 input[type=text],
@@ -291,8 +308,8 @@ textarea {
   border-radius: var(--r-sm);
   color: var(--tx);
   font-family: var(--sans);
-  font-size: .82rem;
-  padding: 9px 12px;
+  font-size: .84rem;
+  padding: 10px 12px;
   outline: none;
   transition: border-color .2s;
   -webkit-appearance: none;
@@ -302,14 +319,10 @@ input[type=password] { font-family: var(--mono); font-size: .78rem; letter-spaci
 input:focus, select:focus, textarea:focus { border-color: var(--violet-border); }
 input::placeholder, textarea::placeholder { color: var(--tx3); }
 select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23505068' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; }
-select option { background: #13141d; }
+select option { background: #1c1d28; }
 textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 
 .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.field-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-@media(max-width: 480px) {
-  .field-grid, .field-grid-3 { grid-template-columns: 1fr; }
-}
 
 /* ── API BOX ── */
 .api-box {
@@ -317,29 +330,22 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
   border: 1px solid var(--amber-border);
   border-radius: var(--r-lg);
   padding: 14px 16px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 .api-box-label {
-  font-size: .62rem; font-weight: 700;
+  font-size: .6rem; font-weight: 700;
   letter-spacing: .1em; text-transform: uppercase;
   color: var(--amber); margin-bottom: 8px;
   display: flex; align-items: center; gap: 6px;
 }
-.api-key-icon {
-  width: 14px; height: 14px;
-  display: inline-block;
-}
-.api-hint {
-  font-size: .64rem; color: var(--tx3);
-  margin-top: 6px; font-family: var(--mono);
-}
+.api-hint { font-size: .62rem; color: var(--tx3); margin-top: 6px; font-family: var(--mono); }
 .api-hint a { color: var(--amber); text-decoration: none; }
 .api-hint a:hover { text-decoration: underline; }
 
 /* ── TAGS INPUT ── */
 .tags-wrap {
   display: flex; flex-wrap: wrap; gap: 6px;
-  min-height: 42px;
+  min-height: 44px;
   background: var(--card2);
   border: 1px solid var(--border);
   border-radius: var(--r-sm);
@@ -353,52 +359,33 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
   background: var(--violet-dim);
   border: 1px solid var(--violet-border);
   color: #b4a0ff;
-  font-size: .7rem; padding: 3px 8px;
-  border-radius: 6px;
-  font-family: var(--mono);
+  font-size: .7rem; padding: 4px 8px;
+  border-radius: 6px; font-family: var(--mono);
   animation: chipIn .15s ease;
 }
 @keyframes chipIn { from { opacity:0; transform:scale(.8); } to { opacity:1; transform:scale(1); } }
 .chip-del {
   background: none; border: none;
-  color: rgba(180,160,255,.4);
-  cursor: pointer; font-size: 14px;
-  line-height: 1; padding: 0;
-  transition: color .15s;
-  display: flex;
+  color: rgba(180,160,255,.4); cursor: pointer; font-size: 14px;
+  line-height: 1; padding: 0; transition: color .15s; display: flex;
 }
 .chip-del:hover { color: var(--red); }
 #tagInput {
   background: none; border: none; outline: none;
   color: var(--tx); font-family: var(--sans);
-  font-size: .8rem; min-width: 90px; flex: 1;
-  padding: 0;
+  font-size: .82rem; min-width: 90px; flex: 1; padding: 0;
 }
 #tagInput::placeholder { color: var(--tx3); }
 
-.hint-text {
-  font-size: .62rem; color: var(--tx3);
-  margin-top: 5px; font-family: var(--mono);
-}
+.hint-text { font-size: .62rem; color: var(--tx3); margin-top: 5px; font-family: var(--mono); }
 
 /* ── QUICK TAG PILLS ── */
-.qtag-row {
-  display: flex; flex-wrap: wrap; gap: 4px;
-  margin-top: 8px;
-}
-.qtag-lbl {
-  font-size: .58rem; color: var(--tx3);
-  font-family: var(--mono);
-  width: 100%; margin-bottom: 2px;
-}
+.qtag-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.qtag-lbl { font-size: .58rem; color: var(--tx3); font-family: var(--mono); width: 100%; margin-bottom: 2px; }
 .qtag {
-  background: var(--card2);
-  border: 1px solid var(--border);
-  color: var(--tx3);
-  font-size: .64rem; padding: 3px 8px;
-  border-radius: 5px; cursor: pointer;
-  transition: all .18s;
-  font-family: var(--mono);
+  background: var(--card2); border: 1px solid var(--border); color: var(--tx3);
+  font-size: .64rem; padding: 4px 9px; border-radius: 5px; cursor: pointer;
+  transition: all .18s; font-family: var(--mono);
 }
 .qtag:hover { border-color: var(--violet-border); color: #b4a0ff; background: var(--violet-dim); }
 
@@ -406,26 +393,22 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 .toggle-row {
   display: flex; align-items: center;
   justify-content: space-between;
-  padding: 8px 0;
+  padding: 10px 0;
   border-bottom: 1px solid var(--border);
 }
 .toggle-row:last-child { border-bottom: none; }
-.toggle-label { font-size: .78rem; color: var(--tx2); font-weight: 500; }
+.toggle-label { font-size: .8rem; color: var(--tx2); font-weight: 500; }
 .toggle-sub { font-size: .62rem; color: var(--tx3); margin-top: 1px; }
 .toggle-sw {
-  width: 36px; height: 20px;
-  background: var(--card3);
-  border: 1px solid var(--border2);
-  border-radius: 10px;
-  position: relative; cursor: pointer;
-  transition: background .25s, border-color .25s;
-  flex-shrink: 0;
+  width: 38px; height: 22px;
+  background: var(--card3); border: 1px solid var(--border2);
+  border-radius: 11px; position: relative; cursor: pointer;
+  transition: background .25s, border-color .25s; flex-shrink: 0;
 }
 .toggle-sw.on { background: var(--violet); border-color: var(--violet); }
 .toggle-sw::after {
-  content: '';
-  position: absolute;
-  width: 14px; height: 14px;
+  content: ''; position: absolute;
+  width: 16px; height: 16px;
   background: white; border-radius: 50%;
   top: 2px; left: 2px;
   transition: transform .25s;
@@ -433,57 +416,57 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 }
 .toggle-sw.on::after { transform: translateX(16px); }
 
-/* ── SERIES BLOCK ── */
-.series-block {
+/* ── VIDEO MODE BLOCK (Series + Single) ── */
+.vmode-block {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   overflow: hidden;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 }
-.series-header {
-  display: flex; align-items: center;
-  justify-content: space-between;
-  padding: 13px 16px;
+.vmode-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+}
+.vmode-tab {
+  padding: 12px 16px;
   cursor: pointer;
+  text-align: center;
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--tx3);
+  transition: all .2s;
   user-select: none;
-  transition: background .15s;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
 }
-.series-header:hover { background: rgba(255,255,255,.02); }
-.series-header-left {
-  display: flex; align-items: center; gap: 10px;
-}
-.series-icon {
-  width: 28px; height: 28px;
-  border-radius: 7px;
-  background: var(--violet-dim);
-  border: 1px solid var(--violet-border);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.series-icon svg { width: 14px; height: 14px; stroke: var(--violet); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.series-head-title { font-size: .82rem; font-weight: 600; color: var(--tx); }
-.series-head-sub { font-size: .62rem; color: var(--tx3); margin-top: 1px; }
-.series-chevron {
-  color: var(--tx3); transition: transform .25s; width: 16px; height: 16px;
-}
-.series-chevron.open { transform: rotate(180deg); }
+.vmode-tab:hover { color: var(--tx2); background: rgba(255,255,255,.02); }
+.vmode-tab.active-single { color: var(--cyan); border-bottom-color: var(--cyan); background: var(--cyan-dim); }
+.vmode-tab.active-series { color: var(--violet); border-bottom-color: var(--violet); background: var(--violet-dim); }
 
-.series-body {
-  padding: 0 16px 16px;
-  display: none;
-  border-top: 1px solid var(--border);
-  animation: fadeSlide .25s ease;
-}
-.series-body.open { display: block; }
+.vmode-panel { padding: 14px 16px; display: none; }
+.vmode-panel.open { display: block; animation: fadeSlide .2s ease; }
 @keyframes fadeSlide { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
 
+/* Single video fields */
+.single-info-label {
+  font-size: .72rem; color: var(--tx2);
+  background: var(--cyan-dim);
+  border: 1px solid var(--cyan-border);
+  border-radius: var(--r-sm);
+  padding: 9px 13px;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.single-info-label strong { color: var(--cyan); display: block; margin-bottom: 2px; font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+
+/* Series styles */
 .ep-counter-wrap { display: flex; align-items: center; gap: 0; }
 .ep-btn {
-  width: 34px; height: 34px;
+  width: 36px; height: 36px;
   background: var(--card2); border: 1px solid var(--border);
-  color: var(--tx2);
-  cursor: pointer; font-size: 1.1rem;
+  color: var(--tx2); cursor: pointer; font-size: 1.1rem;
   display: flex; align-items: center; justify-content: center;
   transition: all .15s;
 }
@@ -491,14 +474,12 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 .ep-btn:last-child  { border-radius: 0 var(--r-sm) var(--r-sm) 0; }
 .ep-btn:hover { background: var(--violet-dim); border-color: var(--violet-border); color: var(--violet); }
 .ep-num {
-  min-width: 44px; height: 34px;
+  min-width: 48px; height: 36px;
   background: var(--card2);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
   display: flex; align-items: center; justify-content: center;
   font-size: 1rem; font-weight: 700;
-  color: var(--violet);
-  font-family: var(--mono);
+  color: var(--violet); font-family: var(--mono);
 }
 
 .series-preview {
@@ -510,43 +491,13 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
   display: none;
 }
 .series-preview-label {
-  font-size: .6rem; font-weight: 700;
-  letter-spacing: .1em; text-transform: uppercase;
+  font-size: .58rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
   color: var(--violet); margin-bottom: 6px;
 }
 .series-preview-text {
-  font-size: .75rem; color: var(--tx);
-  font-family: var(--mono); line-height: 1.6;
-  white-space: pre-wrap;
+  font-size: .74rem; color: var(--tx); font-family: var(--mono);
+  line-height: 1.6; white-space: pre-wrap;
 }
-
-/* ── ANALYZE BUTTON ── */
-.analyze-btn {
-  width: 100%; height: 48px;
-  border: none; border-radius: var(--r-md);
-  color: white; font-family: var(--sans);
-  font-size: .88rem; font-weight: 700;
-  letter-spacing: .02em;
-  cursor: pointer; position: relative; overflow: hidden;
-  transition: opacity .2s, transform .15s;
-  margin-top: 4px;
-}
-.analyze-btn.yt  { background: linear-gradient(135deg, #e63950 0%, #c0293e 50%, #ff5066 100%); }
-.analyze-btn.yts { background: linear-gradient(135deg, #ff3b5c 0%, #e02040 50%, #ff7090 100%); }
-.analyze-btn.tkt { background: linear-gradient(135deg, #22d3ee 0%, #0e9ab0 50%, #ee1d52 100%); }
-.analyze-btn::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.12) 50%, transparent 100%);
-  transform: translateX(-100%);
-  transition: transform .5s;
-}
-.analyze-btn:hover::before { transform: translateX(100%); }
-.analyze-btn:hover { opacity: .92; transform: translateY(-1px); }
-.analyze-btn:active { transform: scale(.98); }
-.analyze-btn:disabled { opacity: .35; cursor: not-allowed; transform: none; }
-.btn-inner { display: flex; align-items: center; justify-content: center; gap: 8px; }
-.btn-icon { width: 18px; height: 18px; flex-shrink: 0; }
 
 /* ── COLLAPSIBLE ADVANCED ── */
 .adv-toggle {
@@ -563,6 +514,32 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 .adv-panel { display: none; padding-top: 10px; animation: fadeSlide .25s ease; }
 .adv-panel.open { display: block; }
 
+/* ── ANALYZE BUTTON ── */
+.analyze-btn {
+  width: 100%; height: 52px;
+  border: none; border-radius: var(--r-md);
+  color: white; font-family: var(--sans);
+  font-size: .92rem; font-weight: 700;
+  letter-spacing: .02em;
+  cursor: pointer; position: relative; overflow: hidden;
+  transition: opacity .2s, transform .15s;
+  margin-top: 4px;
+}
+.analyze-btn.yt  { background: linear-gradient(135deg, #e63950 0%, #c0293e 50%, #ff5066 100%); }
+.analyze-btn.yts { background: linear-gradient(135deg, #ff3b5c 0%, #e02040 50%, #ff7090 100%); }
+.analyze-btn.tkt { background: linear-gradient(135deg, #22d3ee 0%, #0e9ab0 50%, #ee1d52 100%); }
+.analyze-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.12) 50%, transparent 100%);
+  transform: translateX(-100%); transition: transform .5s;
+}
+.analyze-btn:hover::before { transform: translateX(100%); }
+.analyze-btn:hover { opacity: .92; transform: translateY(-1px); }
+.analyze-btn:active { transform: scale(.98); }
+.analyze-btn:disabled { opacity: .35; cursor: not-allowed; transform: none; }
+.btn-inner { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-icon { width: 18px; height: 18px; flex-shrink: 0; }
+
 /* ── LOADING ── */
 .loading {
   display: none;
@@ -571,7 +548,7 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
   border-radius: var(--r-lg);
   padding: 24px 20px;
   text-align: center;
-  margin-bottom: 16px;
+  margin-top: 16px;
 }
 .loading.show { display: block; }
 .spinner {
@@ -594,8 +571,7 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 .step.active { background: var(--violet-dim); color: var(--tx); border-left: 2px solid var(--violet); }
 .step.done   { color: var(--green); }
 .step-dot {
-  width: 16px; height: 16px;
-  border-radius: 50%; background: var(--card3);
+  width: 16px; height: 16px; border-radius: 50%; background: var(--card3);
   display: flex; align-items: center; justify-content: center;
   font-size: 8px; flex-shrink: 0; transition: all .3s;
   font-family: var(--mono); font-weight: 600; color: var(--tx3);
@@ -607,16 +583,26 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
   50%      { box-shadow: 0 0 0 4px rgba(124,92,252,0); }
 }
 
+/* ── ERROR ── */
+.error-box {
+  display: none;
+  background: var(--red-dim); border: 1px solid var(--red-border);
+  border-radius: var(--r-md); padding: 11px 14px;
+  color: #ffaab5; font-size: .78rem;
+  margin-bottom: 12px;
+}
+.error-box.show { display: block; }
+
 /* ── RESULTS ── */
-.results { display: none; }
+.results { display: none; margin-top: 16px; }
 .results.show { display: block; }
 
 .results-header {
   display: flex; align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px; flex-wrap: wrap; gap: 8px;
+  margin-bottom: 14px; flex-wrap: wrap; gap: 8px;
 }
-.results-title { font-size: 1rem; font-weight: 700; }
+.results-title { font-size: .95rem; font-weight: 700; }
 .seo-score {
   font-size: .72rem; font-weight: 700;
   padding: 4px 13px; border-radius: 100px;
@@ -625,23 +611,17 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 .seo-score.medium { background: var(--amber-dim); border: 1px solid var(--amber-border); color: var(--amber); }
 .seo-score.poor   { background: var(--red-dim); border: 1px solid var(--red-border); color: var(--red); }
 
-/* ── SERIES INFO BAR ── */
+/* Series info bar */
 .series-info-bar {
   display: none;
-  background: var(--violet-dim);
-  border: 1px solid var(--violet-border);
-  border-radius: var(--r-md);
-  padding: 12px 16px;
-  margin-bottom: 12px;
-  flex-wrap: wrap; gap: 10px; align-items: center;
+  background: var(--violet-dim); border: 1px solid var(--violet-border);
+  border-radius: var(--r-md); padding: 12px 16px;
+  margin-bottom: 12px; flex-wrap: wrap; gap: 10px; align-items: center;
 }
 .series-info-bar.show { display: flex; }
 .series-ep-badge {
-  font-size: .78rem; font-weight: 800;
-  font-family: var(--mono);
-  color: var(--violet);
-  background: rgba(124,92,252,.15);
-  border: 1px solid var(--violet-border);
+  font-size: .78rem; font-weight: 800; font-family: var(--mono); color: var(--violet);
+  background: rgba(124,92,252,.15); border: 1px solid var(--violet-border);
   padding: 4px 12px; border-radius: 6px;
 }
 .series-info-name { font-size: .82rem; font-weight: 600; }
@@ -653,49 +633,30 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
   grid-template-columns: repeat(3, 1fr);
   gap: 8px; margin-bottom: 12px;
 }
-@media(max-width: 480px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
 .stat-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 12px 14px;
-  text-align: center;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: 12px 10px; text-align: center;
 }
-.stat-val {
-  font-size: .95rem; font-weight: 700;
-  font-family: var(--mono);
-  line-height: 1.2;
-}
-.stat-lbl {
-  font-size: .58rem; color: var(--tx3);
-  text-transform: uppercase; letter-spacing: .07em;
-  margin-top: 3px;
-}
+.stat-val { font-size: .9rem; font-weight: 700; font-family: var(--mono); line-height: 1.2; }
+.stat-lbl { font-size: .55rem; color: var(--tx3); text-transform: uppercase; letter-spacing: .07em; margin-top: 3px; }
 
 /* ── RESULT CARD (collapsible) ── */
 .res-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  margin-bottom: 10px;
-  transition: border-color .2s;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); overflow: hidden;
+  margin-bottom: 10px; transition: border-color .2s;
 }
 .res-card:hover { border-color: var(--border2); }
 .res-card-head {
-  display: flex; align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 16px; border-bottom: 1px solid var(--border);
   cursor: pointer; transition: background .15s;
 }
 .res-card-head:hover { background: rgba(255,255,255,.018); }
 .res-card-left { display: flex; align-items: center; gap: 10px; }
 .res-icon {
-  width: 28px; height: 28px;
-  border-radius: 7px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+  width: 30px; height: 30px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .res-icon svg { width: 14px; height: 14px; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .ic-red    { background: var(--red-dim);   border: 1px solid var(--red-border); }
@@ -708,7 +669,7 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 .ic-amber svg  { stroke: var(--amber); fill: none; }
 .ic-green  { background: var(--green-dim); border: 1px solid var(--green-border); }
 .ic-green svg  { stroke: var(--green); fill: none; }
-.res-card-lbl { font-size: .6rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--tx3); }
+.res-card-lbl { font-size: .58rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--tx3); }
 .res-card-name { font-size: .8rem; font-weight: 600; margin-top: 1px; }
 .chevron-icon { width: 16px; height: 16px; color: var(--tx3); transition: transform .25s; }
 .chevron-icon.open { transform: rotate(180deg); }
@@ -716,88 +677,92 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 .res-card-body.open { display: block; animation: fadeSlide .25s ease; }
 
 /* ── TITLE VARIANTS ── */
-.variants { display: flex; flex-direction: column; gap: 7px; }
+.variants { display: flex; flex-direction: column; gap: 8px; }
 .variant {
-  background: var(--card2);
-  border: 1px solid var(--border);
-  border-radius: var(--r-sm);
-  padding: 10px 13px;
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--r-sm); padding: 11px 13px;
   display: flex; align-items: flex-start;
   gap: 10px; cursor: pointer;
   transition: border-color .18s, background .18s;
 }
 .variant:hover { border-color: var(--border2); background: var(--card3); }
 .variant-num {
-  min-width: 20px; height: 20px;
-  border-radius: 4px; background: var(--card3);
+  min-width: 22px; height: 22px; border-radius: 5px; background: var(--card3);
   display: flex; align-items: center; justify-content: center;
-  font-size: .62rem; font-weight: 700;
-  color: var(--tx3); font-family: var(--mono); flex-shrink: 0;
+  font-size: .62rem; font-weight: 700; color: var(--tx3);
+  font-family: var(--mono); flex-shrink: 0;
 }
 .variant.best .variant-num { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
 .variant-body { flex: 1; min-width: 0; }
-.variant-text { font-size: .82rem; line-height: 1.4; word-break: break-word; }
+.variant-text { font-size: .84rem; line-height: 1.4; word-break: break-word; }
 .variant.best .variant-text { font-weight: 600; }
-.variant-reason { font-size: .65rem; color: var(--tx3); margin-top: 3px; font-family: var(--mono); }
-.variant-chars {
-  font-size: .62rem; font-family: var(--mono); margin-top: 3px;
-}
+.variant-reason { font-size: .64rem; color: var(--tx3); margin-top: 3px; font-family: var(--mono); }
+.variant-chars { font-size: .62rem; font-family: var(--mono); margin-top: 3px; }
 .variant-chars.ok   { color: var(--green); }
 .variant-chars.warn { color: var(--amber); }
 .variant-chars.over { color: var(--red); }
 .best-badge {
-  font-size: .58rem; font-weight: 700;
-  padding: 2px 7px; border-radius: 4px;
-  text-transform: uppercase; letter-spacing: .07em;
-  white-space: nowrap; flex-shrink: 0;
-  background: var(--amber-dim);
-  border: 1px solid var(--amber-border);
-  color: var(--amber);
+  font-size: .58rem; font-weight: 700; padding: 2px 7px; border-radius: 4px;
+  text-transform: uppercase; letter-spacing: .07em; white-space: nowrap; flex-shrink: 0;
+  background: var(--amber-dim); border: 1px solid var(--amber-border); color: var(--amber);
 }
 
 /* ── COPY BUTTON ── */
 .copy-btn {
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--tx3);
-  padding: 4px 10px;
-  border-radius: 5px;
-  font-size: .64rem;
-  cursor: pointer;
-  font-family: var(--sans);
-  transition: all .18s;
-  white-space: nowrap; flex-shrink: 0;
+  background: none; border: 1px solid var(--border); color: var(--tx3);
+  padding: 5px 12px; border-radius: 5px; font-size: .66rem;
+  cursor: pointer; font-family: var(--sans);
+  transition: all .18s; white-space: nowrap; flex-shrink: 0;
 }
 .copy-btn:hover { border-color: var(--cyan-border); color: var(--cyan); }
 .copy-btn.copied { border-color: var(--green-border); color: var(--green); }
 
 /* ── DESCRIPTION ── */
 .desc-box {
-  font-size: .76rem; line-height: 1.7;
-  color: var(--tx);
-  white-space: pre-wrap;
-  background: var(--card2);
-  border: 1px solid var(--border);
-  border-radius: var(--r-sm);
-  padding: 12px 14px;
-  font-family: var(--mono);
-  max-height: 300px; overflow-y: auto;
-  word-break: break-word;
+  font-size: .76rem; line-height: 1.7; color: var(--tx);
+  white-space: pre-wrap; background: var(--card2);
+  border: 1px solid var(--border); border-radius: var(--r-sm);
+  padding: 12px 14px; font-family: var(--mono);
+  max-height: 320px; overflow-y: auto; word-break: break-word;
 }
-.char-count {
-  font-size: .62rem; color: var(--tx3);
-  text-align: right; margin-top: 4px;
-  font-family: var(--mono);
-}
+.char-count { font-size: .62rem; color: var(--tx3); text-align: right; margin-top: 4px; font-family: var(--mono); }
 .char-count.warn { color: var(--amber); }
 .char-count.over { color: var(--red); }
 .action-row { display: flex; gap: 7px; margin-top: 8px; flex-wrap: wrap; }
 
-/* ── TAGS CLOUD ── */
-.tag-legend {
-  display: flex; gap: 14px; margin-bottom: 10px;
-  font-size: .62rem; color: var(--tx3);
+/* ── TIKTOK COMBINED BOX ── */
+.tiktok-combined-box {
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--r-md); overflow: hidden; margin-bottom: 10px;
 }
+.tktcb-section {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.tktcb-section:last-child { border-bottom: none; }
+.tktcb-label {
+  font-size: .58rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+}
+.tktcb-label.l-title { color: var(--red); }
+.tktcb-label.l-desc  { color: var(--violet); }
+.tktcb-label.l-tags  { color: var(--cyan); }
+.tktcb-text {
+  font-size: .8rem; line-height: 1.6; color: var(--tx);
+  white-space: pre-wrap; font-family: var(--mono);
+  word-break: break-word;
+}
+.tktcb-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.tktcb-tag {
+  background: var(--cyan-dim); border: 1px solid var(--cyan-border);
+  color: var(--cyan); font-size: .7rem; padding: 3px 9px; border-radius: 5px;
+  cursor: pointer; transition: opacity .15s; font-family: var(--mono);
+}
+.tktcb-tag:hover { opacity: .7; }
+.tktcb-copy-row { padding: 10px 14px; display: flex; gap: 7px; flex-wrap: wrap; background: rgba(0,0,0,.04); border-top: 1px solid var(--border); }
+
+/* ── TAGS CLOUD ── */
+.tag-legend { display: flex; gap: 14px; margin-bottom: 10px; font-size: .62rem; color: var(--tx3); }
 .tag-legend span { display: flex; align-items: center; gap: 5px; }
 .l-dot { width: 6px; height: 6px; border-radius: 50%; }
 .ld-h { background: var(--red); }
@@ -806,7 +771,7 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 .tags-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
 .tag-pill {
   display: flex; align-items: center; gap: 4px;
-  border-radius: 6px; padding: 4px 10px;
+  border-radius: 6px; padding: 5px 10px;
   font-size: .7rem; font-weight: 500;
   cursor: pointer; transition: opacity .18s;
 }
@@ -816,13 +781,37 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 .tag-pill.low  { background: var(--cyan-dim); border: 1px solid var(--cyan-border); color: var(--cyan); }
 .tag-vol { font-size: .56rem; opacity: .55; font-family: var(--mono); }
 
+/* ── SHORTS DESCRIPTION STRUCTURED ── */
+.shorts-desc-wrap { display: flex; flex-direction: column; gap: 10px; }
+.shorts-section {
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--r-sm); overflow: hidden;
+}
+.shorts-section-label {
+  font-size: .58rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  padding: 7px 12px; border-bottom: 1px solid var(--border);
+}
+.shorts-section-label.s-title  { color: var(--red); background: var(--red-dim); }
+.shorts-section-label.s-desc   { color: var(--violet); background: var(--violet-dim); }
+.shorts-section-label.s-kw     { color: var(--cyan); background: var(--cyan-dim); }
+.shorts-section-label.s-tags   { color: var(--green); background: var(--green-dim); }
+.shorts-section-content {
+  padding: 10px 12px;
+  font-size: .78rem; line-height: 1.7;
+  font-family: var(--mono); white-space: pre-wrap; word-break: break-word;
+}
+.shorts-kw-list { display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; }
+.shorts-kw-item {
+  font-size: .75rem; color: var(--tx); padding: 5px 10px;
+  background: var(--card3); border-radius: 5px; font-family: var(--mono);
+  border-left: 2px solid var(--cyan);
+}
+
 /* ── TIPS ── */
 .tips-list { display: flex; flex-direction: column; gap: 7px; }
 .tip {
-  display: flex; gap: 10px;
-  padding: 10px 12px;
-  background: var(--card2);
-  border-radius: var(--r-sm);
+  display: flex; gap: 10px; padding: 10px 12px;
+  background: var(--card2); border-radius: var(--r-sm);
   font-size: .76rem; line-height: 1.55;
   border-left: 2px solid transparent;
 }
@@ -844,16 +833,15 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
   margin-bottom: 12px; font-size: .78rem; font-weight: 600; color: #6ee7b7;
 }
 .music-mood-bar svg { width: 16px; height: 16px; stroke: var(--green); fill: none; stroke-width: 2; flex-shrink: 0; }
-.music-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-@media(max-width: 500px) { .music-grid { grid-template-columns: 1fr; } }
+.music-tracks { display: flex; flex-direction: column; gap: 8px; }
 .music-track {
   background: var(--card2); border: 1px solid var(--border);
-  border-radius: var(--r-md); padding: 12px 14px;
+  border-radius: var(--r-md); padding: 13px 14px;
   cursor: pointer; transition: border-color .18s, background .18s;
 }
 .music-track:hover { border-color: var(--green-border); background: rgba(16,185,129,.03); }
 .mt-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 5px; }
-.mt-name { font-size: .79rem; font-weight: 600; line-height: 1.35; }
+.mt-name { font-size: .82rem; font-weight: 600; line-height: 1.35; }
 .mt-src {
   font-size: .58rem; font-weight: 700; padding: 2px 7px;
   border-radius: 4px; text-transform: uppercase; letter-spacing: .06em;
@@ -863,7 +851,12 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 .ms-ep { background: var(--amber-dim);  border: 1px solid var(--amber-border);  color: var(--amber); }
 .ms-sc { background: var(--green-dim);  border: 1px solid var(--green-border);  color: var(--green); }
 .ms-sb { background: var(--violet-dim); border: 1px solid var(--violet-border); color: #b4a0ff; }
-.mt-meta { font-size: .67rem; color: var(--tx3); font-family: var(--mono); margin-bottom: 5px; }
+.mt-meta { font-size: .68rem; color: var(--tx3); font-family: var(--mono); margin-bottom: 6px; }
+.mt-trend {
+  font-size: .64rem; color: var(--green); font-family: var(--mono);
+  background: var(--green-dim); border: 1px solid var(--green-border);
+  border-radius: 4px; padding: 2px 7px; display: inline-block; margin-bottom: 4px;
+}
 .mt-tags { display: flex; flex-wrap: wrap; gap: 4px; }
 .mt-tag { font-size: .6rem; padding: 2px 6px; border-radius: 4px; background: var(--card3); color: var(--tx3); }
 .mt-query { font-size: .66rem; color: var(--cyan); font-family: var(--mono); margin-top: 5px; }
@@ -876,31 +869,25 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 
 /* ── IMAGE UPLOAD ── */
 .image-drop-zone {
-  border: 1.5px dashed var(--border2);
-  border-radius: var(--r-md);
-  padding: 24px 16px;
-  text-align: center;
-  cursor: pointer;
-  transition: border-color .2s, background .2s;
-  background: var(--card2);
+  border: 1.5px dashed var(--border2); border-radius: var(--r-md);
+  padding: 22px 16px; text-align: center; cursor: pointer;
+  transition: border-color .2s, background .2s; background: var(--card2);
 }
 .image-drop-zone:hover, .image-drop-zone.drag-over {
-  border-color: var(--violet-border);
-  background: var(--violet-dim);
+  border-color: var(--violet-border); background: var(--violet-dim);
 }
-.idz-icon { margin: 0 auto 10px; width: 36px; height: 36px; opacity: .4; }
-.idz-icon svg { width: 36px; height: 36px; stroke: var(--tx2); }
+.idz-icon { margin: 0 auto 10px; width: 32px; height: 32px; opacity: .4; }
+.idz-icon svg { width: 32px; height: 32px; stroke: var(--tx2); }
 .idz-text { font-size: .8rem; font-weight: 600; color: var(--tx2); margin-bottom: 4px; }
-.idz-sub { font-size: .66rem; color: var(--tx3); }
+.idz-sub { font-size: .64rem; color: var(--tx3); }
 .image-preview-inner {
   display: flex; align-items: flex-start; gap: 12px;
   background: var(--card2); border: 1px solid var(--border);
   border-radius: var(--r-md); padding: 12px;
 }
 .image-preview-inner img {
-  width: 80px; height: 80px;
-  object-fit: cover; border-radius: var(--r-sm);
-  flex-shrink: 0; border: 1px solid var(--border);
+  width: 70px; height: 70px; object-fit: cover;
+  border-radius: var(--r-sm); flex-shrink: 0; border: 1px solid var(--border);
 }
 .image-preview-info { flex: 1; min-width: 0; }
 .image-preview-name { font-size: .78rem; font-weight: 600; color: var(--tx); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -916,84 +903,18 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 .image-remove-btn:hover { background: rgba(230,57,80,.2); }
 .image-remove-btn svg { width: 12px; height: 12px; }
 
-/* ── ERROR ── */
-.error-box {
-  display: none;
-  background: var(--red-dim); border: 1px solid var(--red-border);
-  border-radius: var(--r-md); padding: 11px 14px;
-  color: #ffaab5; font-size: .78rem;
-  margin-bottom: 12px;
-}
-.error-box.show { display: block; }
-
-/* ── TOAST ── */
-.toast {
-  position: fixed; bottom: 20px; right: 20px;
-  background: var(--card3); border: 1px solid var(--border2);
-  color: var(--tx); padding: 8px 16px;
-  border-radius: var(--r-sm); font-size: .74rem;
-  pointer-events: none; opacity: 0;
-  transform: translateY(8px); transition: all .28s;
-  z-index: 9999;
-}
-.toast.show { opacity: 1; transform: translateY(0); }
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 4px; height: 4px; }
-
-/* ── HISTORY ── */
-.hist-empty { font-size: .7rem; color: var(--tx3); text-align: center; padding: 16px 8px; font-family: var(--mono); }
-.hist-item {
-  background: var(--card2); border: 1px solid var(--border);
-  border-radius: var(--r-sm); padding: 9px 11px;
-  cursor: pointer; transition: border-color .18s, background .18s;
-  margin-bottom: 6px;
-}
-.hist-item:hover { border-color: var(--violet-border); background: var(--violet-dim); }
-.hist-item-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; }
-.hist-item-title { font-size: .74rem; font-weight: 600; color: var(--tx); line-height: 1.3; flex: 1; }
-.hist-item-plat {
-  font-size: .55rem; font-weight: 700; padding: 1px 5px;
-  border-radius: 4px; text-transform: uppercase; letter-spacing: .06em;
-  flex-shrink: 0; white-space: nowrap;
-}
-.hp-yt  { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); }
-.hp-yts { background: rgba(255,100,130,.1); color: #ff7090; border: 1px solid rgba(255,100,130,.3); }
-.hp-tkt { background: var(--cyan-dim); color: var(--cyan); border: 1px solid var(--cyan-border); }
-.hist-item-meta { font-size: .62rem; color: var(--tx3); font-family: var(--mono); margin-top: 4px; }
-.hist-item-series { font-size: .62rem; color: var(--violet); margin-top: 2px; font-family: var(--mono); }
-.hist-item-del {
-  width: 18px; height: 18px; flex-shrink: 0;
-  background: none; border: none; color: var(--tx3);
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  border-radius: 3px; transition: color .15s, background .15s;
-  margin-left: 2px;
-}
-.hist-item-del:hover { color: var(--red); background: var(--red-dim); }
-.hist-item-del svg { width: 10px; height: 10px; }
-
-/* ── VIDIQ-STYLE SCORE PANEL ── */
+/* ── VIDIQ PANEL ── */
 .vidiq-panel {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  margin-bottom: 10px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); overflow: hidden; margin-bottom: 10px;
 }
 .vidiq-header {
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--border);
+  padding: 10px 16px; border-bottom: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between;
 }
 .vidiq-title { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--tx3); }
-.vidiq-overall {
-  display: flex; align-items: center; gap: 8px;
-  font-size: .78rem; font-weight: 700;
-}
-.vidiq-score-ring {
-  width: 38px; height: 38px; position: relative;
-  flex-shrink: 0;
-}
+.vidiq-overall { display: flex; align-items: center; gap: 8px; font-size: .78rem; font-weight: 700; }
+.vidiq-score-ring { width: 38px; height: 38px; position: relative; flex-shrink: 0; }
 .vidiq-score-ring svg { transform: rotate(-90deg); }
 .vidiq-score-num {
   position: absolute; inset: 0;
@@ -1002,18 +923,13 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 }
 .vidiq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
 .vidiq-metric {
-  padding: 10px 14px;
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  padding: 10px 14px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
 }
 .vidiq-metric:nth-child(even) { border-right: none; }
 .vidiq-metric:nth-last-child(-n+2) { border-bottom: none; }
 .vm-label { font-size: .6rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--tx3); margin-bottom: 6px; }
 .vm-bar-wrap { display: flex; align-items: center; gap: 8px; }
-.vm-bar-track {
-  flex: 1; height: 6px; background: var(--card3);
-  border-radius: 3px; overflow: hidden;
-}
+.vm-bar-track { flex: 1; height: 6px; background: var(--card3); border-radius: 3px; overflow: hidden; }
 .vm-bar-fill { height: 100%; border-radius: 3px; transition: width .8s ease; }
 .vm-val { font-size: .72rem; font-weight: 700; font-family: var(--mono); min-width: 30px; text-align: right; }
 .vm-sub { font-size: .63rem; color: var(--tx3); margin-top: 3px; }
@@ -1021,12 +937,11 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 /* ── KEYWORD SCORES ── */
 .kw-scores { display: flex; flex-direction: column; gap: 6px; }
 .kw-row {
-  display: flex; align-items: center; gap: 8px;
-  padding: 7px 10px; background: var(--card2);
-  border-radius: var(--r-sm); border: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px; padding: 7px 10px;
+  background: var(--card2); border-radius: var(--r-sm); border: 1px solid var(--border);
 }
 .kw-text { font-size: .74rem; font-family: var(--mono); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.kw-vol-bar { width: 60px; height: 4px; background: var(--card3); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
+.kw-vol-bar { width: 50px; height: 4px; background: var(--card3); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
 .kw-vol-fill { height: 100%; border-radius: 2px; }
 .kw-comp { font-size: .62rem; font-weight: 700; padding: 1px 5px; border-radius: 3px; flex-shrink: 0; }
 .kw-comp.easy   { background: var(--green-dim); color: var(--green); border: 1px solid var(--green-border); }
@@ -1034,7 +949,169 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 .kw-comp.hard   { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); }
 .kw-score { font-size: .7rem; font-weight: 700; font-family: var(--mono); min-width: 28px; text-align: right; }
 
-/* ── LIGHT THEME OVERRIDES ── */
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(8px);
+  background: var(--card3); border: 1px solid var(--border2);
+  color: var(--tx); padding: 9px 20px;
+  border-radius: var(--r-sm); font-size: .76rem;
+  pointer-events: none; opacity: 0; transition: all .28s; z-index: 9999;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--card3); border-radius: 2px; }
+
+/* ── TRENDS DRAWER ── */
+.trends-drawer {
+  position: fixed;
+  top: 0; left: 0;
+  width: min(400px, 96vw);
+  height: 100vh;
+  background: var(--card);
+  border-right: 1px solid var(--border2);
+  z-index: 500;
+  transform: translateX(-110%);
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+  display: flex; flex-direction: column;
+  box-shadow: 8px 0 32px rgba(0,0,0,0.35);
+}
+.trends-drawer.open { transform: translateX(0); }
+.trends-drawer-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(124,92,252,0.08), rgba(14,165,233,0.05));
+}
+.trends-drawer-title {
+  font-size: .9rem; font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+}
+.trends-drawer-title-icon {
+  width: 26px; height: 26px; border-radius: 7px;
+  background: linear-gradient(135deg, var(--violet), var(--cyan));
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.trends-drawer-title-icon svg { width: 13px; height: 13px; stroke: white; fill: none; }
+.trends-search-bar {
+  padding: 12px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+  background: var(--card2);
+}
+.trends-search-inner {
+  display: flex; gap: 8px; align-items: center;
+}
+.trends-search-input {
+  flex: 1; background: var(--card); border: 1px solid var(--border2);
+  border-radius: var(--r-sm); color: var(--tx); font-family: var(--sans);
+  font-size: .82rem; padding: 9px 12px; outline: none;
+  transition: border-color .2s;
+}
+.trends-search-input:focus { border-color: var(--violet-border); }
+.trends-search-input::placeholder { color: var(--tx3); }
+.trends-date-input {
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: var(--r-sm); color: var(--tx); font-family: var(--mono);
+  font-size: .76rem; padding: 9px 10px; outline: none; width: 130px;
+  flex-shrink: 0; transition: border-color .2s;
+}
+.trends-date-input:focus { border-color: var(--violet-border); }
+.trends-search-btn {
+  height: 38px; padding: 0 14px;
+  border: none; border-radius: var(--r-sm);
+  background: linear-gradient(135deg, var(--violet), #5a3fd8);
+  color: white; font-family: var(--sans); font-size: .76rem; font-weight: 700;
+  cursor: pointer; flex-shrink: 0; white-space: nowrap;
+  transition: opacity .2s, transform .15s;
+}
+.trends-search-btn:hover { opacity: .88; transform: translateY(-1px); }
+.trends-search-btn:disabled { opacity: .35; cursor: not-allowed; transform: none; }
+.trends-body { flex: 1; overflow-y: auto; padding: 12px; }
+.trends-empty {
+  font-size: .72rem; color: var(--tx3); text-align: center;
+  padding: 32px 12px; font-family: var(--mono);
+  line-height: 1.8;
+}
+.trends-empty-icon { font-size: 2rem; margin-bottom: 10px; }
+.trends-item {
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--r-md); margin-bottom: 10px; overflow: hidden;
+  transition: border-color .18s;
+}
+.trends-item:hover { border-color: var(--violet-border); }
+.trends-item-head {
+  padding: 11px 13px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
+}
+.trends-item-meta {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.trends-item-date {
+  font-size: .6rem; font-family: var(--mono); color: var(--tx3);
+}
+.trends-item-query {
+  font-size: .8rem; font-weight: 700; color: var(--tx);
+  margin-bottom: 4px; line-height: 1.3;
+}
+.trends-item-del {
+  width: 22px; height: 22px; flex-shrink: 0;
+  background: none; border: none; color: var(--tx3);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  border-radius: 4px; transition: color .15s, background .15s;
+}
+.trends-item-del:hover { color: var(--red); background: var(--red-dim); }
+.trends-item-del svg { width: 10px; height: 10px; }
+.trends-item-body { padding: 12px 13px; }
+.trends-trend-list { display: flex; flex-direction: column; gap: 8px; }
+.trend-entry {
+  background: var(--card3); border-radius: var(--r-sm);
+  padding: 10px 12px; border-left: 3px solid var(--violet);
+}
+.trend-entry.hot { border-left-color: var(--red); }
+.trend-entry.rising { border-left-color: var(--amber); }
+.trend-entry.stable { border-left-color: var(--cyan); }
+.trend-entry-top {
+  display: flex; align-items: center; justify-content: space-between; gap: 6px;
+  margin-bottom: 5px;
+}
+.trend-name { font-size: .8rem; font-weight: 600; flex: 1; line-height: 1.3; }
+.trend-badge {
+  font-size: .55rem; font-weight: 800; padding: 2px 7px;
+  border-radius: 4px; text-transform: uppercase; letter-spacing: .07em;
+  flex-shrink: 0; white-space: nowrap;
+}
+.trend-badge.hot { background: var(--red-dim); border: 1px solid var(--red-border); color: var(--red); }
+.trend-badge.rising { background: var(--amber-dim); border: 1px solid var(--amber-border); color: var(--amber); }
+.trend-badge.stable { background: var(--cyan-dim); border: 1px solid var(--cyan-border); color: var(--cyan); }
+.trend-desc { font-size: .72rem; color: var(--tx2); line-height: 1.5; margin-bottom: 5px; }
+.trend-forecast {
+  font-size: .66rem; font-family: var(--mono); color: var(--violet);
+  background: var(--violet-dim); border: 1px solid var(--violet-border);
+  border-radius: 4px; padding: 4px 8px; display: inline-block;
+}
+.trends-footer { padding: 12px; border-top: 1px solid var(--border); flex-shrink: 0; }
+.trends-clear-btn {
+  width: 100%; padding: 8px; background: none;
+  border: 1px solid var(--border2); border-radius: var(--r-sm);
+  color: var(--tx3); font-family: var(--sans); font-size: .72rem;
+  cursor: pointer; transition: all .18s;
+}
+.trends-clear-btn:hover { border-color: var(--red-border); color: var(--red); background: var(--red-dim); }
+.trends-loading {
+  text-align: center; padding: 24px; font-size: .78rem; color: var(--tx3);
+}
+.trends-spinner {
+  width: 28px; height: 28px;
+  border: 2px solid var(--card3); border-top-color: var(--violet);
+  border-radius: 50%; animation: spin .75s linear infinite;
+  margin: 0 auto 10px;
+}
+
 [data-theme="light"] .tip { background: var(--card3); }
 [data-theme="light"] .variant { background: var(--card2); }
 [data-theme="light"] .variant:hover { background: var(--card3); }
@@ -1042,33 +1119,113 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 [data-theme="light"] .res-card { box-shadow: var(--shadow); }
 [data-theme="light"] .card { box-shadow: var(--shadow); }
 [data-theme="light"] .api-box { background: rgba(245,158,11,0.06); }
-[data-theme="light"] .series-block { box-shadow: var(--shadow); }
 [data-theme="light"] .music-track { background: var(--card2); }
-[data-theme="light"] .music-track:hover { background: var(--card3); }
-[data-theme="light"] .tags-wrap { background: var(--card2); }
-[data-theme="light"] .desc-box { background: var(--card2); }
 [data-theme="light"] .image-drop-zone { background: var(--card2); }
-[data-theme="light"] .step.active { background: var(--violet-dim); }
+[data-theme="light"] select option { background: #fff; }
 [data-theme="light"] .plat-pill.tkt { color: #0284c7; }
-[data-theme="light"] .tag-pill.low { color: #0284c7; }
-[data-theme="light"] .mt-query { color: #0284c7; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--card3); border-radius: 2px; }
+[data-theme="light"] .tktcb-tag { color: #0284c7; }
+[data-theme="light"] .hist-drawer { border-color: rgba(0,0,0,.15); }
 
-/* ── MOBILE BOTTOM NAV ── */
-.mobile-fab {
-  display: none;
-  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-  z-index: 200;
+/* ── QUICK INSIGHTS ── */
+.quick-insights {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); overflow: hidden;
+  margin-bottom: 10px;
 }
-@media(max-width: 768px) {
-  .mobile-fab { display: block; }
-  .main { padding-bottom: 80px; }
+.qi-title {
+  font-size: .58rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--tx3); padding: 10px 16px 0;
 }
+.qi-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 16px; border-bottom: 1px solid var(--border);
+}
+.qi-item:last-child { border-bottom: none; }
+.qi-icon {
+  width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.qi-icon svg { width: 13px; height: 13px; stroke-width: 2; stroke-linecap: round; }
+.qi-body { flex: 1; min-width: 0; }
+.qi-label { font-size: .58rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 2px; }
+.qi-text { font-size: .76rem; color: var(--tx); line-height: 1.45; word-break: break-word; }
+
+/* ── DIVIDER ── */
+.mb10 { margin-bottom: 10px; }
+.mb14 { margin-bottom: 14px; }
+.mb16 { margin-bottom: 16px; }
+
+/* ── FILE:// WARNING BANNER ── */
+.file-warning {
+  background: rgba(245,158,11,0.1);
+  border: 1px solid var(--amber-border);
+  border-radius: var(--r-md);
+  padding: 12px 16px; margin-bottom: 14px; display: none;
+}
+.file-warning.show { display: block; }
+.file-warning-title { font-size:.72rem;font-weight:700;color:var(--amber);margin-bottom:5px; }
+.file-warning-body { font-size:.7rem;color:var(--tx2);line-height:1.7;font-family:var(--mono); }
+.file-warning-body code { background:var(--card3);border-radius:4px;padding:2px 7px;color:var(--amber); }
+
 </style>
 </head>
 <body>
 <div class="glow-bg"></div>
+
+<!-- HISTORY DRAWER OVERLAY -->
+<div class="hist-drawer-overlay" id="histOverlay" onclick="closeHistory()"></div>
+
+<!-- TRENDS DRAWER OVERLAY -->
+<div class="hist-drawer-overlay" id="trendsOverlay" onclick="closeTrends()"></div>
+
+<!-- TRENDS DRAWER -->
+<div class="trends-drawer" id="trendsDrawer">
+  <div class="trends-drawer-head">
+    <div class="trends-drawer-title">
+      <div class="trends-drawer-title-icon">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+      </div>
+      Тренди спідкубінгу
+    </div>
+    <button class="hist-drawer-close" onclick="closeTrends()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="trends-search-bar">
+    <div class="trends-search-inner">
+      <input type="text" class="trends-search-input" id="trendsQuery" placeholder="Тема або пошукове слово..." value="speedcubing">
+      <input type="date" class="trends-date-input" id="trendsDate">
+      <button class="trends-search-btn" id="trendsSearchBtn" onclick="searchTrends()">Пошук</button>
+    </div>
+  </div>
+  <div class="trends-body" id="trendsBody">
+    <div class="trends-empty">
+      <div class="trends-empty-icon">📈</div>
+      Натисни "Пошук" щоб дізнатись<br>що зараз трендить у спідкубінгу<br><span style="font-size:.62rem;opacity:.6">з AI-прогнозом та аналізом</span>
+    </div>
+  </div>
+  <div class="trends-footer" id="trendsFooter" style="display:none">
+    <button class="trends-clear-btn" onclick="clearTrendsHistory()">Очистити всю історію пошуків</button>
+  </div>
+</div>
+
+<!-- HISTORY DRAWER -->
+<div class="hist-drawer" id="histDrawer">
+  <div class="hist-drawer-head">
+    <div class="hist-drawer-title">Історія аналізів</div>
+    <button class="hist-drawer-close" onclick="closeHistory()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="hist-drawer-body">
+    <div id="historyList">
+      <div class="hist-empty" id="histEmpty">Тут зберігатимуться попередні аналізи</div>
+    </div>
+  </div>
+  <div class="hist-drawer-foot">
+    <button class="copy-btn" onclick="clearHistory()" id="clearHistBtn" style="display:none;width:100%;text-align:center;padding:8px">Очистити всю історію</button>
+  </div>
+</div>
 
 <div class="app">
 
@@ -1077,33 +1234,52 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
     <div class="logo-mark">
       <svg viewBox="0 0 24 24"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3L10 15z"/></svg>
     </div>
-    <div>
-      <div class="topbar-title">SpeedCubing SEO Pro</div>
+    <div class="topbar-title">SpeedCubing SEO Pro</div>
+    <div class="topbar-actions">
+      <button class="icon-btn" onclick="openTrends()" title="Тренди спідкубінгу" style="position:relative">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+      </button>
+      <button class="icon-btn hist-open-btn" onclick="openHistory()" title="Історія аналізів">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span class="hist-badge" id="histBadge"></span>
+      </button>
+      <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" title="Змінити тему">
+        <svg id="themeIconDark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg id="themeIconLight" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+      </button>
     </div>
-    <div class="topbar-sub">F2L · OLL · PLL · CFOP · Shorts · TikTok</div>
-    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Змінити тему">
-      <svg id="themeIconDark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      <svg id="themeIconLight" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-    </button>
-    <div class="topbar-badge">AI Powered</div>
   </header>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- FILE:// WARNING -->
+    <div class="file-warning" id="fileWarning">
+      <div class="file-warning-title">
+        <svg style="width:14px;height:14px;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Відкрийте файл через локальний сервер
+      </div>
+      <div class="file-warning-body">
+        Зараз файл відкрито через <code>file://</code> — API не працюватиме через CORS.<br>
+        1. Відкрийте термінал у папці з файлом<br>
+        2. Виконайте: <code>npx serve .</code><br>
+        3. Відкрийте <code>http://localhost:3000</code> у браузері
+      </div>
+    </div>
 
     <!-- API KEY -->
     <div class="section-label">Доступ до AI</div>
-    <div class="api-box">
+    <div class="api-box mb14">
       <div class="api-box-label">
-        <svg class="api-key-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-        API Ключ
+        <svg style="width:14px;height:14px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        API Ключ Anthropic
       </div>
       <input type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off">
       <div class="api-hint">Отримай на <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></div>
     </div>
 
     <!-- PLATFORM -->
-    <div class="section-label" style="margin-top:16px">Платформа</div>
+    <div class="section-label">Платформа</div>
     <div class="platform-tabs">
       <div class="ptab active-yt" id="tab-yt" onclick="setPlat('yt')">
         <span class="ptab-name">YouTube</span>
@@ -1118,31 +1294,38 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
         <span class="ptab-desc">короткі</span>
       </div>
     </div>
-    <div class="plat-pill yt" id="platPill">
+    <div class="plat-pill yt mb14" id="platPill">
       <span class="plat-dot yt" id="platDot"></span>
       <span id="platPillText">YouTube — назва до 100 символів · опис до 5000</span>
     </div>
 
-    <!-- OPTIONS -->
-    <div class="section-label" style="margin-top:16px">Налаштування</div>
-    <div class="card">
+    <!-- SETTINGS -->
+    <div class="section-label">Налаштування</div>
+    <div class="card mb14">
       <div class="card-inner">
-        <div class="field-grid">
+        <div class="field-grid mb10">
           <div class="field">
             <label class="field-label">Тип відео</label>
             <select id="vtype">
               <option value="breakdown">Розбір ситуації</option>
-              <option value="tutorial">Туторіал</option>
+              <option value="tutorial">Туторіал / навчання</option>
               <option value="speedsolve">Спідсолв / PB</option>
-              <option value="tips">Поради</option>
-              <option value="alg">Алгоритм</option>
-              <option value="review">Огляд куба</option>
-              <option value="comp">Змагання</option>
+              <option value="tips">Поради та лайфхаки</option>
+              <option value="alg">Алгоритм / формула</option>
+              <option value="review">Огляд куба / зброї</option>
+              <option value="comp">Змагання / WCA</option>
               <option value="challenge">Челендж</option>
+              <option value="reaction">Реакція / коментар</option>
+              <option value="vlog">Влог / закулісся</option>
+              <option value="tier">Tier-list / рейтинг</option>
+              <option value="unboxing">Анбоксинг</option>
+              <option value="collab">Колаборація</option>
+              <option value="shorts_trend">Shorts / Тікток тренд</option>
+              <option value="first_person">POV / від першої особи</option>
             </select>
           </div>
           <div class="field">
-            <label class="field-label">Мова</label>
+            <label class="field-label">Мова відео</label>
             <select id="lang">
               <option value="ukrainian">Українська</option>
               <option value="english">English</option>
@@ -1152,164 +1335,121 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
           </div>
         </div>
 
-        <!-- Advanced toggle -->
         <div class="adv-toggle" id="advToggle" onclick="toggleAdv()">
           <svg class="adv-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
           Розширені параметри
         </div>
         <div class="adv-panel" id="advPanel">
-          <div class="field-grid" style="margin-bottom:10px">
-            <div class="field">
-              <label class="field-label">Аудиторія</label>
-              <select id="level">
-                <option value="beginner">Початківці</option>
-                <option value="intermediate">Середній</option>
-                <option value="advanced">Просунуті</option>
-                <option value="all">Всі рівні</option>
-              </select>
-            </div>
-            <div class="field">
-              <label class="field-label">Тон</label>
-              <select id="tone">
-                <option value="energetic">Енергійний</option>
-                <option value="educational">Навчальний</option>
-                <option value="casual">Невимушений</option>
-                <option value="hype">Хайповий</option>
-              </select>
-            </div>
-          </div>
-          <div class="field" style="margin-bottom:10px">
-            <label class="field-label">Ціль</label>
-            <select id="goal">
-              <option value="views">Максимум переглядів</option>
-              <option value="subs">Нові підписники</option>
-              <option value="viral">Вірусність</option>
-              <option value="community">Ком'юніті</option>
-            </select>
-          </div>
-          <div class="toggle-row">
-            <div><div class="toggle-label">Хештеги</div><div class="toggle-sub">Додати в опис</div></div>
+          <select id="goal" style="display:none"><option value="all">Максимум всього</option></select>
+          <div class="toggle-row" style="padding-top:8px;margin-top:4px">
+            <div><div class="toggle-label">Хештеги в описі</div><div class="toggle-sub">Додати в кінець опису</div></div>
             <div class="toggle-sw on" id="ht" onclick="this.classList.toggle('on')"></div>
           </div>
           <div class="toggle-row">
-            <div><div class="toggle-label">Таймкоди</div><div class="toggle-sub">Тільки YouTube</div></div>
-            <div class="toggle-sw" id="tt" onclick="this.classList.toggle('on')"></div>
-          </div>
-          <div class="toggle-row">
-            <div><div class="toggle-label">Call to Action</div><div class="toggle-sub">Підписка / лайк</div></div>
+            <div><div class="toggle-label">Call to Action</div><div class="toggle-sub">Підписка / лайк в описі</div></div>
             <div class="toggle-sw on" id="ct" onclick="this.classList.toggle('on')"></div>
           </div>
           <div class="toggle-row">
-            <div><div class="toggle-label">Фонова музика</div><div class="toggle-sub">Підбір треків</div></div>
+            <div><div class="toggle-label">Фонова музика</div><div class="toggle-sub">Підбір 3 трендових треків</div></div>
             <div class="toggle-sw on" id="mt" onclick="this.classList.toggle('on')"></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- HISTORY PANEL -->
-    <div style="margin-top:20px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-        <div class="section-label" style="margin:0">Історія аналізів</div>
-        <button class="copy-btn" onclick="clearHistory()" id="clearHistBtn" style="display:none;font-size:.6rem">Очистити</button>
+    <!-- VIDEO MODE: Single / Series -->
+    <div class="section-label">Режим відео</div>
+    <div class="vmode-block mb14">
+      <div class="vmode-tabs">
+        <div class="vmode-tab active-single" id="vmodeTabSingle" onclick="setVmode('single')">
+          Одиночне відео
+        </div>
+        <div class="vmode-tab" id="vmodeTabSeries" onclick="setVmode('series')">
+          Серія відео
+        </div>
       </div>
-      <div id="historyList">
-        <div class="hist-empty" id="histEmpty">Тут зберігатимуться попередні аналізи</div>
+
+      <!-- SINGLE MODE PANEL -->
+      <div class="vmode-panel open" id="vmodePanel_single">
+        <div class="field mb10">
+          <label class="field-label">Назва / тема відео (необов'язково)</label>
+          <input type="text" id="singleTitle" placeholder="Як зробити F2L під 5 секунд..." oninput="saveState()">
+        </div>
+        <div class="field">
+          <label class="field-label">Конкретний випадок / ситуація (необов'язково)</label>
+          <input type="text" id="singleCase" placeholder="задній хрест, edge flip, T-perm..." oninput="saveState()">
+        </div>
       </div>
-    </div>
 
-  </aside>
-
-  <!-- MAIN -->
-  <main class="main">
-
-    <!-- SERIES BLOCK -->
-    <div class="section-label">Серія відео</div>
-    <div class="series-block" style="margin-bottom:16px">
-      <div class="series-header" onclick="toggleSeries()">
-        <div class="series-header-left">
-          <div class="series-icon">
-            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <!-- SERIES MODE PANEL -->
+      <div class="vmode-panel" id="vmodePanel_series">
+        <div class="field-grid mb10">
+          <div class="field">
+            <label class="field-label">Назва серії</label>
+            <input type="text" id="seriesName" placeholder="Хрест, F2L, OLL..." oninput="updateSeriesPreview()">
           </div>
-          <div>
-            <div class="series-head-title">Режим серії</div>
-            <div class="series-head-sub" id="seriesSubtitle">Вимкнено — для одиночних відео</div>
+          <div class="field">
+            <label class="field-label">Всього частин</label>
+            <div style="display:flex;gap:6px">
+              <select id="totalParts" onchange="onTotalPartsChange()" style="flex:1">
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4" selected>4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="8">8</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="custom">Своє...</option>
+                <option value="?">Невідомо</option>
+              </select>
+              <input type="number" id="totalPartsCustom" min="1" max="999" placeholder="К-сть" oninput="updateSeriesPreview()" style="display:none;width:76px;flex-shrink:0">
+            </div>
           </div>
         </div>
-        <svg class="series-chevron" id="seriesChevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-      </div>
-      <div class="series-body" id="seriesBody">
-        <div style="padding-top:14px">
-          <div class="field-grid" style="margin-bottom:10px">
-            <div class="field">
-              <label class="field-label">Назва серії</label>
-              <input type="text" id="seriesName" placeholder="Хрест, F2L, OLL, PLL..." oninput="updateSeriesPreview()">
-            </div>
-            <div class="field">
-              <label class="field-label">Всього частин</label>
-              <div style="display:flex;gap:6px">
-                <select id="totalParts" onchange="onTotalPartsChange()" style="flex:1">
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4" selected>4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="8">8</option>
-                  <option value="10">10</option>
-                  <option value="15">15</option>
-                  <option value="20">20</option>
-                  <option value="custom">Своє...</option>
-                  <option value="?">Невідомо</option>
-                </select>
-                <input type="number" id="totalPartsCustom" min="1" max="999"
-                  placeholder="К-сть" oninput="updateSeriesPreview()"
-                  style="display:none;width:80px;flex-shrink:0">
-              </div>
+        <div class="field-grid mb10">
+          <div class="field">
+            <label class="field-label">Номер частини</label>
+            <div class="ep-counter-wrap">
+              <button class="ep-btn" onclick="changeEp(-1)">−</button>
+              <div class="ep-num" id="epNum">2</div>
+              <button class="ep-btn" onclick="changeEp(1)">+</button>
             </div>
           </div>
-          <div class="field-grid-3" style="margin-bottom:10px">
-            <div class="field">
-              <label class="field-label">Номер частини</label>
-              <div class="ep-counter-wrap">
-                <button class="ep-btn" onclick="changeEp(-1)">−</button>
-                <div class="ep-num" id="epNum">2</div>
-                <button class="ep-btn" onclick="changeEp(1)">+</button>
-              </div>
-            </div>
-            <div class="field">
-              <label class="field-label">Конкретний випадок</label>
-              <input type="text" id="seriesCase" placeholder="задній хрест, edge flip..." oninput="updateSeriesPreview()">
-            </div>
-            <div class="field">
-              <label class="field-label">Складність</label>
-              <select id="seriesDiff" onchange="updateSeriesPreview()">
-                <option value="basic">Базові</option>
-                <option value="medium">Середні</option>
-                <option value="advanced">Складні</option>
-                <option value="all">Всі підряд</option>
-              </select>
-            </div>
+          <div class="field">
+            <label class="field-label">Складність</label>
+            <select id="seriesDiff" onchange="updateSeriesPreview()">
+              <option value="basic">Базові</option>
+              <option value="medium">Середні</option>
+              <option value="advanced">Складні</option>
+              <option value="all">Всі підряд</option>
+            </select>
           </div>
-          <div class="field" style="margin-bottom:10px">
-            <label class="field-label">Що розбирається (необов'язково)</label>
-            <textarea id="seriesContent" placeholder="Розбираємо 3 випадки заднього хреста, finger trick для швидкого переходу..." oninput="updateSeriesPreview()"></textarea>
-          </div>
-          <div class="series-preview" id="seriesPreview">
-            <div class="series-preview-label">Контекст для AI</div>
-            <div class="series-preview-text" id="seriesPreviewText"></div>
-          </div>
+        </div>
+        <div class="field mb10">
+          <label class="field-label">Конкретна тема / випадок</label>
+          <input type="text" id="seriesCase" placeholder="задній хрест, edge flip..." oninput="updateSeriesPreview()">
+        </div>
+        <div class="field">
+          <label class="field-label">Що розбирається (необов'язково)</label>
+          <textarea id="seriesContent" placeholder="Розбираємо 3 випадки заднього хреста..." oninput="updateSeriesPreview()" style="min-height:60px"></textarea>
+        </div>
+        <div class="series-preview" id="seriesPreview">
+          <div class="series-preview-label">Контекст для AI</div>
+          <div class="series-preview-text" id="seriesPreviewText"></div>
         </div>
       </div>
     </div>
 
     <!-- KEYWORDS -->
     <div class="section-label">Ключові слова</div>
-    <div class="card" style="margin-bottom:16px">
+    <div class="card mb14">
       <div class="card-inner">
         <div class="tags-wrap" id="tagsWrap" onclick="document.getElementById('tagInput').focus()">
           <input type="text" id="tagInput" placeholder="Введіть слово і натисніть Enter..." autocomplete="off">
         </div>
-        <div class="hint-text">Enter або кома для додавання · backspace для видалення · макс. 20</div>
+        <div class="hint-text">Enter або кома для додавання · Backspace для видалення · макс. 20</div>
         <div class="qtag-row" id="qtags">
           <span class="qtag-lbl">Швидкий вибір:</span>
         </div>
@@ -1317,26 +1457,24 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
     </div>
 
     <!-- IMAGE UPLOAD -->
-    <div class="section-label" style="margin-top:16px">Фото / скріншот ситуації <span style="font-size:.6rem;color:var(--tx3);font-weight:400;text-transform:none;letter-spacing:0">(необов'язково — для кращого розуміння AI)</span></div>
-    <div class="card" style="margin-bottom:16px" id="imageUploadCard">
+    <div class="section-label">Фото / скріншот <span style="font-size:.6rem;color:var(--tx3);font-weight:400;text-transform:none;letter-spacing:0">(необов'язково — AI проаналізує зображення)</span></div>
+    <div class="card mb16">
       <div class="card-inner">
         <div class="image-drop-zone" id="imageDropZone" onclick="document.getElementById('imageFileInput').click()" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
-          <div class="idz-inner" id="idzInner">
-            <div class="idz-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            </div>
-            <div class="idz-text">Перетягни фото або натисни для вибору</div>
-            <div class="idz-sub">JPG, PNG, WEBP до 5 МБ · AI проаналізує ситуацію на фото</div>
+          <div class="idz-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
           </div>
+          <div class="idz-text">Натисни або перетягни фото</div>
+          <div class="idz-sub">JPG, PNG, WEBP до 5 МБ · AI аналізує зображення</div>
         </div>
         <input type="file" id="imageFileInput" accept="image/*" style="display:none" onchange="onImageSelect(event)">
-        <div class="image-preview-wrap" id="imagePreviewWrap" style="display:none">
+        <div id="imagePreviewWrap" style="display:none">
           <div class="image-preview-inner">
             <img id="imagePreview" src="" alt="Прев'ю">
             <div class="image-preview-info">
               <div class="image-preview-name" id="imagePreviewName"></div>
               <div class="image-preview-size" id="imagePreviewSize"></div>
-              <div class="image-preview-desc">AI побачить це фото та краще зрозуміє ситуацію на кубі</div>
+              <div class="image-preview-desc">AI побачить це фото та краще проаналізує ситуацію</div>
             </div>
             <button class="image-remove-btn" onclick="removeImage()" title="Видалити">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -1356,22 +1494,22 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
     </button>
 
     <!-- LOADING -->
-    <div class="loading" id="loading" style="margin-top:16px">
+    <div class="loading" id="loading">
       <div class="spinner"></div>
-      <div class="loading-text">AI аналізує контент для спідкубінгу...</div>
+      <div class="loading-text" id="loadingText">AI аналізує контент для спідкубінгу...</div>
       <div class="steps">
-        <div class="step active" id="s1"><div class="step-dot">1</div><span>Аналіз ключових слів та теми</span></div>
-        <div class="step" id="s2"><div class="step-dot">2</div><span>Генерація назв з урахуванням частини серії</span></div>
-        <div class="step" id="s3"><div class="step-dot">3</div><span>Створення SEO-опису та хештегів</span></div>
-        <div class="step" id="s4"><div class="step-dot">4</div><span>Підбір тегів за популярністю</span></div>
+        <div class="step active" id="s1"><div class="step-dot">1</div><span>🔍 Перевірка трендів у реальному часі</span></div>
+        <div class="step" id="s2"><div class="step-dot">2</div><span>Аналіз ключових слів та теми</span></div>
+        <div class="step" id="s3"><div class="step-dot">3</div><span>Генерація назв та SEO-опису</span></div>
+        <div class="step" id="s4"><div class="step-dot">4</div><span>Хештеги, теги та ключові слова</span></div>
         <div class="step" id="s5"><div class="step-dot">5</div><span>Стратегія та рекомендації</span></div>
       </div>
     </div>
 
     <!-- RESULTS -->
-    <div class="results" id="results" style="margin-top:16px">
+    <div class="results" id="results">
       <div class="results-header">
-        <div class="results-title">Результати аналізу <span id="platBadge"></span></div>
+        <div class="results-title">Результати <span id="platBadge"></span></div>
         <div class="seo-score" id="seoScore"></div>
       </div>
 
@@ -1386,7 +1524,7 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
       <!-- VIDIQ-STYLE PANEL -->
       <div class="vidiq-panel" id="vidiqPanel" style="display:none">
         <div class="vidiq-header">
-          <div class="vidiq-title">SEO Аналіз — VidIQ стиль</div>
+          <div class="vidiq-title">SEO Аналіз</div>
           <div class="vidiq-overall">
             <div class="vidiq-score-ring">
               <svg width="38" height="38" viewBox="0 0 38 38">
@@ -1404,7 +1542,7 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
         <div class="vidiq-grid" id="vidiqGrid"></div>
       </div>
 
-      <!-- KEYWORD SCORES (VidIQ style) -->
+      <!-- KEYWORD SCORES -->
       <div class="res-card" id="kwScoresCard" style="display:none">
         <div class="res-card-head" onclick="toggleResCard('kwScoresBody','kwScoresChev')">
           <div class="res-card-left">
@@ -1413,7 +1551,7 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
             </div>
             <div>
               <div class="res-card-lbl">Аналіз ключових слів</div>
-              <div class="res-card-name">Популярність · Конкуренція · Оцінка</div>
+              <div class="res-card-name">Популярність · Конкуренція</div>
             </div>
           </div>
           <svg class="chevron-icon open" id="kwScoresChev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
@@ -1425,16 +1563,17 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 
       <div class="stat-grid" id="statGrid"></div>
 
-      <!-- TITLES -->
+      <!-- QUICK INSIGHTS -->
+      <div class="quick-insights" id="quickInsights" style="display:none"></div>
       <div class="res-card">
         <div class="res-card-head" onclick="toggleResCard('titlesBody','titlesChev')">
           <div class="res-card-left">
             <div class="res-icon ic-red">
-              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
             </div>
             <div>
               <div class="res-card-lbl">SEO Назви</div>
-              <div class="res-card-name" id="titlesLabel">6 варіантів</div>
+              <div class="res-card-name" id="titlesLabel">3 найкращих варіанти</div>
             </div>
           </div>
           <svg class="chevron-icon open" id="titlesChev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
@@ -1444,12 +1583,12 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
         </div>
       </div>
 
-      <!-- DESCRIPTION -->
-      <div class="res-card">
+      <!-- DESCRIPTION (YouTube) -->
+      <div class="res-card" id="descCard">
         <div class="res-card-head" onclick="toggleResCard('descBody','descChev')">
           <div class="res-card-left">
             <div class="res-icon ic-violet">
-              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             </div>
             <div>
               <div class="res-card-lbl">Опис</div>
@@ -1468,34 +1607,95 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
         </div>
       </div>
 
-      <!-- HASHTAGS (TikTok) -->
-      <div class="res-card" id="hashCard" style="display:none">
-        <div class="res-card-head" onclick="toggleResCard('hashBody','hashChev')">
+      <!-- TIKTOK COMBINED BLOCK -->
+      <div class="res-card" id="tiktokCombinedCard" style="display:none">
+        <div class="res-card-head" onclick="toggleResCard('tiktokCombinedBody','tiktokCombinedChev')">
           <div class="res-card-left">
-            <div class="res-icon ic-green">
-              <svg viewBox="0 0 24 24"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+            <div class="res-icon ic-cyan">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
             </div>
             <div>
-              <div class="res-card-lbl">TikTok Хештеги</div>
-              <div class="res-card-name">Оптимальний набір</div>
+              <div class="res-card-lbl">TikTok</div>
+              <div class="res-card-name">Назва · Опис · Теги</div>
             </div>
           </div>
-          <svg class="chevron-icon" id="hashChev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          <svg class="chevron-icon open" id="tiktokCombinedChev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
         </div>
-        <div class="res-card-body" id="hashBody">
-          <div class="tags-cloud" id="hashContent"></div>
-          <div class="action-row" style="margin-top:10px">
-            <button class="copy-btn" id="copyHashBtn" onclick="cpHash()">Копіювати хештеги</button>
+        <div class="res-card-body open" id="tiktokCombinedBody">
+          <div class="tiktok-combined-box">
+            <div class="tktcb-section">
+              <div class="tktcb-label l-title">Назва (перший рядок)</div>
+              <div class="tktcb-text" id="tktTitle"></div>
+            </div>
+            <div class="tktcb-section">
+              <div class="tktcb-label l-desc">Опис</div>
+              <div class="tktcb-text" id="tktDesc"></div>
+            </div>
+            <div class="tktcb-section">
+              <div class="tktcb-label l-tags">Теги</div>
+              <div class="tktcb-tags" id="tktTags"></div>
+            </div>
+            <div class="tktcb-copy-row">
+              <button class="copy-btn" id="copyTktAllBtn" onclick="cpTktAll()">Копіювати все</button>
+              <button class="copy-btn" onclick="cpText(document.getElementById('tktTitle').textContent)">Лише назва</button>
+              <button class="copy-btn" onclick="cpTktTags()">Лише теги</button>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- TAGS -->
+      <!-- SHORTS STRUCTURED DESCRIPTION -->
+      <div class="res-card" id="shortsCard" style="display:none">
+        <div class="res-card-head" onclick="toggleResCard('shortsBody','shortsChev')">
+          <div class="res-card-left">
+            <div class="res-icon ic-red">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <div>
+              <div class="res-card-lbl">YouTube Shorts</div>
+              <div class="res-card-name">3 Назви · Опис · Keywords · Tags</div>
+            </div>
+          </div>
+          <svg class="chevron-icon open" id="shortsChev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="res-card-body open" id="shortsBody">
+          <div class="shorts-desc-wrap">
+            <!-- 3 TITLES BLOCK -->
+            <div class="shorts-section">
+              <div class="shorts-section-label s-title">3 Назви для Shorts</div>
+              <div class="variants" id="shortsTitlesContent" style="padding:10px 12px;gap:6px;display:flex;flex-direction:column;"></div>
+            </div>
+            <!-- DESCRIPTION -->
+            <div class="shorts-section">
+              <div class="shorts-section-label s-desc">Опис (з хуком у першому рядку)</div>
+              <div class="shorts-section-content" id="shortsDesc"></div>
+            </div>
+            <!-- KEYWORDS (English label) -->
+            <div class="shorts-section">
+              <div class="shorts-section-label s-kw">Keywords (one per line)</div>
+              <div class="shorts-kw-list" id="shortsKw"></div>
+            </div>
+            <!-- TAGS — більше тегів окремо -->
+            <div class="shorts-section">
+              <div class="shorts-section-label s-tags">Tags <span id="shortsTagsCount" style="font-weight:400;opacity:.6;text-transform:none;letter-spacing:0"></span></div>
+              <div class="tags-cloud" id="shortsTagsContent" style="padding:10px 12px"></div>
+            </div>
+          </div>
+          <div class="action-row" style="margin-top:10px">
+            <button class="copy-btn" onclick="cpShortsAll()">Копіювати все</button>
+            <button class="copy-btn" onclick="cpText(getShortsFirstTitle())">Лише назву #1</button>
+            <button class="copy-btn" id="copyShortsDescBtn" onclick="cpShortsDesc(this)">Копіювати опис</button>
+            <button class="copy-btn" onclick="cpShortsTags()">Лише теги</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- YOUTUBE TAGS -->
       <div class="res-card" id="tagsCard">
         <div class="res-card-head" onclick="toggleResCard('tagsBody','tagsChev')">
           <div class="res-card-left">
             <div class="res-icon ic-cyan">
-              <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
             </div>
             <div>
               <div class="res-card-lbl">YouTube Теги</div>
@@ -1522,7 +1722,7 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
         <div class="res-card-head" onclick="toggleResCard('tipsBody','tipsChev')">
           <div class="res-card-left">
             <div class="res-icon ic-amber">
-              <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
             </div>
             <div>
               <div class="res-card-lbl">Стратегія</div>
@@ -1541,11 +1741,11 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
         <div class="res-card-head" onclick="toggleResCard('musicBody','musicChev')">
           <div class="res-card-left">
             <div class="res-icon ic-green">
-              <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
             </div>
             <div>
-              <div class="res-card-lbl">Фонова музика</div>
-              <div class="res-card-name">Треки без копірайту</div>
+              <div class="res-card-lbl">Трендова музика</div>
+              <div class="res-card-name">3 підходящих трека</div>
             </div>
           </div>
           <svg class="chevron-icon" id="musicChev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
@@ -1555,7 +1755,7 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
             <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
             <span id="musicMoodText"></span>
           </div>
-          <div class="music-grid" id="musicGrid"></div>
+          <div class="music-tracks" id="musicGrid"></div>
           <div class="music-where" id="musicWhere" style="display:none">
             <div class="music-where-label">Де шукати</div>
             <div id="musicWhereText"></div>
@@ -1572,7 +1772,7 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
 
 <script>
 'use strict';
-let tags=[], plat='yt', epNum=2, seriesOpen=false;
+let tags=[], plat='yt', epNum=2, videoMode='single';
 let uploadedImageBase64=null, uploadedImageType=null;
 
 /* ── THEME ── */
@@ -1594,18 +1794,33 @@ function toggleTheme(){
   });
 })();
 
+/* ── HISTORY DRAWER ── */
+function openHistory(){
+  document.getElementById('histDrawer').classList.add('open');
+  document.getElementById('histOverlay').classList.add('open');
+}
+function closeHistory(){
+  document.getElementById('histDrawer').classList.remove('open');
+  document.getElementById('histOverlay').classList.remove('open');
+}
+
 /* ── IMAGE UPLOAD ── */
 function onDragOver(e){ e.preventDefault(); document.getElementById('imageDropZone').classList.add('drag-over'); }
-function onDragLeave(e){ document.getElementById('imageDropZone').classList.remove('drag-over'); }
-function onDrop(e){ e.preventDefault(); document.getElementById('imageDropZone').classList.remove('drag-over'); const f=e.dataTransfer.files[0]; if(f&&f.type.startsWith('image/')) processImage(f); }
+function onDragLeave(){ document.getElementById('imageDropZone').classList.remove('drag-over'); }
+function onDrop(e){
+  e.preventDefault();
+  document.getElementById('imageDropZone').classList.remove('drag-over');
+  const f=e.dataTransfer.files[0];
+  if(f&&f.type.startsWith('image/')) processImage(f);
+}
 function onImageSelect(e){ const f=e.target.files[0]; if(f) processImage(f); }
 function processImage(file){
   if(file.size>5*1024*1024){ alert('Файл занадто великий. Максимум 5 МБ.'); return; }
   const reader=new FileReader();
-  reader.onload=function(e){
-    uploadedImageBase64=e.target.result.split(',')[1];
+  reader.onload=function(ev){
+    uploadedImageBase64=ev.target.result.split(',')[1];
     uploadedImageType=file.type||'image/jpeg';
-    document.getElementById('imagePreview').src=e.target.result;
+    document.getElementById('imagePreview').src=ev.target.result;
     document.getElementById('imagePreviewName').textContent=file.name;
     document.getElementById('imagePreviewSize').textContent=formatBytes(file.size);
     document.getElementById('imageDropZone').style.display='none';
@@ -1621,7 +1836,7 @@ function removeImage(){
 }
 function formatBytes(b){ if(b<1024) return b+'B'; if(b<1048576) return (b/1024).toFixed(1)+'KB'; return (b/1048576).toFixed(1)+'MB'; }
 
-/* ── TOTAL PARTS CUSTOM ── */
+/* ── TOTAL PARTS ── */
 function onTotalPartsChange(){
   const sel=document.getElementById('totalParts');
   const inp=document.getElementById('totalPartsCustom');
@@ -1638,35 +1853,35 @@ function getTotalParts(){
   return sel.value;
 }
 
+/* ── QUICK TAGS ── */
 const quickTagsData={
   yt:['F2L','OLL','PLL','CFOP','Cross','Look-Ahead','Finger Tricks','Sub-10','Sub-15','Sub-20','3x3','2x2','4x4','Megaminx','Pyraminx','Roux','ZZ','Blindfold','FMC','Edge Control'],
   yts:['F2L tips','OLL skip','PLL skip','CFOP','Sub-20','2x2','Pyraminx','one-look OLL','ZBLL','T-perm','Sune','cross first'],
   tkt:['speedcubing','CFOP','F2L','rubikscube','cubing','learnontiktok','solve','cross','algorithm','3x3','PLL skip','Кубік Рубіка']
 };
+
 const platCfg={
-  yt: {name:'YouTube',    cls:'yt',  titleMax:100, descMax:5000, tagsMax:500, tagsCount:30, descWords:'350-500 слів'},
-  yts:{name:'YT Shorts',  cls:'yts', titleMax:70,  descMax:800,  tagsMax:500, tagsCount:20, descWords:'100-180 слів'},
-  tkt:{name:'TikTok',     cls:'tkt', titleMax:2200,descMax:2200, tagsMax:null,tagsCount:5,  descWords:'80-150 слів'}
+  yt: {name:'YouTube',   cls:'yt',  titleMax:100, descMax:5000, tagsMax:500, tagsCount:25, descWords:'350-500 слів'},
+  yts:{name:'YT Shorts', cls:'yts', titleMax:70,  descMax:800,  tagsMax:500, tagsCount:25, descWords:'100-180 слів'},
+  tkt:{name:'TikTok',    cls:'tkt', titleMax:2200,descMax:2200, tagsMax:null,tagsCount:5,  descWords:'80-120 слів'}
 };
 
-/* PLATFORM */
+/* ── PLATFORM ── */
 function setPlat(p){
   plat=p;
   const cfg=platCfg[p];
   ['yt','yts','tkt'].forEach(x=>{
-    const t=document.getElementById('tab-'+x);
-    t.className='ptab'+(x===p?' active-'+x:'');
+    document.getElementById('tab-'+x).className='ptab'+(x===p?' active-'+x:'');
   });
   const pill=document.getElementById('platPill');
   pill.className='plat-pill '+p;
   document.getElementById('platDot').className='plat-dot '+p;
-  const lim=p==='tkt'?'Caption до 2200 · хештеги замість тегів':
+  const lim=p==='tkt'?'Caption до 2200 · 5 хештегів':
     `Назва до ${cfg.titleMax} символів · опис до ${cfg.descMax}`;
   document.getElementById('platPillText').textContent=`${cfg.name} — ${lim}`;
   const btn=document.getElementById('analyzeBtn');
   btn.className='analyze-btn '+p;
   document.getElementById('btnText').textContent=`Аналіз для ${cfg.name}`;
-  if(p!=='yt') document.getElementById('tt').classList.remove('on');
   renderQuickTags();
 }
 
@@ -1682,20 +1897,24 @@ function renderQuickTags(){
 }
 renderQuickTags();
 
-/* SERIES */
-function toggleSeries(){
-  seriesOpen=!seriesOpen;
-  document.getElementById('seriesBody').classList.toggle('open',seriesOpen);
-  document.getElementById('seriesChevron').classList.toggle('open',seriesOpen);
-  document.getElementById('seriesSubtitle').textContent=
-    seriesOpen?'Увімкнено — вказуй номер і тему частини':'Вимкнено — для одиночних відео';
-  if(seriesOpen) updateSeriesPreview();
+/* ── VIDEO MODE (Single / Series) ── */
+function setVmode(mode){
+  videoMode=mode;
+  document.getElementById('vmodeTabSingle').className='vmode-tab'+(mode==='single'?' active-single':'');
+  document.getElementById('vmodeTabSeries').className='vmode-tab'+(mode==='series'?' active-series':'');
+  document.getElementById('vmodePanel_single').classList.toggle('open', mode==='single');
+  document.getElementById('vmodePanel_series').classList.toggle('open', mode==='series');
+  if(mode==='series') updateSeriesPreview();
 }
+
+/* ── EPISODE COUNTER ── */
 function changeEp(d){
   epNum=Math.max(1,epNum+d);
   document.getElementById('epNum').textContent=epNum;
   updateSeriesPreview();
 }
+
+/* ── SERIES PREVIEW ── */
 function updateSeriesPreview(){
   const name=document.getElementById('seriesName').value.trim();
   const total=getTotalParts();
@@ -1704,7 +1923,7 @@ function updateSeriesPreview(){
   const diffTxt=diff.options[diff.selectedIndex].text;
   const cont=document.getElementById('seriesContent').value.trim();
   const prev=document.getElementById('seriesPreview');
-  if(!name){prev.style.display='none';return;}
+  if(!name){ prev.style.display='none'; return; }
   let txt=`Серія: "${name}" · Частина ${epNum}${total!=='?'?' з '+total:''}\n`;
   if(cas) txt+=`Випадок: ${cas}\n`;
   txt+=`Складність: ${diffTxt}`;
@@ -1713,7 +1932,7 @@ function updateSeriesPreview(){
   prev.style.display='block';
 }
 
-/* TAGS */
+/* ── TAGS ── */
 const tagInput=document.getElementById('tagInput');
 document.getElementById('tagsWrap').addEventListener('click',e=>{
   if(e.target===document.getElementById('tagsWrap')) tagInput.focus();
@@ -1737,7 +1956,7 @@ function renderTags(){
   });
 }
 
-/* UI HELPERS */
+/* ── UI HELPERS ── */
 function toggleAdv(){ document.getElementById('advToggle').classList.toggle('open'); document.getElementById('advPanel').classList.toggle('open'); }
 function toggleResCard(bodyId,chevId){ document.getElementById(bodyId).classList.toggle('open'); document.getElementById(chevId).classList.toggle('open'); }
 function showToast(msg='Скопійовано'){
@@ -1754,10 +1973,41 @@ function cpText(txt,btn){
   });
 }
 function cpDesc(){ cpText(document.getElementById('descContent').innerText, document.getElementById('copyDescBtn')); }
-function cpTags(){ const t=Array.from(document.querySelectorAll('#tagsContent .tag-pill')).map(el=>el.getAttribute('data-tag')).join(', '); cpText(t,document.getElementById('copyTagsBtn')); }
-function cpHash(){ const t=Array.from(document.querySelectorAll('#hashContent .tag-pill')).map(el=>el.getAttribute('data-tag')).join(' '); cpText(t,document.getElementById('copyHashBtn')); }
+function cpTags(){
+  const t=Array.from(document.querySelectorAll('#tagsContent .tag-pill')).map(el=>el.getAttribute('data-tag')).join(', ');
+  cpText(t, document.getElementById('copyTagsBtn'));
+}
+function cpTktAll(){
+  const title=document.getElementById('tktTitle').textContent;
+  const desc=document.getElementById('tktDesc').textContent;
+  const tagsEls=Array.from(document.querySelectorAll('.tktcb-tags .tktcb-tag')).map(el=>el.textContent).join(' ');
+  cpText(`${title}\n\n${desc}\n\n${tagsEls}`, document.getElementById('copyTktAllBtn'));
+}
+function cpTktTags(){
+  const t=Array.from(document.querySelectorAll('.tktcb-tags .tktcb-tag')).map(el=>el.textContent).join(' ');
+  cpText(t);
+}
+function getShortsFirstTitle(){
+  const el=document.querySelector('#shortsTitlesContent .variant-text');
+  return el?el.textContent:'';
+}
+function cpShortsTags(){
+  const t=Array.from(document.querySelectorAll('#shortsTagsContent .tag-pill')).map(el=>el.getAttribute('data-tag')).join(', ');
+  cpText(t);
+}
+function cpShortsAll(){
+  const titles=Array.from(document.querySelectorAll('#shortsTitlesContent .variant-text')).map((el,i)=>`Назва ${i+1}: ${el.textContent}`).join('\n');
+  const desc=document.getElementById('shortsDesc').textContent;
+  const kws=Array.from(document.querySelectorAll('#shortsKw .shorts-kw-item')).map(el=>el.textContent).join('\n');
+  const tagsArr=Array.from(document.querySelectorAll('#shortsTagsContent .tag-pill')).map(el=>el.getAttribute('data-tag')).join(' ');
+  cpText(`${titles}\n\n${desc}\n\nKEYWORDS:\n${kws}\n\nTAGS:\n${tagsArr}`);
+}
+function cpShortsDesc(btn){
+  const desc=document.getElementById('shortsDesc').textContent;
+  cpText(desc,btn);
+}
 
-/* STEPS ANIMATION */
+/* ── STEPS ANIMATION ── */
 let stepTimer, stepCur=1;
 function animateSteps(){
   stepCur=1;
@@ -1771,8 +2021,13 @@ function animateSteps(){
   },1700);
 }
 
-/* MAIN ANALYSIS */
+/* ── MAIN ANALYSIS ── */
 async function go(){
+  // Перевірка file:// протоколу
+  if(location.protocol==='file:'){
+    showErr('⚠️ Відкрийте файл через локальний сервер, не через file://\n\nКроки:\n1. Відкрийте термінал у папці з файлом\n2. Виконайте: npx serve .\n3. Відкрийте http://localhost:3000 у браузері');
+    return;
+  }
   const apiKey=document.getElementById('apiKey').value.trim();
   if(!apiKey){showErr('Введіть API ключ Anthropic (sk-ant-api03-...)');return;}
   if(!apiKey.startsWith('sk-ant')){showErr('Невірний формат ключа. Починається з sk-ant-...');return;}
@@ -1786,101 +2041,97 @@ async function go(){
   const cfg=platCfg[plat];
   const vtype=document.getElementById('vtype').value;
   const lang=document.getElementById('lang').value;
-  const level=document.getElementById('level').value;
-  const tone=document.getElementById('tone').value;
-  const goal=document.getElementById('goal').value;
   const ht=document.getElementById('ht').classList.contains('on');
-  const tt2=document.getElementById('tt').classList.contains('on');
   const cta=document.getElementById('ct').classList.contains('on');
   const wMusic=document.getElementById('mt').classList.contains('on');
-  const sName=document.getElementById('seriesName').value.trim();
-  const sTotal=getTotalParts();
-  const sCase=document.getElementById('seriesCase').value.trim();
-  const sDiff=document.getElementById('seriesDiff');
-  const sDiffTxt=sDiff.options[sDiff.selectedIndex].text;
-  const sCont=document.getElementById('seriesContent').value.trim();
 
+  // Single mode extras
+  const singleTitle=document.getElementById('singleTitle').value.trim();
+  const singleCase=document.getElementById('singleCase').value.trim();
+
+  // Series context
   let seriesCtx='';
-  if(seriesOpen&&sName){
-    seriesCtx=`\n═══ СЕРІЯ ВІДЕО ═══\nНазва серії: "${sName}"\nЦя частина: ${epNum}${sTotal!=='?'?' з '+sTotal:''}\n${sCase?'Тема частини: '+sCase+'\n':''}Складність: ${sDiffTxt}\n${sCont?'Зміст: '+sCont+'\n':''}\nВИМОГИ ДО НАЗВ СЕРІЇ:\n- Назва ОБОВ'ЯЗКОВО містить "Частина ${epNum}" або "#${epNum}" або "Ч.${epNum}"\n- Стиль схожий на попередні частини, але унікальний акцент\n- В описі: згадати серію, порадити попередні частини\n- Теги: загальні для серії + специфічні для цієї частини\n═══════════════════`;
+  let isSeriesMode=videoMode==='series';
+  let sName='', sTotal='', sCase='';
+  if(isSeriesMode){
+    sName=document.getElementById('seriesName').value.trim();
+    sTotal=getTotalParts();
+    sCase=document.getElementById('seriesCase').value.trim();
+    const sDiff=document.getElementById('seriesDiff');
+    const sDiffTxt=sDiff.options[sDiff.selectedIndex].text;
+    const sCont=document.getElementById('seriesContent').value.trim();
+    if(sName){
+      seriesCtx=`\n═══ СЕРІЯ ВІДЕО ═══\nНазва серії: "${sName}"\nЦя частина: ${epNum}${sTotal!=='?'?' з '+sTotal:''}\n${sCase?'Тема частини: '+sCase+'\n':''}Складність: ${sDiffTxt}\n${sCont?'Зміст: '+sCont+'\n':''}\nВИМОГИ ДО НАЗВ СЕРІЇ:\n- Назва ОБОВ'ЯЗКОВО містить "Частина ${epNum}" або "#${epNum}" або "Ч.${epNum}"\n- В описі: згадати серію, порадити попередні частини\n- Теги: загальні для серії + специфічні для цієї частини\n═══════════════════`;
+    }
   }
 
   const platI={
-    yt:`YouTube: назви до ${cfg.titleMax} символів (60-70 ідеально), опис ${cfg.descWords}, перші 150 символів — найважливіші.${tt2?' Додай таймкоди: 00:00 Назва.':''} ${cfg.tagsCount} YouTube tags.`,
-    yts:`YouTube Shorts: назва МАКСИМУМ ${cfg.titleMax} символів, обов'язково #Shorts. Перший рядок опису до 100 символів = preview. Опис ${cfg.descWords}. ${cfg.tagsCount} тегів.`,
-    tkt:`TikTok ВАЖЛИВО: в TikTok є ОДНЕ поле — "caption" (до 2200 символів). Це одночасно і назва і опис. Перші 1-2 рядки (до 100 символів) — це те що видно без розгортання, тому вони мають бути чіпляючими. Потім основний текст. В КІНЦІ caption обов'язково максимум 5 хештегів (не більше! TikTok не індексує більше 5). Повний caption ${cfg.descWords}. Теги НЕ ПОТРІБНІ — тільки хештеги в caption.`
+    yt:`YouTube: назви до ${cfg.titleMax} символів (60-70 ідеально), опис ${cfg.descWords}. Перші 150 символів опису — найважливіші для SEO. Додай ${cfg.tagsCount} YouTube тегів.`,
+    yts:`YouTube Shorts (2026 алгоритм):
+НАЗВА: до ${cfg.titleMax} символів, обов'язково #Shorts в кінці. Перші 3 слова — найважливіші.
+ОПИС: структурований, абзацами, не суцільний текст. ${cfg.descWords}. Перший рядок — hook.
+КЛЮЧОВІ СЛОВА: окремий список, мінімум 10 ключових слів, кожне з нового рядку.
+ТЕГИ: мінімум 25 тегів окремо. Mix популярних і нішевих. Більше = краще для охоплення.`,
+    tkt:`TikTok (2026 алгоритм):
+НАЗВА: перший рядок caption (до 80 симв) — ultra-hook, питання або шок-факт.
+ОПИС: 2-4 рядки — розпалює цікавість, не спойлерить.
+ТЕГИ: рівно 5 хештегів — 2 мегапопулярних + 2 нішевих + 1 тренд тижня.
+Caption загалом: ${cfg.descWords}.`
   };
 
+  const histCtx=getHistoryContext();
+
   const musicInstruction=wMusic?`,
-  "music": {
-    "mood": "одне речення — яка атмосфера музики для цього відео",
-    "bpm": "рекомендований BPM наприклад 120-140",
-    "tracks": [
-      {"name":"назва треку або плейлиста","artist":"виконавець або канал","source":"YouTube Audio Library|Epidemic Sound|SoundCloud|StreamBeats","genre":"жанр","energy":"low|medium|high","tags":["тег1","тег2"],"searchQuery":"пошуковий запит для знаходження"},
-      ... мінімум 6 треків
-    ],
-    "where": "де шукати безкоштовну музику для спідкубінг відео — конкретні поради"
-  }`:'' ;
+  "music":{"mood":"атмосфера","bpm":"BPM","tracks":[{"name":"","artist":"","source":"YouTube Audio Library|Epidemic Sound|SoundCloud|StreamBeats","genre":"","energy":"low|medium|high","trendNote":"чому 2026","searchQuery":""},{"name":"","artist":"","source":"","genre":"","energy":"","trendNote":"","searchQuery":""},{"name":"","artist":"","source":"","genre":"","energy":"","trendNote":"","searchQuery":""}],"where":"де шукати (укр)"}`:''
 
-  const prompt=`Ти — провідний SEO-спеціаліст для SPEEDCUBING каналу.
-${seriesCtx}
-ПЛАТФОРМА: ${cfg.name}
-${platI[plat]}
+  const today=new Date();
+  const dateStr=today.toLocaleDateString('uk',{day:'2-digit',month:'2-digit',year:'numeric'}).replace(/\./g,'.')+' ('+today.toLocaleDateString('en',{weekday:'long'})+')';
 
-КЛЮЧОВІ СЛОВА: ${tags.join(', ')}
-ТИП ВІДЕО: ${vtype}
-МОВА: ${lang}
-АУДИТОРІЯ: ${level}
-ТОН: ${tone}
-ЦІЛЬ: ${goal}
-ХЕШТЕГИ: ${ht?'так':'ні'}
-CTA: ${cta?'так':'ні'}
+  const prompt=`SEO-спеціаліст speedcubing каналу 2026. Мова відповіді: УКРАЇНСЬКА. Теги/ключові слова — мовою відео.
 
-SPEEDCUBING: F2L, OLL, PLL, CFOP, Cross, Look-Ahead, Finger Tricks, sub-10/15/20, T-perm, Y-perm, Sune, ZBLL, OLL skip, PLL skip, BLD, FMC, 3x3/2x2/4x4/Pyraminx/Megaminx, WCA.
+ДАТА: ${dateStr}. Зроби 1 web_search: "speedcubing trending ${today.getFullYear()} ${cfg.name}" — врахуй результати.
+
+ПЛАТФОРМА: ${cfg.name}. ${platI[plat]}
+${seriesCtx}${histCtx}
+
+ВІДЕО: теги=[${tags.join(', ')}] | тип=${vtype} | мова=${lang}${!isSeriesMode&&singleTitle?' | тема='+singleTitle:''}${!isSeriesMode&&singleCase?' | випадок='+singleCase:''} | режим=${isSeriesMode?'серія':'одиночне'} | хештеги=${ht?'так':'ні'} | CTA=${cta?'так':'ні'}${uploadedImageBase64?' | є фото куба — врахуй в назвах':''}
+
+НАЗВИ (3 штуки, різні стилі): 1=curiosity gap/питання, 2=число/факт/результат, 3=POV hook 2026. По 1-2 емодзі. До ${cfg.titleMax} символів.
+ОПИС: структурований, 1-3 емодзі, hook першим рядком${plat==='yt'?', chapters':''}. ${cfg.descWords}.
+ПОРАДИ: 6+ порад (critical/important/nice) — hook перших секунд, thumbnail, час публікації, стратегія 24год.${wMusic?'\nМУЗИКА: 3 трендових треки 2026 для speedcubing, з назвою виконавця і де шукати.':''}
+SPEEDCUBING: F2L OLL PLL CFOP Cross sub-10/15/20 T-perm Sune ZBLL BLD FMC WCA Roux ZZ.
 
 Відповідай ТІЛЬКИ чистим JSON без markdown:
 {
-  "seoScore": число 0-100,
-  "seriesContext": ${seriesOpen&&sName?`{"episodeNum":${epNum},"seriesName":"${sName.replace(/"/g,"'")}","totalParts":"${sTotal}","caseTopic":"${sCase.replace(/"/g,"'")}"}`:'null'},
-  "analytics": {"searchVolume":"рядок","competition":"рядок","ctrPotential":"рядок","rankingChance":"рядок"},
-  "titles": [
-    {"text":"","type":"best","reason":"","charCount":0},
-    {"text":"","type":"normal","reason":"","charCount":0},
-    {"text":"","type":"normal","reason":"","charCount":0},
-    {"text":"","type":"normal","reason":"","charCount":0},
-    {"text":"","type":"normal","reason":"","charCount":0},
-    {"text":"","type":"normal","reason":"","charCount":0}
+  "seoScore":0-100,
+  "detectedAudience":"beginner|intermediate|advanced|mixed",
+  "detectedTone":"energetic|educational|hype|casual",
+  "seriesContext":${isSeriesMode&&sName?`{"episodeNum":${epNum},"seriesName":"${sName.replace(/"/g,"'")}","totalParts":"${sTotal}","caseTopic":"${sCase.replace(/"/g,"'")}"}`:'null'},
+  "analytics":{"searchVolume":"рядок","competition":"рядок","ctrPotential":"рядок","rankingChance":"рядок"},
+  "titles":[
+    {"text":"назва1","type":"best","reason":"укр","charCount":0},
+    {"text":"назва2","type":"normal","reason":"укр","charCount":0},
+    {"text":"назва3","type":"normal","reason":"укр","charCount":0}
   ],
-  "description": "повний опис МОВОЮ ${lang}${tt2&&plat==='yt'?', з таймкодами':''}${cta?', з CTA':''}${seriesOpen&&sName?', з посиланням на плейлист і згадкою попередніх частин':''}",
-  "hashtags": ${plat==='tkt'?'["#хеш1","#хеш2","#хеш3","#хеш4","#хеш5"] — РІВНО 5 хештегів, не більше! В caption вже включені, але повертай окремим масивом теж':'null'},
-  "tags": ${plat!=='tkt'?`[мінімум ${cfg.tagsCount} об'єктів {"tag":"","volume":"high|med|low","reason":""}]`:'null'},
-  "tips": [мінімум 6 {"priority":"critical|important|nice","title":"","text":""}],
-  "vidiq": {
-    "overallScore": число 0-100,
-    "searchVolScore": число 0-100,
-    "competitionScore": число 0-100,
-    "ctrScore": число 0-100,
-    "rankChanceScore": число 0-100,
-    "searchVolLabel": "рядок напр Дуже Високий",
-    "competitionLabel": "рядок напр Висока",
-    "ctrLabel": "рядок напр 8-12%",
-    "rankChanceLabel": "рядок напр Хороший",
-    "overallLabel": "Відмінно|Добре|Задовільно|Слабо",
-    "overallSub": "коротка порада що покращити"
-  },
-  "kwScores": [
-    {"kw":"ключове слово","volScore":число 0-100,"volLabel":"рядок","competition":"easy|medium|hard","compLabel":"рядок","score":число 0-100},
-    ... для кожного ключового слова
-  ]${musicInstruction}
+  "hookSuggestion":"перші 2-3 сек відео (укр)",
+  "thumbnailText":"3-5 слів для thumbnail",
+  "pinnedComment":"закріплений коментар-питання (укр)",
+  "bestPostTime":"найкращий час публікації",
+  "description":"${plat==='yt'?`SEO опис YouTube мовою ${lang}${cta?', CTA':''}`:plat==='yts'?`опис Shorts мовою ${lang}`:`TikTok caption мовою ${lang}`}",
+  ${plat==='yts'?`"shortsDescription":"структурований опис Shorts (абзаци, hook першим рядком) мовою ${lang}","shortsKeywords":["kw1","kw2","kw3","kw4","kw5","kw6","kw7","kw8","kw9","kw10"],`:''}${plat==='tkt'?`"tiktokTitle":"ultra-hook до 80 символів мовою ${lang}","tiktokDescription":"опис 2-4 рядки мовою ${lang}",`:''}
+  "hashtags":${plat==='tkt'?'["#хеш1","#хеш2","#хеш3","#хеш4","#хеш5"]':'null'},
+  "tags":${plat!=='tkt'?`[мін.${cfg.tagsCount} штук {"tag":"","volume":"high|med|low","reason":""}]`:'null'},
+  "tips":[мін.6 {"priority":"critical|important|nice","title":"укр","text":"укр"}],
+  "vidiq":{"overallScore":0-100,"searchVolScore":0-100,"competitionScore":0-100,"ctrScore":0-100,"rankChanceScore":0-100,"searchVolLabel":"укр","competitionLabel":"укр","ctrLabel":"8-12%","rankChanceLabel":"укр","overallLabel":"Відмінно|Добре|Задовільно|Слабо","overallSub":"укр"},
+  "kwScores":[{"kw":"слово","volScore":0-100,"volLabel":"укр","competition":"easy|medium|hard","compLabel":"укр","score":0-100}]${musicInstruction}
 }`;
 
   try{
-    // Build message content - add image if uploaded
     let msgContent;
     if(uploadedImageBase64){
       msgContent=[
         {type:'image',source:{type:'base64',media_type:uploadedImageType,data:uploadedImageBase64}},
-        {type:'text',text:prompt+"\n\nНа зображенні вище показана ситуація з кубом. Врахуй це при генерації назв, описів та порад."}
+        {type:'text',text:prompt+"\n\nНа зображенні вище показана ситуація з кубом. Детально проаналізуй що зображено — яке положення куба, які елементи видно, і максимально використай цю інформацію при генерації назв, описів та порад."}
       ];
     } else {
       msgContent=prompt;
@@ -1888,26 +2139,26 @@ SPEEDCUBING: F2L, OLL, PLL, CFOP, Cross, Look-Ahead, Finger Tricks, sub-10/15/20
     const r=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:5500,messages:[{role:'user',content:msgContent}]})
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:6000,tools:[{type:'web_search_20250305',name:'web_search'}],messages:[{role:'user',content:msgContent}]})
     });
     if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error?.message||`HTTP ${r.status}`);}
     const d=await r.json();
-    const raw=d.content.map(b=>b.text||'').join('');
+    const raw=d.content.filter(b=>b.type==='text').map(b=>b.text||'').join('');
     clearInterval(stepTimer);
     for(let i=1;i<=5;i++){const el=document.getElementById('s'+i);el.className='step done';el.querySelector('.step-dot').textContent='✓';}
     await new Promise(res=>setTimeout(res,350));
     let parsed;
     try{ parsed=JSON.parse(raw.replace(/```json|```/g,'').trim()); }
-    catch{ const m=raw.match(/\{[\s\S]*\}/); if(m) parsed=JSON.parse(m[0]); else throw new Error('Не вдалося розібрати відповідь. Спробуйте ще раз.'); }
+    catch{ const m=raw.match(/\{[\s\S]*\}/); if(m) parsed=JSON.parse(m[0]); else throw new Error('Не вдалося розібрати відповідь AI. Спробуйте ще раз.'); }
     document.getElementById('loading').classList.remove('show');
-    renderResults(parsed,cfg);
+    renderResults(parsed, cfg);
   } catch(e){
     clearInterval(stepTimer);
     document.getElementById('loading').classList.remove('show');
     let msg=e.message;
     if(msg.includes('401')||msg.includes('authentication')) msg='Невірний API ключ. Перевірте на console.anthropic.com';
-    else if(msg.includes('429')) msg='Ліміт запитів вичерпано. Зачекайте хвилину.';
-    else if(msg.includes('CORS')||msg.includes('fetch')) msg='Відкрийте файл через сервер: cd до папки з файлом → npx serve .';
+    else if(msg.includes('429')){ show429Countdown(60); return; }
+    else if(msg.includes('CORS')||msg.includes('fetch')||msg.includes('Failed')) msg='🌐 CORS помилка — відкрийте через локальний сервер: npx serve . → http://localhost:3000';
     showErr(msg);
   } finally{ document.getElementById('analyzeBtn').disabled=false; }
 }
@@ -1941,65 +2192,176 @@ function renderResults(d, cfg){
     {v:a.searchVolume||'—',l:'Попит',c:'#7c5cfc'},
     {v:a.ctrPotential||'—',l:'CTR',c:'#22d3ee'},
     {v:a.competition||'—',l:'Конкуренція',c:'#e63950'},
-    {v:sc+'/100',l:'SEO Score',c:'#10b981'},
+    {v:sc+'/100',l:'SEO',c:'#10b981'},
     {v:a.rankingChance||'—',l:'Ранжування',c:'#f59e0b'},
     {v:((d.tags||d.hashtags||[]).length)+'шт',l:plat==='tkt'?'Хештегів':'Тегів',c:'#b4a0ff'}
   ];
   document.getElementById('statGrid').innerHTML=stats.map(s=>`<div class="stat-card"><div class="stat-val" style="color:${s.c}">${eH(String(s.v))}</div><div class="stat-lbl">${s.l}</div></div>`).join('');
 
-  /* TITLES */
-  document.getElementById('titlesLabel').textContent=`${(d.titles||[]).length} варіантів для ${cfg.name}`;
-  document.getElementById('titlesContent').innerHTML=(d.titles||[]).map((t,i)=>{
+  /* QUICK INSIGHTS (hook, thumbnail, pinned comment, post time) */
+  const qiEl=document.getElementById('quickInsights');
+  if(qiEl){
+    const insights=[];
+    if(d.hookSuggestion) insights.push({icon:'<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>',color:'var(--red)',label:'Hook (перші 2 сек)',text:d.hookSuggestion});
+    if(d.thumbnailText) insights.push({icon:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>',color:'var(--amber)',label:'Thumbnail текст',text:d.thumbnailText});
+    if(d.pinnedComment) insights.push({icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',color:'var(--cyan)',label:'Закріплений коментар',text:d.pinnedComment});
+    if(d.bestPostTime) insights.push({icon:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',color:'var(--green)',label:'Найкращий час публікації',text:d.bestPostTime});
+    if(insights.length){
+      qiEl.style.display='block';
+      qiEl.innerHTML=`<div class="qi-title">Швидкі підказки</div>`+insights.map(it=>`
+        <div class="qi-item">
+          <div class="qi-icon" style="background:rgba(0,0,0,.15);border:1px solid ${it.color}33">
+            <svg viewBox="0 0 24 24" fill="none" stroke="${it.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${it.icon}</svg>
+          </div>
+          <div class="qi-body">
+            <div class="qi-label" style="color:${it.color}">${eH(it.label)}</div>
+            <div class="qi-text">${eH(it.text)}</div>
+          </div>
+          <button class="copy-btn" style="flex-shrink:0" onclick="cpText('${eA(it.text)}')">Копіювати</button>
+        </div>`).join('');
+    } else { qiEl.style.display='none'; }
+  }
+
+  /* TITLES — only 3 — hide for Shorts (titles shown inside shortsCard) */
+  const titlesResCard=document.getElementById('titlesContent')?.closest('.res-card');
+  if(titlesResCard) titlesResCard.style.display = plat==='yts' ? 'none' : 'block';
+
+  // CTR A/B predictions based on title style
+  function calcCTR(t, idx){
+    let base=idx===0?8:idx===1?6:5;
+    const txt=t.text||'';
+    if(/\?/.test(txt)) base+=2;
+    if(/[0-9]/.test(txt)) base+=1.5;
+    if(/POV|ЦЕ|ШОКУЮ|ніколи|неможли/i.test(txt)) base+=2;
+    if(/[⚡🔥😤💀🎯🧩⏱😱👀🚀]/.test(txt)) base+=1;
+    if(txt.length<60) base+=0.5;
+    if(t.type==='best') base+=1;
+    base=Math.min(Math.max(base+((Math.random()-.5)*0.6),3),22);
+    return base.toFixed(1);
+  }
+
+  const titlesArr=(d.titles||[]).slice(0,3);
+  document.getElementById('titlesLabel').textContent=`${titlesArr.length} назви · A/B CTR прогноз`;
+  document.getElementById('titlesContent').innerHTML=titlesArr.map((t,i)=>{
     const over=t.charCount>cfg.titleMax, warn=t.charCount>(cfg.titleMax*.9);
     const chCls=over?'over':warn?'warn':'ok';
     const chTxt=t.charCount?`${t.charCount}/${cfg.titleMax} символів${over?' — занадто довга':''}`:'' ;
+    const ctr=calcCTR(t,i);
+    const ctrClr=ctr>=10?'var(--green)':ctr>=7?'var(--amber)':'var(--tx3)';
     return `<div class="variant ${t.type==='best'?'best':''}" onclick="cpText('${eA(t.text)}')">
       <div class="variant-num">${i+1}</div>
       <div class="variant-body">
         <div class="variant-text">${eH(t.text)}</div>
         ${t.reason?`<div class="variant-reason">${eH(t.reason)}</div>`:''}
         ${chTxt?`<div class="variant-chars ${chCls}">${chTxt}</div>`:''}
+        <div style="margin-top:4px;display:flex;align-items:center;gap:6px">
+          <span style="font-size:.58rem;color:var(--tx3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em">CTR прогноз</span>
+          <span style="font-size:.72rem;font-weight:700;font-family:var(--mono);color:${ctrClr}">${ctr}%</span>
+          <div style="flex:1;height:3px;background:var(--card3);border-radius:2px;overflow:hidden"><div style="height:100%;width:${Math.min(ctr/22*100,100)}%;background:${ctrClr};border-radius:2px"></div></div>
+        </div>
       </div>
       ${t.type==='best'?'<div class="best-badge">Найкраща</div>':''}
       <button class="copy-btn" onclick="event.stopPropagation();cpText('${eA(t.text)}',this)">Копіювати</button>
     </div>`;
   }).join('');
 
-  /* DESC */
-  const descTxt=d.description||'';
-  document.getElementById('descContent').textContent=descTxt;
-  const dl=descTxt.length;
-  const dcEl=document.getElementById('descCharCount');
-  dcEl.textContent=`${dl} / ${cfg.descMax} символів`;
-  dcEl.className='char-count'+(dl>cfg.descMax?' over':dl>cfg.descMax*.85?' warn':'');
-  document.getElementById('descLabel').textContent=plat==='tkt'?'TikTok Caption':plat==='yts'?'Shorts Опис':'YouTube Опис';
+  /* PLATFORM-SPECIFIC CONTENT */
+  const descCard=document.getElementById('descCard');
+  const tiktokCard=document.getElementById('tiktokCombinedCard');
+  const shortsCard=document.getElementById('shortsCard');
+  const tagsCard=document.getElementById('tagsCard');
 
-  /* HASHTAGS */
-  const hCard=document.getElementById('hashCard');
-  if(plat==='tkt'&&d.hashtags?.length){
-    hCard.style.display='block';
-    document.getElementById('hashContent').innerHTML=d.hashtags.map(h=>`<span class="tag-pill high" data-tag="${eA(h)}" onclick="cpText('${eA(h)}')">${eH(h)}</span>`).join('');
-  } else hCard.style.display='none';
+  if(plat==='tkt'){
+    // TikTok — combined block
+    descCard.style.display='none';
+    shortsCard.style.display='none';
+    tagsCard.style.display='none';
+    tiktokCard.style.display='block';
 
-  /* TAGS */
-  const tCard=document.getElementById('tagsCard');
-  if(plat==='tkt'){ tCard.style.display='none'; }
-  else {
-    tCard.style.display='block';
-    document.getElementById('tagsLabel').textContent=`${cfg.name} теги — ${(d.tags||[]).length} шт`;
-    document.getElementById('tagsContent').innerHTML=(d.tags||[]).map(t=>`<span class="tag-pill ${t.volume==='high'?'high':t.volume==='low'?'low':'med'}" data-tag="${eA(t.tag)}" title="${eA(t.reason||'')}" onclick="cpText('${eA(t.tag)}')">${eH(t.tag)}<span class="tag-vol">${t.volume==='high'?'H':t.volume==='low'?'L':'M'}</span></span>`).join('');
+    const tktTitle=d.tiktokTitle||(d.titles&&d.titles[0]?d.titles[0].text:'');
+    const tktDesc=d.tiktokDescription||d.description||'';
+    const tktHashArr=d.hashtags||[];
+
+    document.getElementById('tktTitle').textContent=tktTitle;
+    document.getElementById('tktDesc').textContent=tktDesc;
+    document.getElementById('tktTags').innerHTML=tktHashArr.map(h=>`<span class="tktcb-tag" onclick="cpText('${eA(h)}')">${eH(h)}</span>`).join('');
+
+  } else if(plat==='yts'){
+    // YouTube Shorts — structured with 3 titles first
+    descCard.style.display='none';
+    tiktokCard.style.display='none';
+    shortsCard.style.display='block';
+    tagsCard.style.display='none'; // tags are inside shorts block now
+
+    const sDesc=d.shortsDescription||d.description||'';
+    const sKws=d.shortsKeywords||[];
+    const sTitles=d.titles||[];
+
+    // Render 3 titles inside shorts block
+    const shortsTitlesEl=document.getElementById('shortsTitlesContent');
+    if(shortsTitlesEl){
+      shortsTitlesEl.innerHTML=sTitles.map((t,i)=>{
+        const chars=t.text?t.text.length:0;
+        const charCls=chars>70?'over':chars>55?'warn':'ok';
+        const ctr=calcCTR(t,i);
+        const ctrClr=ctr>=10?'var(--green)':ctr>=7?'var(--amber)':'var(--tx3)';
+        return `<div class="variant${t.type==='best'?' best':''}" onclick="cpText('${eA(t.text)}')">
+          <div class="variant-num">${i+1}</div>
+          <div class="variant-body">
+            <div class="variant-text">${eH(t.text||'')}</div>
+            ${t.reason?`<div class="variant-reason">${eH(t.reason)}</div>`:''}
+            <div class="variant-chars ${charCls}">${chars} символів</div>
+            <div style="margin-top:4px;display:flex;align-items:center;gap:6px">
+              <span style="font-size:.58rem;color:var(--tx3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em">CTR</span>
+              <span style="font-size:.72rem;font-weight:700;font-family:var(--mono);color:${ctrClr}">${ctr}%</span>
+              <div style="flex:1;height:3px;background:var(--card3);border-radius:2px;overflow:hidden"><div style="height:100%;width:${Math.min(ctr/22*100,100)}%;background:${ctrClr};border-radius:2px"></div></div>
+            </div>
+          </div>
+          ${t.type==='best'?'<div class="best-badge">Найкраща</div>':''}
+          <button class="copy-btn" onclick="event.stopPropagation();cpText('${eA(t.text)}',this)">Копіювати</button>
+        </div>`;
+      }).join('');
+    }
+
+    document.getElementById('shortsDesc').textContent=sDesc;
+    document.getElementById('shortsKw').innerHTML=sKws.map(k=>`<div class="shorts-kw-item">${eH(k)}</div>`).join('');
+
+    // Shorts tags in shorts block — more tags
+    const stArr=d.tags||[];
+    const stCountEl=document.getElementById('shortsTagsCount');
+    if(stCountEl) stCountEl.textContent=`— ${stArr.length} шт`;
+    document.getElementById('shortsTagsContent').innerHTML=stArr.map(t=>`<span class="tag-pill ${t.volume==='high'?'high':t.volume==='low'?'low':'med'}" data-tag="${eA(t.tag)}" onclick="cpText('${eA(t.tag)}')">${eH(t.tag)}<span class="tag-vol">${t.volume==='high'?'H':t.volume==='low'?'L':'M'}</span></span>`).join('');
+
+  } else {
+    // YouTube — standard
+    descCard.style.display='block';
+    tiktokCard.style.display='none';
+    shortsCard.style.display='none';
+    tagsCard.style.display='block';
+
+    const descTxt=d.description||'';
+    document.getElementById('descContent').textContent=descTxt;
+    const dl=descTxt.length;
+    const dcEl=document.getElementById('descCharCount');
+    dcEl.textContent=`${dl} / ${cfg.descMax} символів`;
+    dcEl.className='char-count'+(dl>cfg.descMax?' over':dl>cfg.descMax*.85?' warn':'');
+    document.getElementById('descLabel').textContent='YouTube Опис';
+
+    const tArr=d.tags||[];
+    document.getElementById('tagsLabel').textContent=`YouTube теги — ${tArr.length} шт`;
+    document.getElementById('tagsContent').innerHTML=tArr.map(t=>`<span class="tag-pill ${t.volume==='high'?'high':t.volume==='low'?'low':'med'}" data-tag="${eA(t.tag)}" title="${eA(t.reason||'')}" onclick="cpText('${eA(t.tag)}')">${eH(t.tag)}<span class="tag-vol">${t.volume==='high'?'H':t.volume==='low'?'L':'M'}</span></span>`).join('');
   }
 
-  /* TIPS */
-  document.getElementById('tipsLabel').textContent=`Рекомендації для ${cfg.name}`;
+  /* TIPS (Ukrainian) */
+  document.getElementById('tipsLabel').textContent=`Стратегія для ${cfg.name}`;
   const tipIcons={
-    critical:`<svg viewBox="0 0 24 24"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
-    important:`<svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
-    nice:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`
+    critical:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+    important:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+    nice:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`
   };
   document.getElementById('tipsContent').innerHTML=(d.tips||[]).map(t=>`<div class="tip ${t.priority||'nice'}"><div class="tip-icon">${tipIcons[t.priority]||tipIcons.nice}</div><div class="tip-body"><strong>${eH(t.title||'')}</strong>${eH(t.text||'')}</div></div>`).join('');
 
-  /* MUSIC */
+  /* MUSIC — 3 tracks only */
   const mCard=document.getElementById('musicCard');
   if(d.music?.tracks?.length){
     mCard.style.display='block';
@@ -2007,9 +2369,11 @@ function renderResults(d, cfg){
     document.getElementById('musicMoodText').textContent=`${m.mood||''}${m.bpm?' · '+m.bpm+' BPM':''}`;
     const srcCls={'YouTube Audio Library':'ms-yt','Epidemic Sound':'ms-ep','SoundCloud':'ms-sc','StreamBeats':'ms-sb'};
     const eLbl={low:'Спокійна',medium:'Середня',high:'Енергійна'};
-    document.getElementById('musicGrid').innerHTML=(m.tracks||[]).map(t=>`<div class="music-track" onclick="cpText('${eA(t.searchQuery||t.name)}')">
+    const tracks=(m.tracks||[]).slice(0,3);
+    document.getElementById('musicGrid').innerHTML=tracks.map(t=>`<div class="music-track" onclick="cpText('${eA(t.searchQuery||t.name)}')">
       <div class="mt-top"><div class="mt-name">${eH(t.name)}</div><span class="mt-src ${srcCls[t.source]||'ms-sb'}">${eH(t.source||'')}</span></div>
       <div class="mt-meta">${eH(t.artist||'')} · ${eH(t.genre||'')} · ${eLbl[t.energy]||'Середня'}</div>
+      ${t.trendNote?`<div class="mt-trend">🔥 ${eH(t.trendNote)}</div>`:''}
       ${t.tags?.length?`<div class="mt-tags">${t.tags.map(tg=>`<span class="mt-tag">${eH(tg)}</span>`).join('')}</div>`:''}
       ${t.searchQuery?`<div class="mt-query">Пошук: ${eH(t.searchQuery)}</div>`:''}
     </div>`).join('');
@@ -2017,10 +2381,18 @@ function renderResults(d, cfg){
       document.getElementById('musicWhereText').textContent=m.where;
       document.getElementById('musicWhere').style.display='block';
     }
-  } else mCard.style.display='none';
+  } else { mCard.style.display='none'; }
 
   document.getElementById('results').classList.add('show');
   document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
+
+  // Save to history + state
+  const serInfo=videoMode==='series'&&document.getElementById('seriesName').value.trim()?
+    {name:document.getElementById('seriesName').value.trim(),ep:epNum}:null;
+  saveToHistory(d, cfg, [...tags], serInfo);
+  renderVidiqPanel(d);
+  renderKwScores(d);
+  saveState();
 }
 
 function eH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -2028,11 +2400,60 @@ function eA(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replac
 function showErr(m){const b=document.getElementById('errorBox');b.textContent=m;b.classList.add('show');}
 function hideErr(){document.getElementById('errorBox').classList.remove('show');}
 
-/* ══════════════════════════════════════════════
-   LOCALSTORAGE — SAVE / RESTORE ALL FORM STATE
-   ══════════════════════════════════════════════ */
-const SAVE_KEY='seo_pro_state';
-const HISTORY_KEY='seo_pro_history';
+/* ── VIDIQ PANEL ── */
+function renderVidiqPanel(d){
+  const v=d.vidiq;
+  if(!v){ document.getElementById('vidiqPanel').style.display='none'; return; }
+  document.getElementById('vidiqPanel').style.display='block';
+  const score=v.overallScore||0;
+  const circumference=94.2;
+  const offset=circumference-(circumference*score/100);
+  const ringColor=score>=75?'#10b981':score>=50?'#f59e0b':'#e63950';
+  setTimeout(()=>{
+    const ring=document.getElementById('vidiqRingFill');
+    if(ring){ ring.style.stroke=ringColor; ring.style.strokeDashoffset=offset; }
+  },100);
+  document.getElementById('vidiqRingNum').textContent=score;
+  document.getElementById('vidiqRingNum').style.color=ringColor;
+  document.getElementById('vidiqOverallLabel').textContent=v.overallLabel||'';
+  document.getElementById('vidiqOverallLabel').style.color=ringColor;
+  document.getElementById('vidiqOverallSub').textContent=v.overallSub||'';
+  const metrics=[
+    {label:'Пошуковий попит', score:v.searchVolScore||0, text:v.searchVolLabel||'', color:'#7c5cfc'},
+    {label:'Конкуренція',     score:100-(v.competitionScore||0), text:v.competitionLabel||'', color:'#e63950'},
+    {label:'Потенціал CTR',   score:v.ctrScore||0, text:v.ctrLabel||'', color:'#0ea5e9'},
+    {label:'Шанс ранжування', score:v.rankChanceScore||0, text:v.rankChanceLabel||'', color:'#10b981'},
+  ];
+  document.getElementById('vidiqGrid').innerHTML=metrics.map(m=>{
+    const barW=Math.min(100,Math.max(0,m.score));
+    return `<div class="vidiq-metric">
+      <div class="vm-label">${eH(m.label)}</div>
+      <div class="vm-bar-wrap">
+        <div class="vm-bar-track"><div class="vm-bar-fill" style="width:${barW}%;background:${m.color}"></div></div>
+        <div class="vm-val" style="color:${m.color}">${m.score}</div>
+      </div>
+      <div class="vm-sub">${eH(m.text)}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderKwScores(d){
+  const kws=d.kwScores;
+  if(!kws||!kws.length){ document.getElementById('kwScoresCard').style.display='none'; return; }
+  document.getElementById('kwScoresCard').style.display='block';
+  document.getElementById('kwScoresContent').innerHTML=kws.map(k=>`
+    <div class="kw-row">
+      <div class="kw-text">${eH(k.kw)}</div>
+      <div class="kw-vol-bar"><div class="kw-vol-fill" style="width:${Math.min(100,k.volScore||0)}%;background:var(--violet)"></div></div>
+      <span class="kw-comp ${k.competition||'medium'}">${eH(k.compLabel||k.competition||'')}</span>
+      <div class="kw-score" style="color:${k.competition==='easy'?'var(--green)':k.competition==='hard'?'var(--red)':'var(--amber)'}">${k.score||0}</div>
+    </div>
+  `).join('');
+}
+
+/* ── STATE SAVE/RESTORE ── */
+const SAVE_KEY='seo_pro_state_v2';
+const HISTORY_KEY='seo_pro_history_v2';
 
 function saveState(){
   try{
@@ -2042,14 +2463,10 @@ function saveState(){
       tags,
       vtype: document.getElementById('vtype').value,
       lang:  document.getElementById('lang').value,
-      level: document.getElementById('level').value,
-      tone:  document.getElementById('tone').value,
-      goal:  document.getElementById('goal').value,
       ht:    document.getElementById('ht').classList.contains('on'),
-      tt:    document.getElementById('tt').classList.contains('on'),
       ct:    document.getElementById('ct').classList.contains('on'),
       mt:    document.getElementById('mt').classList.contains('on'),
-      seriesOpen,
+      videoMode,
       epNum,
       seriesName:    document.getElementById('seriesName').value,
       totalParts:    document.getElementById('totalParts').value,
@@ -2057,6 +2474,8 @@ function saveState(){
       seriesCase:    document.getElementById('seriesCase').value,
       seriesDiff:    document.getElementById('seriesDiff').value,
       seriesContent: document.getElementById('seriesContent').value,
+      singleTitle:   document.getElementById('singleTitle').value,
+      singleCase:    document.getElementById('singleCase').value,
     };
     localStorage.setItem(SAVE_KEY, JSON.stringify(state));
   }catch(e){}
@@ -2072,14 +2491,10 @@ function restoreState(){
     if(s.tags)    { tags=s.tags; renderTags(); }
     if(s.vtype)   document.getElementById('vtype').value=s.vtype;
     if(s.lang)    document.getElementById('lang').value=s.lang;
-    if(s.level)   document.getElementById('level').value=s.level;
-    if(s.tone)    document.getElementById('tone').value=s.tone;
-    if(s.goal)    document.getElementById('goal').value=s.goal;
-    document.getElementById('ht').classList.toggle('on',!!s.ht);
-    document.getElementById('tt').classList.toggle('on',!!s.tt);
-    document.getElementById('ct').classList.toggle('on',!!s.ct);
-    document.getElementById('mt').classList.toggle('on',!!s.mt);
-    if(s.seriesOpen){ seriesOpen=false; toggleSeries(); }
+    if(s.ht!==undefined)    document.getElementById('ht').classList.toggle('on',!!s.ht);
+    if(s.ct!==undefined)    document.getElementById('ct').classList.toggle('on',!!s.ct);
+    if(s.mt!==undefined)    document.getElementById('mt').classList.toggle('on',!!s.mt);
+    if(s.videoMode) setVmode(s.videoMode);
     if(s.epNum)   { epNum=s.epNum; document.getElementById('epNum').textContent=epNum; }
     if(s.seriesName)    document.getElementById('seriesName').value=s.seriesName;
     if(s.totalParts)    document.getElementById('totalParts').value=s.totalParts;
@@ -2087,17 +2502,16 @@ function restoreState(){
     if(s.seriesCase)    document.getElementById('seriesCase').value=s.seriesCase;
     if(s.seriesDiff)    document.getElementById('seriesDiff').value=s.seriesDiff;
     if(s.seriesContent) document.getElementById('seriesContent').value=s.seriesContent;
-    updateSeriesPreview();
+    if(s.singleTitle)   document.getElementById('singleTitle').value=s.singleTitle;
+    if(s.singleCase)    document.getElementById('singleCase').value=s.singleCase;
+    if(s.videoMode==='series') updateSeriesPreview();
   }catch(e){}
 }
 
-// Auto-save on any input change
 document.addEventListener('change', saveState);
 document.addEventListener('input', saveState);
 
-/* ══════════════════════════════════════════════
-   HISTORY — ЗБЕРІГАННЯ ПОПЕРЕДНІХ АНАЛІЗІВ
-   ══════════════════════════════════════════════ */
+/* ── HISTORY ── */
 let history=[];
 
 function loadHistory(){
@@ -2119,7 +2533,6 @@ function saveToHistory(result, cfg, kwList, seriesInfo){
     seriesEp:   seriesInfo?.ep||null,
     vtype: document.getElementById('vtype').value,
     lang:  document.getElementById('lang').value,
-    // Store full result for restore
     result,
     cfgName: cfg.name,
   };
@@ -2131,11 +2544,23 @@ function saveToHistory(result, cfg, kwList, seriesInfo){
 
 function renderHistory(){
   const container=document.getElementById('historyList');
-  const empty=document.getElementById('histEmpty');
+  const emptyEl=document.getElementById('histEmpty');
   const clearBtn=document.getElementById('clearHistBtn');
-  if(!history.length){ empty.style.display='block'; clearBtn.style.display='none'; return; }
-  empty.style.display='none'; clearBtn.style.display='block';
-  container.innerHTML=history.map((h,i)=>`
+  const badge=document.getElementById('histBadge');
+
+  if(!history.length){
+    if(emptyEl) emptyEl.style.display='block';
+    if(clearBtn) clearBtn.style.display='none';
+    if(badge) badge.classList.remove('show');
+    if(container) container.innerHTML='<div class="hist-empty" id="histEmpty">Тут зберігатимуться попередні аналізи</div>';
+    return;
+  }
+
+  if(emptyEl) emptyEl.style.display='none';
+  if(clearBtn) clearBtn.style.display='block';
+  if(badge){ badge.textContent=history.length; badge.classList.add('show'); }
+
+  if(container) container.innerHTML=history.map((h,i)=>`
     <div class="hist-item" onclick="restoreFromHistory(${i})">
       <div class="hist-item-top">
         <div class="hist-item-title">${eH(h.title.substring(0,50)+(h.title.length>50?'...':''))}</div>
@@ -2156,7 +2581,8 @@ function restoreFromHistory(idx){
   const cfg=platCfg[h.plat]||platCfg.yt;
   setPlat(h.plat);
   tags=h.keywords; renderTags();
-  renderResults(h.result,cfg);
+  renderResults(h.result, cfg);
+  closeHistory();
   showToast('Відновлено з історії');
   document.getElementById('results').scrollIntoView({behavior:'smooth'});
 }
@@ -2172,97 +2598,193 @@ function clearHistory(){
   history=[];
   try{ localStorage.removeItem(HISTORY_KEY); }catch(e){}
   renderHistory();
+  closeHistory();
 }
 
 function getHistoryContext(){
   if(!history.length) return 'Це перший аналіз — попередніх даних немає.';
   const recent=history.slice(0,5);
-  return 'Попередні відео на каналі (для контексту та уникнення повторів):' +
+  return 'Попередні відео на каналі (для контексту та уникнення повторів):'+
     recent.map((h,i)=>`\n${i+1}. [${h.platName}] "${h.title.substring(0,60)}" — теги: ${h.keywords.join(', ')}${h.seriesName?' | Серія: '+h.seriesName+' Ч.'+h.seriesEp:''}`).join('');
 }
 
-/* ══════════════════════════════════════════════
-   VIDIQ-STYLE PANEL RENDER
-   ══════════════════════════════════════════════ */
-function renderVidiqPanel(d){
-  const v=d.vidiq;
-  if(!v){ document.getElementById('vidiqPanel').style.display='none'; return; }
-  document.getElementById('vidiqPanel').style.display='block';
+/* ── TRENDS DRAWER ── */
+const TRENDS_HISTORY_KEY='seo_pro_trends_v1';
+let trendsHistory=[];
 
-  // Ring animation
-  const score=v.overallScore||0;
-  const circumference=94.2;
-  const offset=circumference-(circumference*score/100);
-  const ringColor=score>=75?'#10b981':score>=50?'#f59e0b':'#e63950';
-  setTimeout(()=>{
-    const ring=document.getElementById('vidiqRingFill');
-    ring.style.stroke=ringColor;
-    ring.style.strokeDashoffset=offset;
-  },100);
-  document.getElementById('vidiqRingNum').textContent=score;
-  document.getElementById('vidiqRingNum').style.color=ringColor;
-
-  const lbl=v.overallLabel||'';
-  document.getElementById('vidiqOverallLabel').textContent=lbl;
-  document.getElementById('vidiqOverallLabel').style.color=ringColor;
-  document.getElementById('vidiqOverallSub').textContent=v.overallSub||'';
-
-  // Metrics grid
-  const metrics=[
-    {label:'Пошуковий попит', score:v.searchVolScore||0, text:v.searchVolLabel||'', color:'#7c5cfc'},
-    {label:'Конкуренція',     score:100-(v.competitionScore||0), text:v.competitionLabel||'', color:'#e63950', invertBar:true},
-    {label:'Потенціал CTR',   score:v.ctrScore||0, text:v.ctrLabel||'', color:'#0ea5e9'},
-    {label:'Шанс ранжування', score:v.rankChanceScore||0, text:v.rankChanceLabel||'', color:'#10b981'},
-  ];
-  document.getElementById('vidiqGrid').innerHTML=metrics.map(m=>{
-    const barW=Math.min(100,Math.max(0,m.score));
-    return `<div class="vidiq-metric">
-      <div class="vm-label">${eH(m.label)}</div>
-      <div class="vm-bar-wrap">
-        <div class="vm-bar-track"><div class="vm-bar-fill" style="width:${barW}%;background:${m.color}"></div></div>
-        <div class="vm-val" style="color:${m.color}">${m.score}</div>
-      </div>
-      <div class="vm-sub">${eH(m.text)}</div>
-    </div>`;
-  }).join('');
+function openTrends(){
+  document.getElementById('trendsDrawer').classList.add('open');
+  document.getElementById('trendsOverlay').classList.add('open');
+  loadTrendsHistory();
+  // set today's date as default
+  const d=new Date();
+  const pad=n=>String(n).padStart(2,'0');
+  document.getElementById('trendsDate').value=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+function closeTrends(){
+  document.getElementById('trendsDrawer').classList.remove('open');
+  document.getElementById('trendsOverlay').classList.remove('open');
 }
 
-function renderKwScores(d){
-  const kws=d.kwScores;
-  if(!kws||!kws.length){ document.getElementById('kwScoresCard').style.display='none'; return; }
-  document.getElementById('kwScoresCard').style.display='block';
-  const compColor={easy:'var(--green)',medium:'var(--amber)',hard:'var(--red)'};
-  document.getElementById('kwScoresContent').innerHTML=kws.map(k=>`
-    <div class="kw-row">
-      <div class="kw-text">${eH(k.kw)}</div>
-      <div class="kw-vol-bar"><div class="kw-vol-fill" style="width:${Math.min(100,k.volScore||0)}%;background:var(--violet)"></div></div>
-      <span class="kw-comp ${k.competition||'medium'}">${eH(k.compLabel||k.competition||'')}</span>
-      <div class="kw-score" style="color:${compColor[k.competition]||'var(--amber)'}">${k.score||0}</div>
+function loadTrendsHistory(){
+  try{ trendsHistory=JSON.parse(localStorage.getItem(TRENDS_HISTORY_KEY)||'[]'); }catch(e){ trendsHistory=[]; }
+  renderTrendsHistory();
+}
+
+function saveTrendsEntry(entry){
+  trendsHistory.unshift(entry);
+  if(trendsHistory.length>15) trendsHistory=trendsHistory.slice(0,15);
+  try{ localStorage.setItem(TRENDS_HISTORY_KEY,JSON.stringify(trendsHistory)); }catch(e){}
+  renderTrendsHistory();
+}
+
+function deleteTrendsEntry(idx){
+  trendsHistory.splice(idx,1);
+  try{ localStorage.setItem(TRENDS_HISTORY_KEY,JSON.stringify(trendsHistory)); }catch(e){}
+  renderTrendsHistory();
+}
+
+function clearTrendsHistory(){
+  if(!confirm('Очистити всю історію трендів?')) return;
+  trendsHistory=[];
+  try{ localStorage.removeItem(TRENDS_HISTORY_KEY); }catch(e){}
+  renderTrendsHistory();
+}
+
+function renderTrendsHistory(){
+  const body=document.getElementById('trendsBody');
+  const footer=document.getElementById('trendsFooter');
+  if(!trendsHistory.length){
+    body.innerHTML=`<div class="trends-empty"><div class="trends-empty-icon">📈</div>Натисни "Пошук" щоб дізнатись<br>що зараз трендить у спідкубінгу<br><span style="font-size:.62rem;opacity:.6">з AI-прогнозом та аналізом</span></div>`;
+    footer.style.display='none';
+    return;
+  }
+  footer.style.display='block';
+  body.innerHTML=trendsHistory.map((entry,idx)=>`
+    <div class="trends-item">
+      <div class="trends-item-head">
+        <div>
+          <div class="trends-item-query">${eH(entry.query)}</div>
+          <div class="trends-item-meta">
+            <span class="trends-item-date">${eH(entry.date)}</span>
+            ${entry.dateFor?`<span style="font-size:.6rem;font-family:var(--mono);color:var(--violet)">· ${eH(entry.dateFor)}</span>`:''}
+          </div>
+        </div>
+        <button class="trends-item-del" onclick="deleteTrendsEntry(${idx})" title="Видалити">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="trends-item-body">
+        <div class="trends-trend-list">
+          ${(entry.trends||[]).map(tr=>`
+            <div class="trend-entry ${tr.status||'stable'}">
+              <div class="trend-entry-top">
+                <div class="trend-name">${eH(tr.name)}</div>
+                <span class="trend-badge ${tr.status||'stable'}">${tr.status==='hot'?'🔥 Гаряче':tr.status==='rising'?'📈 Зростає':'📊 Стабільно'}</span>
+              </div>
+              <div class="trend-desc">${eH(tr.description)}</div>
+              <div class="trend-forecast">🔮 ${eH(tr.forecast)}</div>
+            </div>`).join('')}
+        </div>
+      </div>
     </div>
   `).join('');
 }
 
-/* ══════════════════════════════════════════════
-   PATCH renderResults TO CALL NEW FUNCTIONS + SAVE HISTORY
-   ══════════════════════════════════════════════ */
-const _origRenderResults = renderResults;
-renderResults = function(d, cfg){
-  _origRenderResults(d, cfg);
-  renderVidiqPanel(d);
-  renderKwScores(d);
-  // Save to history
-  const sName2=seriesOpen?document.getElementById('seriesName').value.trim():null;
-  const serInfo=sName2?{name:sName2,ep:epNum}:null;
-  saveToHistory(d, cfg, [...tags], serInfo);
-  saveState();
-};
+async function searchTrends(){
+  if(location.protocol==='file:'){ showToast('Відкрийте через локальний сервер (npx serve .)'); return; }
+  const apiKey=document.getElementById('apiKey').value.trim();
+  if(!apiKey){showToast('Спочатку введіть API ключ');return;}
+  const query=document.getElementById('trendsQuery').value.trim()||'speedcubing';
+  const dateVal=document.getElementById('trendsDate').value;
+  const dateDisplay=dateVal?new Date(dateVal).toLocaleDateString('uk',{day:'2-digit',month:'long',year:'numeric'}):'сьогодні';
 
-/* ══════════════════════════════════════════════
-   INIT ON PAGE LOAD
-   ══════════════════════════════════════════════ */
+  const btn=document.getElementById('trendsSearchBtn');
+  btn.disabled=true;
+  btn.textContent='Шукаю...';
+  document.getElementById('trendsBody').innerHTML=`<div class="trends-loading"><div class="trends-spinner"></div>AI аналізує тренди...</div>`;
+
+  const prompt=`Ти — топ-аналітик спідкубінг контенту. Дата запиту: ${dateDisplay}. Тема пошуку: "${query}".
+
+Використай web_search щоб знайти актуальні тренди. Шукай: "speedcubing trending ${new Date().getFullYear()}", "${query} speedcubing viral", "YouTube speedcubing ${dateDisplay}", "#speedcubing TikTok trend".
+
+Поверни ТІЛЬКИ чистий JSON (без markdown):
+{
+  "trends": [
+    {
+      "name": "Назва тренду (укр)",
+      "status": "hot|rising|stable",
+      "description": "Що це за тренд, чому популярний зараз (2-3 речення укр)",
+      "forecast": "Прогноз: що буде з цим трендом наступні 2-4 тижні (укр)"
+    }
+  ]
+}
+Поверни 4-7 трендів. status: hot = вірусний прямо зараз, rising = набирає оберти, stable = стабільно популярний. Відповідь ТІЛЬКИ JSON.`;
+
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,tools:[{type:'web_search_20250305',name:'web_search'}],messages:[{role:'user',content:prompt}]})
+    });
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data=await r.json();
+    const raw=data.content.filter(b=>b.type==='text').map(b=>b.text).join('');
+    let parsed;
+    try{ parsed=JSON.parse(raw.replace(/```json|```/g,'').trim()); }
+    catch{ const m=raw.match(/\{[\s\S]*\}/); if(m) parsed=JSON.parse(m[0]); else throw new Error('Не вдалося розібрати відповідь'); }
+    
+    const pad=n=>String(n).padStart(2,'0');
+    const now=new Date();
+    const entry={
+      id:Date.now(),
+      query,
+      date:`${pad(now.getDate())}.${pad(now.getMonth()+1)} ${pad(now.getHours())}:${pad(now.getMinutes())}`,
+      dateFor:dateDisplay,
+      trends:parsed.trends||[]
+    };
+    saveTrendsEntry(entry);
+  }catch(e){
+    document.getElementById('trendsBody').innerHTML=`<div class="trends-empty"><div class="trends-empty-icon">⚠️</div>Помилка: ${eH(e.message)}<br><span style="font-size:.62rem;opacity:.6">Перевірте API ключ та спробуйте знову</span></div>`;
+  }finally{
+    btn.disabled=false;
+    btn.textContent='Пошук';
+  }
+}
+
+/* ── FILE:// DETECTION ── */
+(function(){
+  if(location.protocol==='file:'){
+    document.addEventListener('DOMContentLoaded',()=>{
+      const w=document.getElementById('fileWarning');
+      if(w) w.classList.add('show');
+    });
+  }
+})();
+
+/* ── 429 RATE LIMIT COUNTDOWN ── */
+let rateLimitTimer=null;
+function show429Countdown(seconds){
+  let s=seconds;
+  const btn=document.getElementById('analyzeBtn');
+  if(btn) btn.disabled=true;
+  clearInterval(rateLimitTimer);
+  rateLimitTimer=setInterval(()=>{
+    s--;
+    showErr(`⏳ Rate limit. Зачекайте ${s}с... (поповніть баланс на console.anthropic.com якщо це повторюється)`);
+    if(s<=0){
+      clearInterval(rateLimitTimer);
+      if(btn) btn.disabled=false;
+      hideErr();
+    }
+  },1000);
+}
+
+/* ── INIT ── */
 document.addEventListener('DOMContentLoaded',()=>{
   restoreState();
   loadHistory();
+  loadTrendsHistory();
 });
 </script>
 </body>
